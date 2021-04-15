@@ -2,6 +2,6 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-pub mod base;
-pub mod config;
-pub mod deb;
+pub fn expand_file_pattern(s: &str) -> String {
+    String::from(s)
+}

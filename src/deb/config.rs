@@ -5,4 +5,12 @@
 use serde_derive::Deserialize;
 
 #[derive(Debug, Deserialize)]
-pub struct DebConfig {}
+pub struct DebConfig {
+    pub priority: String,
+
+    pub section: Option<String>,
+    pub depends: Option<String>,
+    pub recommends: Option<String>,
+    pub conflicts: Option<String>,
+    pub replace: Option<String>,
+}
