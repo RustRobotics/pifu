@@ -1,6 +1,12 @@
+use serde_derive::Deserialize;
+
+use crate::deb::config::DebConfig;
+
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub metadata: Metadata,
+
+    pub deb: Option<DebConfig>,
 }
 
 #[derive(Debug, Deserialize)]
