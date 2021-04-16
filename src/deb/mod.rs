@@ -3,5 +3,6 @@
 // in the LICENSE file.
 
 mod config;
+mod control;
 
 pub use config::DebConfig;

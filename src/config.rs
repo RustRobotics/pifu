@@ -4,7 +4,7 @@
 
 use serde_derive::Deserialize;
 
-use crate::base::{Arch, FileSet};
+use crate::base::{Arch, Metadata};
 use crate::deb::DebConfig;
 
 #[derive(Debug, Deserialize)]
@@ -12,21 +12,6 @@ pub struct Config {
     pub metadata: Metadata,
 
     pub linux: Option<LinuxConfig>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Metadata {
-    pub name: String,
-    pub app_id: String,
-    pub description: String,
-    pub author: String,
-    pub copyright: Option<String>,
-    pub version: String,
-    pub license: String,
-    pub license_file: Option<String>,
-
-    pub assets: Vec<FileSet>,
-    pub workdir: String,
 }
 
 #[derive(Debug, Deserialize)]

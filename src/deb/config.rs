@@ -13,7 +13,9 @@ pub struct DebConfig {
     pub depends: Option<String>,
     pub recommends: Option<String>,
     pub conflicts: Option<String>,
-    pub replace: Option<String>,
+    pub breaks: Option<String>,
+    pub replaces: Option<String>,
+    pub provides: Option<String>,
 }
 
 fn default_priority() -> String {
