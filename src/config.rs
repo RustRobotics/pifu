@@ -4,7 +4,8 @@
 
 use serde_derive::Deserialize;
 
-use crate::deb::config::DebConfig;
+use crate::base::{Arch, FileSet};
+use crate::deb::DebConfig;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
@@ -24,13 +25,42 @@ pub struct Metadata {
     pub license: String,
     pub license_file: Option<String>,
 
+    pub assets: Vec<FileSet>,
     pub workdir: String,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct LinuxConfig {
-    pub arch: Vec<String>,
-    pub targets: Vec<String>,
+    #[serde(default = "default_arch")]
+    pub arch: Vec<Arch>,
+
+    #[serde(default = "default_linux_targets")]
+    pub targets: Vec<LinuxTarget>,
 
     pub deb: Option<DebConfig>,
+}
+
+fn default_arch() -> Vec<Arch> {
+    vec![Arch::X86_64]
+}
+
+fn default_linux_targets() -> Vec<LinuxTarget> {
+    vec![LinuxTarget::Deb]
+}
+
+#[derive(Debug, Deserialize)]
+pub enum LinuxTarget {
+    #[serde(alias = "deb")]
+    Deb,
+
+    #[serde(alias = "rpm")]
+    Rpm,
+
+    AppImage,
+
+    #[serde(alias = "tar")]
+    Tar,
+
+    #[serde(alias = "tgz")]
+    TarGz,
 }

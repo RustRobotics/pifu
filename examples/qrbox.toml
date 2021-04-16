@@ -6,11 +6,16 @@ author = "Xu Shaohua <shaohua@biofan.org"
 description = "QR generator"
 version = "1.0.0"
 license = "GPL-3.0"
+
 workdir = "target/rs-builder"
+assets = [
+	{from = "target/release/qrbox", to = "bin/qrbox"},
+]
+
 
 [linux]
-arch = ["x86", "x86_64", "arm64"]
-targets = ["deb", "rpm", "AppImage"]
+targets = ["deb"]
+arch = ["x86-64"]
 artifact_name = "${name}-${version}.${ext}"
 
 [linux.deb]
