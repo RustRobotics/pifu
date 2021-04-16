@@ -5,4 +5,4 @@
 mod config;
 pub mod file_pattern;
 
-pub use config::{Arch, FileSet, GlobPatterns};
+pub use config::{Arch, FileSet, GlobPatterns, Metadata};

@@ -3,6 +3,7 @@
 // in the LICENSE file.
 
 use serde_derive::Deserialize;
+use std::fmt;
 
 #[derive(Debug, Deserialize, PartialEq)]
 pub enum Arch {
@@ -16,6 +17,16 @@ pub enum Arch {
     AArch64,
 }
 
+impl fmt::Display for Arch {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Arch::X86 => write!(f, "x86"),
+            Arch::X86_64 => write!(f, "x86-64"),
+            Arch::AArch64 => write!(f, "aarch64"),
+        }
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct FileSet {
     pub from: String,
@@ -26,3 +37,18 @@ pub struct FileSet {
 
 #[derive(Debug, Deserialize)]
 pub struct GlobPatterns(Vec<String>);
+
+#[derive(Debug, Deserialize)]
+pub struct Metadata {
+    pub name: String,
+    pub app_id: String,
+    pub description: String,
+    pub author: String,
+    pub copyright: Option<String>,
+    pub version: String,
+    pub license: String,
+    pub license_file: Option<String>,
+
+    pub assets: Vec<FileSet>,
+    pub workdir: String,
+}
