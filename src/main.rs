@@ -2,6 +2,37 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-fn main() {
-    println!("Hello, world!");
+use clap::{App, Arg};
+use std::fs;
+use std::io;
+
+use rs_builder::config::Config;
+
+fn main() -> Result<(), io::Error> {
+    std::env::set_var("RUST_LOG", "info");
+    env_logger::init();
+
+    let matches = App::new("Rust builder")
+        .version("0.1.0")
+        .author("Xu Shaohua <shaohua@biofan.org>")
+        .about("General package builder")
+        .arg(
+            Arg::with_name("config")
+                .short("c")
+                .long("config")
+                .value_name("toml file")
+                .help("Specify a custom toml config file")
+                .takes_value(true),
+        )
+        .get_matches();
+
+    let config_file = matches.value_of("config").unwrap_or("rs-builder.toml");
+    log::info!("config file: {:?}", config_file);
+
+    let config_content =
+        fs::read_to_string(config_file).expect(&format!("Failed to read {}", config_file));
+
+    let conf: Config = toml::from_str(&config_content).expect("Invalid config");
+
+    Ok(())
 }

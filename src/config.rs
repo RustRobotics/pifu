@@ -10,7 +10,7 @@ use crate::deb::config::DebConfig;
 pub struct Config {
     pub metadata: Metadata,
 
-    pub deb: Option<DebConfig>,
+    pub linux: Option<LinuxConfig>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -18,11 +18,19 @@ pub struct Metadata {
     pub name: String,
     pub app_id: String,
     pub description: String,
-    pub authors: Vec<String>,
-    pub copyright: String,
+    pub author: String,
+    pub copyright: Option<String>,
     pub version: String,
     pub license: String,
     pub license_file: Option<String>,
 
-    pub output: String,
+    pub workdir: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct LinuxConfig {
+    pub arch: Vec<String>,
+    pub targets: Vec<String>,
+
+    pub deb: Option<DebConfig>,
 }

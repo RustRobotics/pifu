@@ -1,0 +1,16 @@
+
+[metadata]
+name = "qrbox"
+app_id = "org.biofan.qrbox"
+author = "Xu Shaohua <shaohua@biofan.org"
+description = "QR generator"
+version = "1.0.0"
+license = "GPL-3.0"
+workdir = "target/rs-builder"
+
+[linux]
+arch = ["x86", "x86_64", "arm64"]
+targets = ["deb", "rpm", "AppImage"]
+artifact_name = "${name}-${version}.${ext}"
+
+[linux.deb]

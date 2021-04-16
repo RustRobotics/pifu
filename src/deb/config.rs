@@ -6,6 +6,7 @@ use serde_derive::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct DebConfig {
+    #[serde(default = "default_priority")]
     pub priority: String,
 
     pub section: Option<String>,
@@ -13,4 +14,8 @@ pub struct DebConfig {
     pub recommends: Option<String>,
     pub conflicts: Option<String>,
     pub replace: Option<String>,
+}
+
+fn default_priority() -> String {
+    "utility".to_string()
 }
