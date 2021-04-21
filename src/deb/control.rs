@@ -3,6 +3,8 @@
 // in the LICENSE file.
 
 use std::io::Write;
+use std::path::Path;
+use walkdir::WalkDir;
 
 use crate::base::Arch;
 use crate::config::Config;
@@ -47,6 +49,16 @@ pub fn generate_control(conf: &Config, arch: Arch, size: usize) -> Result<(), Bu
     Ok(())
 }
 
-pub fn generate_md5sum() {}
+pub fn generate_md5sum(dir: &Path) -> Result<String, BuildError> {
+    for entry in WalkDir::new(dir) {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_file() {
+            let mdt = "";
+            let filename = path.strip_prefix(dir)?;
+            println!("{}, filename: {:?}", path.display(), filename);
+        }
+    }
 
-pub fn generate_archive() {}
+    Ok(String::new())
+}

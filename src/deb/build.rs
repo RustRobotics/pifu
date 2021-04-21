@@ -8,6 +8,7 @@ use crate::base::archive;
 use crate::base::compress;
 use crate::base::fileset;
 use crate::config::{Config, LinuxConfig};
+use crate::deb::control;
 use crate::BuildError;
 
 pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildError> {
@@ -41,6 +42,8 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
 
     let data_xz_file = deb_dir.join("data.tar.xz");
     compress::create_xz2(&data_tar_file, &data_xz_file)?;
+
+    let md5sum_content = control::generate_md5sum(&data_dir)?;
 
     Ok(())
 }
