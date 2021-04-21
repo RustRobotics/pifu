@@ -33,7 +33,7 @@ fn default_linux_targets() -> Vec<LinuxTarget> {
     vec![LinuxTarget::Deb]
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub enum LinuxTarget {
     #[serde(alias = "deb")]
     Deb,

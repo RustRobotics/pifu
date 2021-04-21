@@ -3,6 +3,11 @@
 // in the LICENSE file.
 
 mod base;
+mod build;
+mod build_linux;
 pub mod config;
 mod deb;
-pub mod error;
+mod error;
+
+pub use build::build;
+pub use error::BuildError;

@@ -1,12 +1,12 @@
 use std::io;
 
 #[derive(Debug)]
-pub enum BuilderError {
+pub enum BuildError {
     IoError(io::Error),
 }
 
-impl From<io::Error> for BuilderError {
-    fn from(err: io::Error) -> BuilderError {
-        BuilderError::IoError(err)
+impl From<io::Error> for BuildError {
+    fn from(err: io::Error) -> BuildError {
+        BuildError::IoError(err)
     }
 }

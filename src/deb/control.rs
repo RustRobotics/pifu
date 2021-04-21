@@ -4,10 +4,10 @@
 
 use crate::base::Arch;
 use crate::config::Config;
-use crate::error::BuilderError;
+use crate::BuildError;
 use std::io::Write;
 
-pub fn generate_control(conf: &Config, arch: Arch, size: usize) -> Result<(), BuilderError> {
+pub fn generate_control(conf: &Config, arch: Arch, size: usize) -> Result<(), BuildError> {
     let mut control: Vec<u8> = Vec::with_capacity(1024);
 
     let metadata = &conf.metadata;
