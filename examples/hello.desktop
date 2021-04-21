@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Hello
+Comment=rs-builder example
+Exec=/usr/bin/rs-builder-hello
+Terminal=true
+X-MultipleArgs=false
+Type=Application
+Icon=rs-builder-hello
+Categories=Network;WebBrowser;
+StartupWMClass=RsBuilder
+StartupNotify=true

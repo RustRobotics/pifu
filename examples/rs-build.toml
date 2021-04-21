@@ -1,0 +1,25 @@
+
+[metadata]
+name = "hello"
+app_id = "org.biofan.qrbox"
+author = "Xu Shaohua <shaohua@biofan.org"
+description = "Rust hello app"
+version = "1.0.0"
+license = "GPL-3.0"
+
+workdir = "target/rs-builder"
+src_dir = "."
+
+
+[linux]
+targets = ["deb"]
+arch = ["x86-64"]
+artifact_name = "${name}-${version}.${ext}"
+
+files = [
+	{from = "target/debug/examples/hello", to = "usr/bin/rs-builder-hello"},
+	{from = "examples/hello.png", to = "usr/share/icons/hicolor/128x128/apps/rs-build-hello.png"},
+	{from = "examples/hello.desktop", to = "usr/share/applications/rs-builder-hello.desktop"},
+]
+
+[linux.deb]

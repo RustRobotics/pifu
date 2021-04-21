@@ -3,6 +3,7 @@
 // in the LICENSE file.
 
 use serde_derive::Deserialize;
+use std::fs;
 use std::path::Path;
 
 use crate::base::GlobPatterns;
@@ -18,6 +19,12 @@ pub struct FileSet {
 
 impl FileSet {
     pub fn copy_to(&self, src: &Path, dest: &Path) -> Result<(), BuildError> {
+        let src_path = src.join(&self.from);
+        let dest_path = dest.join(&self.to);
+        let dest_dir = dest_path.parent().unwrap();
+        fs::create_dir_all(dest_dir)?;
+        log::info!("Copy {:?} > {:?}", src_path, dest_path);
+        fs::copy(src_path, dest_path)?;
         Ok(())
     }
 }
