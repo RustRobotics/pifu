@@ -3,7 +3,9 @@
 // in the LICENSE file.
 
 use serde_derive::Deserialize;
+use std::path::PathBuf;
 
+use crate::base::fileset::FileSet;
 use crate::base::{Arch, Metadata};
 use crate::deb::DebConfig;
 
@@ -21,6 +23,8 @@ pub struct LinuxConfig {
 
     #[serde(default = "default_linux_targets")]
     pub targets: Vec<LinuxTarget>,
+
+    pub files: Option<Vec<FileSet>>,
 
     pub deb: Option<DebConfig>,
 }

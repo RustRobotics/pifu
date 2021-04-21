@@ -4,6 +4,8 @@
 
 use serde_derive::Deserialize;
 
+use crate::base::fileset::FileSet;
+
 #[derive(Debug, Deserialize)]
 pub struct DebConfig {
     #[serde(default = "default_priority")]
@@ -16,6 +18,8 @@ pub struct DebConfig {
     pub breaks: Option<String>,
     pub replaces: Option<String>,
     pub provides: Option<String>,
+
+    pub files: Option<Vec<FileSet>>,
 }
 
 fn default_priority() -> String {

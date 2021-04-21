@@ -2,10 +2,11 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
+use std::io::Write;
+
 use crate::base::Arch;
 use crate::config::Config;
 use crate::BuildError;
-use std::io::Write;
 
 pub fn generate_control(conf: &Config, arch: Arch, size: usize) -> Result<(), BuildError> {
     let mut control: Vec<u8> = Vec::with_capacity(1024);

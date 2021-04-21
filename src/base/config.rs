@@ -28,14 +28,6 @@ impl fmt::Display for Arch {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct FileSet {
-    pub from: String,
-    pub to: String,
-    pub filter: Option<GlobPatterns>,
-    pub mode: Option<i32>,
-}
-
-#[derive(Debug, Deserialize)]
 pub struct GlobPatterns(Vec<String>);
 
 #[derive(Debug, Deserialize)]
@@ -49,6 +41,6 @@ pub struct Metadata {
     pub license: String,
     pub license_file: Option<String>,
 
-    pub assets: Vec<FileSet>,
     pub workdir: String,
+    pub src_dir: String,
 }

@@ -3,6 +3,7 @@
 // in the LICENSE file.
 
 mod config;
-pub mod file_pattern;
+mod file_pattern;
+pub mod fileset;
 
-pub use config::{Arch, FileSet, GlobPatterns, Metadata};
+pub use config::{Arch, GlobPatterns, Metadata};

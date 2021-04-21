@@ -32,7 +32,6 @@ pub fn build() -> Result<(), BuildError> {
 
     let config_content =
         fs::read_to_string(config_file).expect(&format!("Failed to read {}", config_file));
-
     let conf: Config = toml::from_str(&config_content).expect("Invalid config");
 
     build_linux(&conf)
