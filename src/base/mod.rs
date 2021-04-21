@@ -3,6 +3,7 @@
 // in the LICENSE file.
 
 pub mod archive;
+pub mod compress;
 mod config;
 mod file_pattern;
 pub mod fileset;

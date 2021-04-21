@@ -5,6 +5,7 @@
 use std::path::Path;
 
 use crate::base::archive;
+use crate::base::compress;
 use crate::base::fileset;
 use crate::config::{Config, LinuxConfig};
 use crate::BuildError;
@@ -34,6 +35,9 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
 
     let data_tar_file = deb_dir.join("data.tar");
     archive::create_archive(&data_dir, &data_tar_file)?;
+
+    let data_gz_file = deb_dir.join("data.tar.gz");
+    compress::create_gz(&data_tar_file, &data_gz_file)?;
 
     Ok(())
 }

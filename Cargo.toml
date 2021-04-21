@@ -9,8 +9,15 @@ license = "GPL-3.0"
 [dependencies]
 clap = "2.33.3"
 env_logger = "0.8.3"
+flate2 = "1.0.20"
 glob = "0.3.0"
 log = "0.4.14"
 serde = "1.0.125"
 serde_derive = "1.0.125"
+tar = "0.4.33"
 toml = "0.5.8"
+
+[profile.release]
+lto = true
+opt-level = 3
+debug = false
