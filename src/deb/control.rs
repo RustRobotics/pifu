@@ -11,41 +11,48 @@ use crate::base::Arch;
 use crate::config::Config;
 use crate::BuildError;
 
-pub fn generate_control(conf: &Config, arch: Arch, size: usize) -> Result<(), BuildError> {
-    let mut control: Vec<u8> = Vec::with_capacity(1024);
+pub fn generate_control(
+    conf: &Config,
+    arch: Arch,
+    size: usize,
+    dest_file: &Path,
+) -> Result<(), BuildError> {
+    let dest_dir = dest_file.parent().unwrap();
+    fs::create_dir_all(dest_dir)?;
+    let mut dest_fd = File::create(dest_file)?;
 
     let metadata = &conf.metadata;
-    writeln!(&mut control, "Package: {}", metadata.name)?;
-    writeln!(&mut control, "Version: {}", metadata.version)?;
-    writeln!(&mut control, "Architecture: {}", arch)?;
+    writeln!(&mut dest_fd, "Package: {}", metadata.name)?;
+    writeln!(&mut dest_fd, "Version: {}", metadata.version)?;
+    writeln!(&mut dest_fd, "Architecture: {}", arch)?;
 
     let linux = conf.linux.as_ref().unwrap();
     let deb = linux.deb.as_ref().unwrap();
     if let Some(section) = deb.section.as_ref() {
-        writeln!(&mut control, "Section: {}", section)?;
+        writeln!(&mut dest_fd, "Section: {}", section)?;
     }
-    writeln!(&mut control, "Priority: {}", deb.priority)?;
-    writeln!(&mut control, "Standards-Version: 3.9.4")?;
-    writeln!(&mut control, "Maintainer: {}", metadata.author)?;
-    writeln!(&mut control, "Installed-Size: {}", size)?;
+    writeln!(&mut dest_fd, "Priority: {}", deb.priority)?;
+    writeln!(&mut dest_fd, "Standards-Version: 3.9.4")?;
+    writeln!(&mut dest_fd, "Maintainer: {}", metadata.author)?;
+    writeln!(&mut dest_fd, "Installed-Size: {}", size)?;
 
     if let Some(ref depends) = deb.depends {
-        writeln!(&mut control, "Depends: {}", depends)?;
+        writeln!(&mut dest_fd, "Depends: {}", depends)?;
     }
     if let Some(ref conflicts) = deb.conflicts {
-        writeln!(&mut control, "Conflicts: {}", conflicts)?;
+        writeln!(&mut dest_fd, "Conflicts: {}", conflicts)?;
     }
     if let Some(ref breaks) = deb.breaks {
-        writeln!(&mut control, "Breaks: {}", breaks)?;
+        writeln!(&mut dest_fd, "Breaks: {}", breaks)?;
     }
     if let Some(ref replaces) = deb.replaces {
-        writeln!(&mut control, "Replaces: {}", replaces)?;
+        writeln!(&mut dest_fd, "Replaces: {}", replaces)?;
     }
     if let Some(ref provides) = deb.provides {
-        writeln!(&mut control, "Provides: {}", provides)?;
+        writeln!(&mut dest_fd, "Provides: {}", provides)?;
     }
 
-    writeln!(&mut control, "Description: {}", metadata.description)?;
+    writeln!(&mut dest_fd, "Description: {}", metadata.description)?;
 
     Ok(())
 }
@@ -56,6 +63,7 @@ fn md5_file(file: &Path) -> Result<String, BuildError> {
     io::copy(&mut in_file, &mut context)?;
     let digest = context.compute();
     let hash = format!("{:x}", digest);
+
     Ok(hash)
 }
 

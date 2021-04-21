@@ -7,6 +7,7 @@ use std::path::Path;
 use crate::base::archive;
 use crate::base::compress;
 use crate::base::fileset;
+use crate::base::Arch;
 use crate::config::{Config, LinuxConfig};
 use crate::deb::control;
 use crate::BuildError;
@@ -46,6 +47,10 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
 
     let md5sum_file = control_dir.join("md5sum");
     control::generate_md5sum(&data_dir, &md5sum_file)?;
+
+    let control_file = control_dir.join("control");
+    let file_size = 64;
+    control::generate_control(conf, Arch::X86_64, file_size, &control_file)?;
 
     Ok(())
 }
