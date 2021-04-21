@@ -2,7 +2,8 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use std::io::Write;
+use std::fs::{self, File};
+use std::io::{self, Read, Write};
 use std::path::Path;
 use walkdir::WalkDir;
 
@@ -49,16 +50,29 @@ pub fn generate_control(conf: &Config, arch: Arch, size: usize) -> Result<(), Bu
     Ok(())
 }
 
-pub fn generate_md5sum(dir: &Path) -> Result<String, BuildError> {
+fn md5_file(file: &Path) -> Result<String, BuildError> {
+    let mut in_file = File::open(file)?;
+    let mut context = md5::Context::new();
+    io::copy(&mut in_file, &mut context)?;
+    let digest = context.compute();
+    let hash = format!("{:x}", digest);
+    Ok(hash)
+}
+
+pub fn generate_md5sum(dir: &Path, dest_file: &Path) -> Result<(), BuildError> {
+    let dest_dir = dest_file.parent().unwrap();
+    fs::create_dir_all(dest_dir)?;
+    let mut dest_fd = File::create(dest_file)?;
+
     for entry in WalkDir::new(dir) {
         let entry = entry?;
         let path = entry.path();
         if path.is_file() {
-            let mdt = "";
             let filename = path.strip_prefix(dir)?;
-            println!("{}, filename: {:?}", path.display(), filename);
+            let hash = md5_file(path)?;
+            write!(dest_fd, "{} {}\n", hash, filename.display())?;
         }
     }
 
-    Ok(String::new())
+    Ok(())
 }

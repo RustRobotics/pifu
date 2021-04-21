@@ -31,6 +31,7 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
     let deb_dir = workdir.join("deb");
     let data_dir = deb_dir.join("data");
     let src_dir = Path::new(&conf.metadata.src_dir);
+    let control_dir = deb_dir.join("control");
 
     fileset::copy_filesets(files, &src_dir, &data_dir)?;
 
@@ -43,7 +44,8 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
     let data_xz_file = deb_dir.join("data.tar.xz");
     compress::create_xz2(&data_tar_file, &data_xz_file)?;
 
-    let md5sum_content = control::generate_md5sum(&data_dir)?;
+    let md5sum_file = control_dir.join("md5sum");
+    control::generate_md5sum(&data_dir, &md5sum_file)?;
 
     Ok(())
 }
