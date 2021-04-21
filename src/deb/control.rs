@@ -24,7 +24,7 @@ pub fn generate_control(
     let metadata = &conf.metadata;
     writeln!(&mut dest_fd, "Package: {}", metadata.name)?;
     writeln!(&mut dest_fd, "Version: {}", metadata.version)?;
-    writeln!(&mut dest_fd, "Architecture: {}", arch)?;
+    writeln!(&mut dest_fd, "Architecture: {}", arch_name(arch))?;
 
     let linux = conf.linux.as_ref().unwrap();
     let deb = linux.deb.as_ref().unwrap();
@@ -83,4 +83,12 @@ pub fn generate_md5sum(dir: &Path, dest_file: &Path) -> Result<(), BuildError> {
     }
 
     Ok(())
+}
+
+const fn arch_name(arch: Arch) -> &'static str {
+    match arch {
+        Arch::X86 => "i386",
+        Arch::X86_64 => "amd64",
+        Arch::AArch64 => "arm64",
+    }
 }
