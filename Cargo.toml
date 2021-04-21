@@ -16,6 +16,7 @@ serde = "1.0.125"
 serde_derive = "1.0.125"
 tar = "0.4.33"
 toml = "0.5.8"
+xz2 = "0.1.6"
 
 [profile.release]
 lto = true

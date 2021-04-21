@@ -9,6 +9,7 @@ use crate::BuildError;
 
 pub fn create_archive(dir: &Path, to: &Path) -> Result<(), BuildError> {
     let to_file = File::create(to)?;
+    log::info!("tar {:?} > {:?}", dir, to);
     let mut archive = tar::Builder::new(to_file);
     archive.append_dir_all(".", dir)?;
     archive.finish()?;
