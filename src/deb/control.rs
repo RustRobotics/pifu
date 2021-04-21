@@ -14,7 +14,7 @@ use crate::BuildError;
 pub fn generate_control(
     conf: &Config,
     arch: Arch,
-    size: usize,
+    size: u64,
     dest_file: &Path,
 ) -> Result<(), BuildError> {
     let dest_dir = dest_file.parent().unwrap();

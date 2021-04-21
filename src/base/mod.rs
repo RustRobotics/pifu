@@ -7,5 +7,6 @@ pub mod compress;
 mod config;
 mod file_pattern;
 pub mod fileset;
+pub mod utils;
 
 pub use config::{Arch, GlobPatterns, Metadata};
