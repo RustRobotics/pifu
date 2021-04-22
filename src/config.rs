@@ -3,7 +3,6 @@
 // in the LICENSE file.
 
 use serde_derive::Deserialize;
-use std::path::PathBuf;
 
 use crate::base::fileset::FileSet;
 use crate::base::{Arch, Metadata};

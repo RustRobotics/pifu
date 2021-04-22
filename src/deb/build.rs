@@ -56,5 +56,12 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
     let control_xz_file = deb_dir.join("control.tar.xz");
     compress::create_xz2(&control_tar_file, &control_xz_file)?;
 
+    let deb_binary_file = deb_dir.join("debian-binary");
+    control::generate_deb_binary(&deb_binary_file)?;
+
+    let deb_file = deb_dir.join("out.deb");
+    let xz_files = vec![&data_xz_file, &control_xz_file, &deb_binary_file];
+    archive::create_ar_files(&xz_files, &deb_file)?;
+
     Ok(())
 }

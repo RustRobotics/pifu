@@ -3,7 +3,7 @@
 // in the LICENSE file.
 
 use std::fs::{self, File};
-use std::io::{self, Read, Write};
+use std::io::{self, Write};
 use std::path::Path;
 use walkdir::WalkDir;
 
@@ -83,6 +83,12 @@ pub fn generate_md5sum(dir: &Path, dest_file: &Path) -> Result<(), BuildError> {
         }
     }
 
+    Ok(())
+}
+
+pub fn generate_deb_binary(path: &Path) -> Result<(), BuildError> {
+    let mut fd = File::create(path)?;
+    write!(fd, "2.0")?;
     Ok(())
 }
 
