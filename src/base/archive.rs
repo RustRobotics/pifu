@@ -34,11 +34,12 @@ pub fn create_ar(dir: &Path, to: &Path) -> Result<(), BuildError> {
     Ok(())
 }
 
-pub fn create_ar_files(files: &[&PathBuf], to: &Path) -> Result<(), BuildError> {
+pub fn create_ar_files<P: AsRef<Path>>(files: &[&P], to: &Path) -> Result<(), BuildError> {
     let to_file = File::create(to)?;
     let mut builder = ar::Builder::new(to_file);
 
     for path in files {
+        let path = path.as_ref();
         if path.is_file() {
             builder.append_path(path)?;
         }

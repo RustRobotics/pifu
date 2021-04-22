@@ -19,41 +19,54 @@ pub fn generate_control(
 ) -> Result<(), BuildError> {
     let dest_dir = dest_file.parent().unwrap();
     fs::create_dir_all(dest_dir)?;
-    let mut dest_fd = File::create(dest_file)?;
+    let mut fd = File::create(dest_file)?;
 
     let metadata = &conf.metadata;
-    writeln!(&mut dest_fd, "Package: {}", metadata.name)?;
-    writeln!(&mut dest_fd, "Version: {}", metadata.version)?;
-    writeln!(&mut dest_fd, "Architecture: {}", arch_name(arch))?;
+    writeln!(&mut fd, "Package: {}", metadata.name)?;
+    writeln!(&mut fd, "Version: {}", metadata.version)?;
+    writeln!(&mut fd, "Architecture: {}", arch_name(arch))?;
 
     let linux = conf.linux.as_ref().unwrap();
     let deb = linux.deb.as_ref().unwrap();
     if let Some(section) = deb.section.as_ref() {
-        writeln!(&mut dest_fd, "Section: {}", section)?;
+        writeln!(&mut fd, "Section: {}", section)?;
     }
-    writeln!(&mut dest_fd, "Priority: {}", deb.priority)?;
-    writeln!(&mut dest_fd, "Standards-Version: 3.9.4")?;
-    writeln!(&mut dest_fd, "Maintainer: {}", metadata.author)?;
-    writeln!(&mut dest_fd, "Installed-Size: {}", size)?;
+    writeln!(&mut fd, "Priority: {}", deb.priority)?;
+    writeln!(&mut fd, "Standards-Version: 3.9.4")?;
+    writeln!(&mut fd, "Maintainer: {}", metadata.author)?;
+    writeln!(&mut fd, "Installed-Size: {}", size)?;
 
     if let Some(ref depends) = deb.depends {
-        writeln!(&mut dest_fd, "Depends: {}", depends)?;
+        writeln!(&mut fd, "Depends: {}", depends)?;
     }
     if let Some(ref conflicts) = deb.conflicts {
-        writeln!(&mut dest_fd, "Conflicts: {}", conflicts)?;
+        writeln!(&mut fd, "Conflicts: {}", conflicts)?;
     }
     if let Some(ref breaks) = deb.breaks {
-        writeln!(&mut dest_fd, "Breaks: {}", breaks)?;
+        writeln!(&mut fd, "Breaks: {}", breaks)?;
     }
     if let Some(ref replaces) = deb.replaces {
-        writeln!(&mut dest_fd, "Replaces: {}", replaces)?;
+        writeln!(&mut fd, "Replaces: {}", replaces)?;
     }
     if let Some(ref provides) = deb.provides {
-        writeln!(&mut dest_fd, "Provides: {}", provides)?;
+        writeln!(&mut fd, "Provides: {}", provides)?;
     }
 
-    writeln!(&mut dest_fd, "Homepage: {}", metadata.homepage)?;
-    writeln!(&mut dest_fd, "Description: {}", metadata.description)?;
+    writeln!(&mut fd, "Homepage: {}", metadata.homepage)?;
+    writeln!(&mut fd, "Description: {}", metadata.description)?;
+    writeln!(
+        &mut fd,
+        " QtWebEngine provides a Web browser engine that makes it easy to embed content"
+    )?;
+    writeln!(
+        &mut fd,
+        " from the World Wide Web into your Qt application."
+    )?;
+    writeln!(&mut fd, " .")?;
+    writeln!(
+        &mut fd,
+        " This package contains the core QtWebEngine library."
+    )?;
 
     Ok(())
 }
@@ -88,7 +101,7 @@ pub fn generate_md5sum(dir: &Path, dest_file: &Path) -> Result<(), BuildError> {
 
 pub fn generate_deb_binary(path: &Path) -> Result<(), BuildError> {
     let mut fd = File::create(path)?;
-    write!(fd, "2.0")?;
+    writeln!(fd, "2.0")?;
     Ok(())
 }
 
