@@ -52,6 +52,7 @@ pub fn generate_control(
         writeln!(&mut dest_fd, "Provides: {}", provides)?;
     }
 
+    writeln!(&mut dest_fd, "Homepage: {}", metadata.homepage)?;
     writeln!(&mut dest_fd, "Description: {}", metadata.description)?;
 
     Ok(())
