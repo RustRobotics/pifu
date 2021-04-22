@@ -13,29 +13,26 @@ use crate::BuildError;
 
 pub fn create_gz(in_path: &Path, out_path: &Path) -> Result<(), BuildError> {
     let out_file = File::create(out_path)?;
-    let mut gz = GzBuilder::new().write(out_file, Compression::default());
-
+    let mut encoder = GzBuilder::new().write(out_file, Compression::default());
     let mut in_file = File::open(in_path)?;
-    io::copy(&mut in_file, &mut gz)?;
-    gz.finish()?;
+    io::copy(&mut in_file, &mut encoder)?;
+    encoder.finish()?;
 
     Ok(())
 }
 
 pub fn create_xz2(in_path: &Path, out_path: &Path) -> Result<(), BuildError> {
-    let out_file = File::create(out_path)?;
-
     let xz_level = 6;
     let mut stream = MtStreamBuilder::new()
         .preset(xz_level)
         .threads(num_cpus::get() as u32)
         .encoder()?;
 
-    let mut xz = XzEncoder::new_stream(out_file, stream);
-
+    let out_file = File::create(out_path)?;
+    let mut encoder = XzEncoder::new_stream(out_file, stream);
     let mut in_file = File::open(in_path)?;
-    io::copy(&mut in_file, &mut xz)?;
-    xz.finish()?;
+    io::copy(&mut in_file, &mut encoder)?;
+    encoder.finish()?;
 
     Ok(())
 }

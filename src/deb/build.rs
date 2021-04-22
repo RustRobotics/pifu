@@ -38,7 +38,7 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
     fileset::copy_filesets(files, &src_dir, &data_dir)?;
 
     let data_tar_file = deb_dir.join("data.tar");
-    archive::create_archive(&data_dir, &data_tar_file)?;
+    archive::create_tar(&data_dir, &data_tar_file)?;
 
     let data_xz_file = deb_dir.join("data.tar.xz");
     compress::create_xz2(&data_tar_file, &data_xz_file)?;
@@ -51,7 +51,7 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
     control::generate_control(conf, Arch::X86_64, file_size, &control_file)?;
 
     let control_tar_file = deb_dir.join("control.tar");
-    archive::create_archive(&control_dir, &control_tar_file)?;
+    archive::create_tar(&control_dir, &control_tar_file)?;
 
     let control_xz_file = deb_dir.join("control.tar.xz");
     compress::create_xz2(&control_tar_file, &control_xz_file)?;
