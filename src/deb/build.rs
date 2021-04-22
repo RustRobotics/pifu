@@ -60,7 +60,7 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
     control::generate_deb_binary(&deb_binary_file)?;
 
     let deb_file = deb_dir.join("out.deb");
-    let xz_files = vec![&data_xz_file, &control_xz_file, &deb_binary_file];
+    let xz_files = vec![&deb_binary_file, &control_xz_file, &data_xz_file];
     archive::create_ar_files(&xz_files, &deb_file)?;
 
     Ok(())
