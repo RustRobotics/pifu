@@ -4,6 +4,7 @@ name = "hello"
 app_id = "org.biofan.qrbox"
 author = "Xu Shaohua <shaohua@biofan.org"
 description = "Rust hello app"
+homepage = "https://biofan.org"
 version = "1.0.0"
 license = "GPL-3.0"
 
