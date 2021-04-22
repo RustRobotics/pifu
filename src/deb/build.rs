@@ -13,7 +13,7 @@ use crate::config::{Config, LinuxConfig};
 use crate::deb::control;
 use crate::BuildError;
 
-pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildError> {
+pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> Result<(), BuildError> {
     let deb_conf = if let Some(deb_conf) = linux_conf.deb.as_ref() {
         deb_conf
     } else {
@@ -49,7 +49,7 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
 
     let file_size = utils::get_folder_size(&data_dir)?;
     let control_file = control_dir.join("control");
-    control::generate_control(conf, Arch::X86_64, file_size, &control_file)?;
+    control::generate_control(conf, arch, file_size, &control_file)?;
 
     let control_tar_file = deb_dir.join("control.tar");
     archive::create_tar(&control_dir, &control_tar_file)?;
@@ -60,7 +60,13 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig) -> Result<(), BuildErr
     let deb_binary_file = deb_dir.join("debian-binary");
     control::generate_deb_binary(&deb_binary_file)?;
 
-    let deb_file = deb_dir.join("out.deb");
+    let deb_filename = format!(
+        "{}_{}_{}.deb",
+        conf.metadata.name,
+        conf.metadata.version,
+        control::arch_name(arch)
+    );
+    let deb_file = workdir.join(deb_filename);
     let xz_files = vec![&deb_binary_file, &control_xz_file, &data_xz_file];
     archive::create_ar_files(&xz_files, &deb_file)?;
 

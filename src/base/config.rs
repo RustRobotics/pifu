@@ -5,7 +5,7 @@
 use serde_derive::Deserialize;
 use std::fmt;
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Copy, Clone, Deserialize, PartialEq)]
 pub enum Arch {
     #[serde(alias = "x86")]
     X86,

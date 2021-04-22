@@ -92,7 +92,7 @@ pub fn generate_deb_binary(path: &Path) -> Result<(), BuildError> {
     Ok(())
 }
 
-const fn arch_name(arch: Arch) -> &'static str {
+pub const fn arch_name(arch: Arch) -> &'static str {
     match arch {
         Arch::X86 => "i386",
         Arch::X86_64 => "amd64",

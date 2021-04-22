@@ -14,7 +14,9 @@ pub fn build_linux(conf: &Config) -> Result<(), BuildError> {
     };
 
     if linux_conf.targets.contains(&LinuxTarget::Deb) {
-        build_deb(conf, linux_conf)?;
+        for arch in &linux_conf.arch {
+            build_deb(conf, linux_conf, *arch)?;
+        }
     }
 
     Ok(())

@@ -11,11 +11,9 @@ license = "GPL-3.0"
 workdir = "target/rs-builder"
 src_dir = "."
 
-
 [linux]
 targets = ["deb"]
 arch = ["x86-64"]
-artifact_name = "${name}-${version}.${ext}"
 
 files = [
 	{from = "target/debug/examples/hello", to = "usr/bin/rs-builder-hello"},
