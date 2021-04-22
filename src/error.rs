@@ -4,6 +4,7 @@
 
 use std::io;
 use std::path;
+use std::time;
 
 #[derive(Debug)]
 pub enum BuildError {
@@ -16,6 +17,14 @@ pub enum BuildError {
     WalkDirError(walkdir::Error),
 
     StripPrefixError(path::StripPrefixError),
+
+    SystemTimeError,
+}
+
+impl From<time::SystemTimeError> for BuildError {
+    fn from(_err: time::SystemTimeError) -> Self {
+        BuildError::SystemTimeError
+    }
 }
 
 impl From<xz2::stream::Error> for BuildError {

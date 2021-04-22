@@ -2,8 +2,11 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use std::fs::File;
-use std::path::{Path, PathBuf};
+use std::fs::{self, File};
+use std::io;
+use std::os::unix::fs::PermissionsExt;
+use std::path::Path;
+use std::time::UNIX_EPOCH;
 use walkdir::WalkDir;
 
 use crate::BuildError;
@@ -13,6 +16,57 @@ pub fn create_tar(dir: &Path, to: &Path) -> Result<(), BuildError> {
     let to_file = File::create(to)?;
     let mut builder = tar::Builder::new(to_file);
     builder.append_dir_all(".", dir)?;
+    builder.finish()?;
+
+    Ok(())
+}
+
+pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), BuildError> {
+    log::info!("tar {:?} > {:?}", dir, to);
+    let to_file = File::create(to)?;
+    let mut builder = tar::Builder::new(to_file);
+
+    for entry in WalkDir::new(dir) {
+        let entry = entry?;
+        let path = entry.path();
+
+        let metadata = fs::metadata(path)?;
+        let mtime = metadata.modified()?;
+        let mtime = mtime.duration_since(UNIX_EPOCH)?.as_secs();
+        let mode = metadata.permissions().mode();
+        let filename = path.strip_prefix(dir)?;
+
+        if path.is_file() {
+            let mut header = tar::Header::new_gnu();
+            header.set_mtime(mtime);
+            header.set_mode(mode);
+            header.set_size(metadata.len());
+            let dir_path = Path::new("./.").join(filename);
+            let mut path_str = filename.to_string_lossy().to_string();
+            header.set_path(&path_str)?;
+            header.set_cksum();
+            let mut fd = File::open(path)?;
+            builder.append(&mut header, fd)?;
+        } else if path.is_dir() {
+            let mut header = tar::Header::new_gnu();
+            header.set_mtime(mtime);
+            header.set_size(0);
+            header.set_mode(0o755);
+            if filename.as_os_str().is_empty() {
+                continue;
+            }
+            let dir_path = Path::new("./.").join(filename);
+            let mut path_str = dir_path.to_string_lossy().to_string();
+            if !path_str.ends_with('/') {
+                path_str += "/";
+            }
+            header.set_path(&filename)?;
+            header.set_entry_type(tar::EntryType::Directory);
+            header.set_cksum();
+            builder.append(&mut header, &mut io::empty())?;
+        }
+    }
+
     builder.finish()?;
 
     Ok(())
