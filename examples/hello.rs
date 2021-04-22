@@ -1,4 +1,10 @@
+use std::thread::sleep;
+use std::time::Duration;
 
 fn main() {
-    println!("Hello, rs-builder");
+    let sec = Duration::from_millis(100);
+    loop {
+        println!("Hello, rs-builder");
+        sleep(sec);
+    }
 }
