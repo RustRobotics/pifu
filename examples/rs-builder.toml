@@ -1,7 +1,7 @@
 
 [metadata]
 name = "rs-builder-hello"
-app_id = "org.biofan.qrbox"
+app_id = "org.biofan.hello"
 author = "Xu Shaohua <shaohua@biofan.org"
 description = "Rust hello app"
 homepage = "https://biofan.org"

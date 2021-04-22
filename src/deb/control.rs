@@ -54,19 +54,6 @@ pub fn generate_control(
 
     writeln!(&mut fd, "Homepage: {}", metadata.homepage)?;
     writeln!(&mut fd, "Description: {}", metadata.description)?;
-    writeln!(
-        &mut fd,
-        " QtWebEngine provides a Web browser engine that makes it easy to embed content"
-    )?;
-    writeln!(
-        &mut fd,
-        " from the World Wide Web into your Qt application."
-    )?;
-    writeln!(&mut fd, " .")?;
-    writeln!(
-        &mut fd,
-        " This package contains the core QtWebEngine library."
-    )?;
 
     Ok(())
 }
