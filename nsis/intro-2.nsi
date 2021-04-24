@@ -3,11 +3,6 @@
 !include "MUI2.nsh"
 !include "x64.nsh"
 !include "Sections.nsh"
-!include "LogicLib.nsh"
-!include "Memento.nsh"
-!include "WordFunc.nsh"
-!include "Util.nsh"
-!include "Integration.nsh"
 
 ;; Defines
 !define VERSION "1.0.0"
@@ -34,13 +29,13 @@ ShowUninstDetails show
 BrandingText "${HELPURL}"
 
 ;Interface Configuration
+!define MUI_ABORTWARNING
 !define MUI_ICON "install.ico"
 !define MUI_UNICON "uninstall.ico"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "branding.bmp"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "branding.bmp"
-!define MUI_UNWELCOMEFINISHPAGE_BITMAP "branding.bmp"
-!define MUI_ABORTWARNING
+!define MUI_HEADERIMAGE_BITMAP ".\nsis3-branding.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP ".\nsis3-branding.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP ".\nsis3-branding.bmp"
 
 ; Pages
 !define MUI_WELCOMEPAGE_TITLE "Welcome to the ${PRODUCT_NAME} Setup Wizard"
@@ -51,6 +46,9 @@ BrandingText "${HELPURL}"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 
+!insertmacro MUI_UNPAGE_COMPONENTS
+!insertmacro MUI_UNPAGE_CONFIRM
+
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_FINISHPAGE_RUN "$INSTDIR\${APPNAME}.exe"
 !define MUI_FINISHPAGE_RUN_CHECKED
@@ -58,16 +56,10 @@ BrandingText "${HELPURL}"
 !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
 !insertmacro MUI_PAGE_FINISH
 
-!insertmacro MUI_UNPAGE_COMPONENTS
-!insertmacro MUI_UNPAGE_CONFIRM
-
-!insertmacro MUI_UNPAGE_INSTFILES
-!insertmacro MUI_UNPAGE_FINISH
-
 ;Installer section
-Section "Install" SecFiles
+Section "Install"
   SetOverwrite on
-  SetOutPath "${INSTDIR}"
+  SetOutPath "$INSTDIR"
   File "${APPNAME}.exe"
 
   ; Create desktop shortcut
