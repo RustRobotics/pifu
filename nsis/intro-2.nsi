@@ -1,14 +1,13 @@
 
 ;; UI
 !include "MUI2.nsh"
-!include "x64.nsh"
-!include "Sections.nsh"
+;!include "x64.nsh"
+;!include "Sections.nsh"
 
 ;; Defines
 !define VERSION "1.0.0"
-!define PRODUCT_NAME "Hello ${VERSION}"
+!define PRODUCT_NAME "Rs Builder demo"
 !define APPNAME "hello"
-!define MUI_FOLDER "CustomWindow"
 !define COMPANYNAME "rs-builder.Ltd"
 !define HELPURL "https://biofan.org"
 !define /date PRODUCT_DATE %Y%m%d
@@ -20,9 +19,12 @@ Icon "install.ico"
 UninstallIcon "uninstall.ico"
 Unicode True
 SetCompressor /SOLID lzma
-OutFile "CustomWindow-${VERSION}-x86_64-${PRODUCT_DATE}.exe"
-RequestExecutionlevel admin
-InstallDir $PROGRAMFILES64\HelloInstaller
+OutFile "${APPNAME}-${VERSION}-x86_64-${PRODUCT_DATE}.exe"
+; Admin | User
+RequestExecutionlevel User
+;InstallDir $PROGRAMFILES64\HelloInstaller
+InstallDir "$LocalAppData\Programs\${PRODUCT_NAME}\fuck"
+InstallDirRegKey HKCU "Software\${PRODUCT_NAME}" ""
 
 ShowInstDetails show
 ShowUninstDetails show
@@ -33,11 +35,13 @@ BrandingText "${HELPURL}"
 !define MUI_ICON "install.ico"
 !define MUI_UNICON "uninstall.ico"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP ".\nsis3-branding.bmp"
-!define MUI_WELCOMEFINISHPAGE_BITMAP ".\nsis3-branding.bmp"
-!define MUI_UNWELCOMEFINISHPAGE_BITMAP ".\nsis3-branding.bmp"
+!define MUI_HEADERIMAGE_BITMAP "header.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "welcome.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "welcome.bmp"
+!define MUI_COMPONENTSPAGE_SMALLDESC
 
 ; Pages
+!insertmacro MUI_LANGUAGE "English"
 !define MUI_WELCOMEPAGE_TITLE "Welcome to the ${PRODUCT_NAME} Setup Wizard"
 !define MUI_WELCOMEPAGE_TEXT "This wizard will guide you through the installation of ${PRODUCT_NAME}"
 !insertmacro MUI_PAGE_WELCOME
@@ -55,6 +59,12 @@ BrandingText "${HELPURL}"
 !define MUI_FINISHPAGE_RUN_TEXT "Run ${PRODUCT_NAME}"
 !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
 !insertmacro MUI_PAGE_FINISH
+
+!insertmacro MUI_UNPAGE_WELCOME
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+!insertmacro MUI_UNPAGE_FINISH
+
 
 ;Installer section
 Section "Install"

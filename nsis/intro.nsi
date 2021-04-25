@@ -1,5 +1,5 @@
 Name "Hello Installer"
-RequestExecutionlevel dmin
+RequestExecutionlevel admin
 Unicode True
 InstallDir $PROGRAMFILES64\HelloInstaller
 Page Directory
