@@ -1,0 +1,34 @@
+
+[metadata]
+name = "pifu-hello"
+app_id = "org.biofan.hello"
+author = "Xu Shaohua <shaohua@biofan.org"
+description = "Rust hello app"
+homepage = "https://biofan.org"
+version = "1.0.0"
+license = "GPL-3.0"
+
+workdir = "target/pifu"
+src_dir = "."
+
+[linux]
+targets = ["deb"]
+arch = ["x86-64"]
+
+files = [
+	{from = "target/debug/examples/hello", to = "usr/bin/pifu-hello"},
+	{from = "examples/hello.png", to = "usr/share/icons/hicolor/128x128/apps/pifu-hello.png"},
+	{from = "examples/hello.desktop", to = "usr/share/applications/pifu-hello.desktop"},
+]
+
+[linux.deb]
+
+[windows]
+files = [
+	{from = "target/debug/examples/hello", to = "pifu-hello"},
+	{from = "examples/hello.png", to = "pifu-hello.png"},
+]
+
+[windows.nsis]
+installer_icon = ""
+uninstaller_icon = ""

@@ -28,14 +28,16 @@ pub fn build() -> Result<(), BuildError> {
         )
         .get_matches();
 
-    let config_file = matches.value_of("config").unwrap_or("rs-builder.toml");
+    let config_file = matches.value_of("config").unwrap_or("pifu.toml");
     log::info!("config file: {:?}", config_file);
 
     let config_content =
         fs::read_to_string(config_file).expect(&format!("Failed to read {}", config_file));
     let conf: Config = toml::from_str(&config_content).expect("Invalid config");
 
-    build_linux(&conf)
+    //build_linux(&conf)?;
+
+    build_windows(&conf)
 }
 
 fn build_linux(conf: &Config) -> Result<(), BuildError> {
