@@ -30,5 +30,7 @@ files = [
 ]
 
 [windows.nsis]
+one_click = false
+per_machine = false
 installer_icon = "examples/install.ico"
 uninstaller_icon = "examples/uninstall.ico"

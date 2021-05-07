@@ -48,6 +48,20 @@ pub fn build_nsis(
         writeln!(nsi_fd, "Unicode False")?;
     }
 
+    writeln!(nsi_fd, "OutFile \"{}\"", nsis_conf.artifact_name)?;
+    writeln!(nsi_fd, "SetCompressor /SOLID {}", nsis_conf.compress_method)?;
+
+    writeln!(nsi_fd, "!include \"MUI2.nsh\"")?;
+    if nsis_conf.warnings_as_errors {
+        writeln!(nsi_fd, "!define MUI_ABORTWARNING")?;
+    }
+    writeln!(nsi_fd, "!define MUI_ICON \"{}\"", nsis_conf.installer_icon)?;
+    writeln!(
+        nsi_fd,
+        "!define MUI_UNICON \"{}\"",
+        nsis_conf.uninstaller_icon
+    )?;
+
     if nsis_conf.one_click {
         writeln!(
             nsi_fd,
@@ -68,22 +82,21 @@ pub fn build_nsis(
             }
             writeln!(nsi_fd, "RequestExecutionlevel Admin")?;
         } else {
+            writeln!(
+                nsi_fd,
+                "InstallDir \"$LocalAppData\\Programs\\{}\"",
+                &conf.metadata.name
+            )?;
             writeln!(nsi_fd, "RequestExecutionlevel User")?;
         }
 
         if nsis_conf.allow_to_change_installation_directory {
-            writeln!(nsi_fd, "Page Directory")?;
+            writeln!(nsi_fd, "!insertmacro MUI_PAGE_DIRECTORY")?;
         }
-        writeln!(nsi_fd, "Page instfiles")?;
+        writeln!(nsi_fd, "!insertmacro MUI_PAGE_INSTFILES")?;
     }
 
-    writeln!(nsi_fd, "Icon \"{}\"", nsis_conf.installer_icon)?;
-    writeln!(nsi_fd, "UninstallIcon \"{}\"", nsis_conf.uninstaller_icon)?;
-    writeln!(nsi_fd, "OutFile \"{}\"", nsis_conf.artifact_name)?;
-
-    writeln!(nsi_fd, "SetCompressor /SOLID {}", nsis_conf.compress_method)?;
-
-    writeln!(nsi_fd, "Section Install")?;
+    writeln!(nsi_fd, "\nSection Install")?;
     writeln!(nsi_fd, "  SetOutPath $INSTDIR")?;
     for file in files {
         writeln!(nsi_fd, "  File {}", &file.from)?;
