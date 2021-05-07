@@ -80,8 +80,8 @@ pub fn build_nsis(
     writeln!(nsi_fd, "Icon \"{}\"", nsis_conf.installer_icon)?;
     writeln!(nsi_fd, "UninstallIcon \"{}\"", nsis_conf.uninstaller_icon)?;
     // TODO(Shaohua): Set out file.
-    // TODO(Shaohua): Add compression option.
-    writeln!(nsi_fd, "SetCompressor /SOLID lzma")?;
+
+    writeln!(nsi_fd, "SetCompressor /SOLID {}", nsis_conf.compress_method)?;
 
     writeln!(nsi_fd, "Section Install")?;
     writeln!(nsi_fd, "  SetOutPath $INSTDIR")?;

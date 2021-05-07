@@ -3,6 +3,7 @@
 // in the LICENSE file.
 
 use serde_derive::Deserialize;
+use std::fmt;
 
 use crate::base::fileset::FileSet;
 
@@ -91,6 +92,31 @@ pub struct NsisConfig {
     /// Boolean - Whether to create start menu shortcut.
     #[serde(default = "default_true")]
     pub create_start_menu_shortcut: bool,
+
+    #[serde(default = "default_compress_method")]
+    pub compress_method: CompressMethod,
+}
+
+#[derive(Debug, Deserialize)]
+pub enum CompressMethod {
+    #[serde(alias = "bzip2")]
+    BZip2,
+
+    #[serde(alias = "lzma")]
+    Lzma,
+
+    #[serde(alias = "zlib")]
+    Zlib,
+}
+
+impl fmt::Display for CompressMethod {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            CompressMethod::BZip2 => write!(f, "bzip2"),
+            CompressMethod::Lzma => write!(f, "lzma"),
+            CompressMethod::Zlib => write!(f, "zlib"),
+        }
+    }
 }
 
 const fn default_false() -> bool {
@@ -99,4 +125,8 @@ const fn default_false() -> bool {
 
 const fn default_true() -> bool {
     true
+}
+
+const fn default_compress_method() -> CompressMethod {
+    CompressMethod::Lzma
 }
