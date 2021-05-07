@@ -30,5 +30,5 @@ files = [
 ]
 
 [windows.nsis]
-installer_icon = ""
-uninstaller_icon = ""
+installer_icon = "examples/install.ico"
+uninstaller_icon = "examples/uninstall.ico"

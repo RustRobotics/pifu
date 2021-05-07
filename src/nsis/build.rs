@@ -40,7 +40,7 @@ pub fn build_nsis(
 
     // Generate nsi script
 
-    writeln!(nsi_fd, "Name: {}", &conf.metadata.name)?;
+    writeln!(nsi_fd, "Name {}", &conf.metadata.name)?;
 
     if nsis_conf.unicode {
         writeln!(nsi_fd, "Unicode True")?;
@@ -77,12 +77,18 @@ pub fn build_nsis(
         writeln!(nsi_fd, "Page instfiles")?;
     }
 
-    writeln!(nsi_fd, "Secion Install")?;
+    writeln!(nsi_fd, "Icon \"{}\"", nsis_conf.installer_icon)?;
+    writeln!(nsi_fd, "UninstallIcon \"{}\"", nsis_conf.uninstaller_icon)?;
+    // TODO(Shaohua): Set out file.
+    // TODO(Shaohua): Add compression option.
+    writeln!(nsi_fd, "SetCompressor /SOLID lzma")?;
+
+    writeln!(nsi_fd, "Section Install")?;
     writeln!(nsi_fd, "  SetOutPath $INSTDIR")?;
     for file in files {
         writeln!(nsi_fd, "  File {}", &file.from)?;
     }
-    writeln!(nsi_fd, "Section End")?;
+    writeln!(nsi_fd, "SectionEnd")?;
 
     Ok(())
 }
