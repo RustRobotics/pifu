@@ -79,7 +79,7 @@ pub fn build_nsis(
 
     writeln!(nsi_fd, "Icon \"{}\"", nsis_conf.installer_icon)?;
     writeln!(nsi_fd, "UninstallIcon \"{}\"", nsis_conf.uninstaller_icon)?;
-    // TODO(Shaohua): Set out file.
+    writeln!(nsi_fd, "OutFile \"{}\"", nsis_conf.artifact_name)?;
 
     writeln!(nsi_fd, "SetCompressor /SOLID {}", nsis_conf.compress_method)?;
 

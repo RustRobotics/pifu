@@ -67,6 +67,14 @@ pub struct NsisConfig {
     /// String - The path to NSIS script to customize installer. Defaults to build/installer.nsi.
     pub script: Option<String>,
 
+    /// String - The artifact file name template. Defaults to ${productName} Setup ${version}.${ext}.
+    #[serde(default = "default_artifact_name")]
+    pub artifact_name: String,
+
+    /// Boolean - one-click installer only. Whether to delete app data on uninstall.
+    #[serde(default = "default_false")]
+    pub delete_app_data_on_uninstall: bool,
+
     /// Boolean - Whether to create Unicode installer.
     #[serde(default = "default_true")]
     pub unicode: bool,
@@ -117,6 +125,10 @@ impl fmt::Display for CompressMethod {
             CompressMethod::Zlib => write!(f, "zlib"),
         }
     }
+}
+
+fn default_artifact_name() -> String {
+    "${productName} Setup ${version}.${ext}".to_string()
 }
 
 const fn default_false() -> bool {
