@@ -5,8 +5,9 @@
 use clap::{App, Arg};
 use std::fs;
 
-use crate::build_linux::build_linux;
-use crate::config::Config;
+use crate::config::{Config, LinuxTarget, WindowsTarget};
+use crate::deb::build_deb;
+use crate::nsis::build_nsis;
 use crate::BuildError;
 
 pub fn build() -> Result<(), BuildError> {
@@ -35,4 +36,36 @@ pub fn build() -> Result<(), BuildError> {
     let conf: Config = toml::from_str(&config_content).expect("Invalid config");
 
     build_linux(&conf)
+}
+
+fn build_linux(conf: &Config) -> Result<(), BuildError> {
+    let linux_conf = if let Some(linux_conf) = conf.linux.as_ref() {
+        linux_conf
+    } else {
+        return Ok(());
+    };
+
+    if linux_conf.targets.contains(&LinuxTarget::Deb) {
+        for arch in &linux_conf.arch {
+            build_deb(conf, linux_conf, *arch)?;
+        }
+    }
+
+    Ok(())
+}
+
+fn build_windows(conf: &Config) -> Result<(), BuildError> {
+    let windows_conf = if let Some(windows_conf) = conf.windows.as_ref() {
+        windows_conf
+    } else {
+        return Ok(());
+    };
+
+    if windows_conf.targets.contains(&WindowsTarget::Nsis) {
+        for arch in &windows_conf.arch {
+            build_nsis(conf, windows_conf, *arch)?;
+        }
+    }
+
+    Ok(())
 }

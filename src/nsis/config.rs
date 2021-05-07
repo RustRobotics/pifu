@@ -66,10 +66,6 @@ pub struct NsisConfig {
     /// String - The path to NSIS script to customize installer. Defaults to build/installer.nsi.
     pub script: Option<String>,
 
-    /// String - The path to EULA license file. Defaults to license.txt or eula.txt (or uppercase variants).
-    /// In addition to txt,rtfandhtmlsupported (don't forget to usetarget=”_blank”` for links).
-    pub license: Option<String>,
-
     /// Boolean - Whether to create Unicode installer.
     #[serde(default = "default_true")]
     pub unicode: bool,
