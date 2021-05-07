@@ -1,6 +1,6 @@
 
 # About
-Cross platform package builder
+Pifu(a.k.a. 蜌蜉), is a cross platform package builder.
 
 ## Related projects
 - https://github.com/burtonageo/cargo-bundle
