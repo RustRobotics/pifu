@@ -1,6 +1,7 @@
 
 [metadata]
 name = "pifu-hello"
+product_name = "Pifu Example"
 app_id = "org.biofan.hello"
 author = "Xu Shaohua <shaohua@biofan.org"
 copyright = "Copyright (c) Xu Shaohua"

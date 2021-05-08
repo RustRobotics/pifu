@@ -124,7 +124,7 @@ pub fn build_nsis(
     writeln!(
         nsi_fd,
         "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"ProductName\" \"{}\"",
-        &conf.metadata.name
+        &conf.metadata.product_name
     )?;
     writeln!(
         nsi_fd,

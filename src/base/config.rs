@@ -33,6 +33,7 @@ pub struct GlobPatterns(Vec<String>);
 #[derive(Debug, Deserialize)]
 pub struct Metadata {
     pub name: String,
+    pub product_name: String,
     pub app_id: String,
     pub description: String,
     pub homepage: String,
