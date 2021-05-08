@@ -109,6 +109,50 @@ pub fn build_nsis(
         writeln!(nsi_fd, "!insertmacro MUI_UNPAGE_INSTFILES")?;
     }
 
+    writeln!(nsi_fd, "")?;
+    writeln!(nsi_fd, "!insertmacro MUI_LANGUAGE \"English\"")?;
+
+    let build_version = format!("{}.{}", &conf.metadata.version, &conf.metadata.build_id);
+
+    // Version information.
+    writeln!(nsi_fd, "VIProductVersion \"{}\"", &build_version)?;
+    writeln!(nsi_fd, "VIFileVersion \"{}\"", &build_version)?;
+
+    writeln!(
+        nsi_fd,
+        "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"ProductName\" \"{}\"",
+        &conf.metadata.name
+    )?;
+    writeln!(
+        nsi_fd,
+        "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"ProductVersion\" \"{}\"",
+        &conf.metadata.version
+    )?;
+    writeln!(
+        nsi_fd,
+        "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"FileDescription\" \"{}\"",
+        &conf.metadata.description
+    )?;
+    if let Some(ref company) = conf.metadata.company {
+        writeln!(
+            nsi_fd,
+            "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"CompanyName\" \"{}\"",
+            company
+        )?;
+    }
+    if let Some(ref copyright) = conf.metadata.copyright {
+        writeln!(
+            nsi_fd,
+            "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"LegalCopyright\" \"{}\"",
+            copyright
+        )?;
+    }
+    writeln!(
+        nsi_fd,
+        "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"FileVersion\" \"{}\"",
+        &build_version
+    )?;
+
     writeln!(nsi_fd, "\nSection Install")?;
     writeln!(nsi_fd, "  SetOutPath \"$INSTDIR\"")?;
     let src = Path::new(".");

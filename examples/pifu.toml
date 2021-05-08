@@ -3,9 +3,11 @@
 name = "pifu-hello"
 app_id = "org.biofan.hello"
 author = "Xu Shaohua <shaohua@biofan.org"
+copyright = "Copyright (c) Xu Shaohua"
 description = "Rust hello app"
 homepage = "https://biofan.org"
 version = "1.0.0"
+build_id = "2"
 license = "GPL-3.0"
 
 workdir = "target/pifu"

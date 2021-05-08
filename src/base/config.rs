@@ -38,7 +38,9 @@ pub struct Metadata {
     pub homepage: String,
     pub author: String,
     pub copyright: Option<String>,
+    pub company: Option<String>,
     pub version: String,
+    pub build_id: String,
     pub license: String,
     pub license_file: Option<String>,
 
