@@ -27,7 +27,7 @@ files = [
 
 [windows]
 files = [
-	{from = "target/debug/examples/hello", to = "pifu-hello.exe"},
+	{from = "target/x86_64-pc-windows-gnu/debug/examples/hello.exe", to="pifu-hello.exe"},
 	{from = "examples/hello.png", to = "pifu-hello.png"},
 ]
 
