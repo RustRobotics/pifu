@@ -4,6 +4,7 @@
 
 use std::io;
 use std::path;
+use std::string;
 use std::time;
 
 #[derive(Debug)]
@@ -21,6 +22,12 @@ pub enum BuildError {
     SystemTimeError,
 
     NsisCompilerError,
+
+    /// Failed to get git commit hash.
+    /// `git` command not found or this is not a git repo.
+    GitHashError,
+
+    Utf8Error,
 }
 
 impl From<time::SystemTimeError> for BuildError {
@@ -50,5 +57,11 @@ impl From<path::StripPrefixError> for BuildError {
 impl From<io::Error> for BuildError {
     fn from(err: io::Error) -> Self {
         BuildError::IoError(err)
+    }
+}
+
+impl From<string::FromUtf8Error> for BuildError {
+    fn from(_err: string::FromUtf8Error) -> Self {
+        BuildError::Utf8Error
     }
 }
