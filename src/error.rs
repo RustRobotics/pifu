@@ -19,6 +19,8 @@ pub enum BuildError {
     StripPrefixError(path::StripPrefixError),
 
     SystemTimeError,
+
+    NsisCompilerError,
 }
 
 impl From<time::SystemTimeError> for BuildError {

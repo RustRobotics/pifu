@@ -5,6 +5,7 @@
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
+use std::process::Command;
 
 use crate::base::Arch;
 use crate::config::{Config, WindowsConfig};
@@ -36,7 +37,7 @@ pub fn build_nsis(
     fs::create_dir_all(&nsis_dir)?;
     let nsi_file = nsis_dir.join("app.nsi");
 
-    let mut nsi_fd = File::create(nsi_file)?;
+    let mut nsi_fd = File::create(&nsi_file)?;
 
     // Generate nsi script
 
@@ -164,9 +165,11 @@ pub fn build_nsis(
     }
     writeln!(nsi_fd, "SectionEnd")?;
 
-    Ok(())
-}
-
-fn compile_nsi_script() -> Result<(), BuildError> {
-    Ok(())
+    // Compile nsis script
+    let status = Command::new("makensis").arg(&nsi_file).status()?;
+    if status.success() {
+        Ok(())
+    } else {
+        Err(BuildError::NsisCompilerError)
+    }
 }
