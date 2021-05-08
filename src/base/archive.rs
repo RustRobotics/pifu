@@ -4,6 +4,7 @@
 
 use std::fs::{self, File};
 use std::io;
+#[cfg(not(target_os = "windows"))]
 use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use std::time::UNIX_EPOCH;
@@ -33,14 +34,19 @@ pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), BuildError> {
         let metadata = fs::metadata(path)?;
         let mtime = metadata.modified()?;
         let mtime = mtime.duration_since(UNIX_EPOCH)?.as_secs();
-        let mode = metadata.permissions().mode();
         let filename = path.strip_prefix(dir)?;
+
+        #[cfg(not(target_os = "windows"))]
+        let mode = metadata.permissions().mode();
 
         if path.is_file() {
             let mut header = tar::Header::new_gnu();
             header.set_mtime(mtime);
-            header.set_mode(mode);
             header.set_size(metadata.len());
+
+            #[cfg(not(target_os = "windows"))]
+            header.set_mode(mode);
+
             let dir_path = Path::new("./.").join(filename);
             let mut path_str = filename.to_string_lossy().to_string();
             header.set_path(&path_str)?;
