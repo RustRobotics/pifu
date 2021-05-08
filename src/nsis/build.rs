@@ -78,6 +78,8 @@ pub fn build_nsis(
             &conf.metadata.name
         )?;
         writeln!(nsi_fd, "RequestExecutionlevel User")?;
+        // Enable silent install.
+        writeln!(nsi_fd, "SilentInstall silent")?;
     } else {
         if nsis_conf.per_machine {
             if arch == Arch::X86_64 {
