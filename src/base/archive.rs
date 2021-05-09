@@ -47,11 +47,10 @@ pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), BuildError> {
             #[cfg(not(target_os = "windows"))]
             header.set_mode(mode);
 
-            let dir_path = Path::new("./.").join(filename);
-            let mut path_str = filename.to_string_lossy().to_string();
+            let path_str = filename.to_string_lossy().to_string();
             header.set_path(&path_str)?;
             header.set_cksum();
-            let mut fd = File::open(path)?;
+            let fd = File::open(path)?;
             builder.append(&mut header, fd)?;
         } else if path.is_dir() {
             let mut header = tar::Header::new_gnu();

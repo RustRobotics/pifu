@@ -23,7 +23,7 @@ pub fn create_gz(in_path: &Path, out_path: &Path) -> Result<(), BuildError> {
 
 pub fn create_xz2(in_path: &Path, out_path: &Path) -> Result<(), BuildError> {
     let xz_level = 6;
-    let mut stream = MtStreamBuilder::new()
+    let stream = MtStreamBuilder::new()
         .preset(xz_level)
         .threads(num_cpus::get() as u32)
         .encoder()?;
