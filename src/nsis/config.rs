@@ -61,13 +61,13 @@ pub struct NsisConfig {
     /// Default is `${product_name} ${version}`.
     pub uninstall_display_name: Option<String>,
 
-    /// String - The path to NSIS include script to customize installer. Defaults to build/installer.nsh.
+    /// String - The path to NSIS include script to customize installer.
     pub include: Option<String>,
 
-    /// String - The path to NSIS script to customize installer. Defaults to build/installer.nsi.
+    /// String - The path to NSIS script to customize installer. Not recommanded.
     pub script: Option<String>,
 
-    /// String - The artifact file name template. Defaults to ${productName} Setup ${version}.${ext}.
+    /// String - The artifact file name template. Defaults to ${product_name} Setup ${version}.${ext}.
     #[serde(default = "default_artifact_name")]
     pub artifact_name: String,
 

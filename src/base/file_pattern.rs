@@ -36,6 +36,7 @@ fn get_timestamp() -> String {
     now.timestamp().to_string()
 }
 
+// TODO(Shaohua): Replace all instance
 pub fn expand_file_pattern(s: &str) -> Result<String, BuildError> {
     let mut content = s.to_string();
     if let Some(git_offset) = content.find("${git}") {

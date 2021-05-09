@@ -21,6 +21,8 @@ pub enum BuildError {
 
     SystemTimeError,
 
+    InvalidConfError,
+
     NsisCompilerError,
 
     /// Failed to get git commit hash.
