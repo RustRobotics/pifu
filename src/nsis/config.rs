@@ -58,7 +58,7 @@ pub struct NsisConfig {
     pub uninstaller_sidebar: Option<String>,
 
     /// String - The uninstaller display name in the control panel.
-    /// Default is `${productName} ${version}`.
+    /// Default is `${product_name} ${version}`.
     pub uninstall_display_name: Option<String>,
 
     /// String - The path to NSIS include script to customize installer. Defaults to build/installer.nsh.
@@ -128,7 +128,7 @@ impl fmt::Display for CompressMethod {
 }
 
 fn default_artifact_name() -> String {
-    "${productName} Setup ${version}.${ext}".to_string()
+    "${product_name} Setup ${version}.${ext}".to_string()
 }
 
 const fn default_false() -> bool {

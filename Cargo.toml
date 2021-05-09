@@ -8,6 +8,7 @@ license = "GPL-3.0"
 
 [dependencies]
 ar = "0.8.0"
+chrono = "0.4.19"
 clap = "2.33.3"
 env_logger = "0.8.3"
 flate2 = "1.0.20"

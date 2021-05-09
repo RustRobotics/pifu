@@ -15,7 +15,7 @@ workdir = "target/pifu"
 src_dir = "."
 
 [linux]
-targets = ["deb"]
+targets = []
 arch = ["x86-64"]
 
 files = [
@@ -27,7 +27,7 @@ files = [
 [linux.deb]
 
 [windows]
-targets = []
+targets = ["nsis"]
 
 files = [
 	{from = "target/x86_64-pc-windows-gnu/debug/examples/hello.exe", to="pifu-hello.exe"},
