@@ -15,7 +15,7 @@ pub fn get_git_hash() -> Result<String, BuildError> {
         .arg("HEAD")
         .output()?;
     let hash = String::from_utf8(output.stdout)?;
-    Ok(hash)
+    Ok(hash.trim().to_string())
 }
 
 /// Get date of today, like `20210509`.
@@ -36,8 +36,27 @@ fn get_timestamp() -> String {
     now.timestamp().to_string()
 }
 
-pub fn expand_file_pattern(s: &str) -> String {
-    String::from(s)
+pub fn expand_file_pattern(s: &str) -> Result<String, BuildError> {
+    let mut content = s.to_string();
+    if let Some(git_offset) = content.find("${git}") {
+        let hash = get_git_hash()?;
+        content.replace_range(git_offset..git_offset + 6, &hash);
+    }
+
+    if let Some(date_offset) = content.find("${date}") {
+        let t = get_date();
+        content.replace_range(date_offset..date_offset + 7, &t);
+    }
+    if let Some(date_time_offset) = content.find("${date-time}") {
+        let t = get_date_time();
+        content.replace_range(date_time_offset..date_time_offset + 12, &t);
+    }
+    if let Some(timestamp_offset) = content.find("${timestamp}") {
+        let t = get_timestamp();
+        content.replace_range(timestamp_offset..timestamp_offset + 12, &t);
+    }
+
+    Ok(content)
 }
 
 #[cfg(test)]
@@ -48,7 +67,7 @@ mod tests {
     fn test_git_hash() {
         let hash = get_git_hash();
         assert!(hash.is_ok());
-        assert_eq!(hash.unwrap().len(), 8);
+        assert_eq!(hash.unwrap().len(), 7);
     }
 
     #[test]
@@ -67,5 +86,28 @@ mod tests {
     fn test_get_timestamp() {
         let t = get_timestamp();
         assert_eq!(t.len(), 10);
+    }
+
+    #[test]
+    fn test_expand_file_pattern() {
+        let s = "app-${git}.deb";
+        let ret = expand_file_pattern(s);
+        assert!(ret.is_ok());
+        assert_eq!(ret.unwrap().len(), 15);
+
+        let s = "app-${date}.deb";
+        let ret = expand_file_pattern(s);
+        assert!(ret.is_ok());
+        assert_eq!(ret.unwrap().len(), 16);
+
+        let s = "app-${date-time}.deb";
+        let ret = expand_file_pattern(s);
+        assert!(ret.is_ok());
+        assert_eq!(ret.unwrap().len(), 22);
+
+        let s = "app-${timestamp}.deb";
+        let ret = expand_file_pattern(s);
+        assert!(ret.is_ok());
+        assert_eq!(ret.unwrap().len(), 18);
     }
 }
