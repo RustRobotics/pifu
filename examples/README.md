@@ -3,9 +3,9 @@
 [cross](https://github.com/rust-embedded/cross) is a great tool to do this job.
 
 On Debian based system, follow these steps:
-1. Install docker: `sudo apt install docker`
-2. Install cross: `cargo install cross`
-3. Add current user to docker group: `sudo adduser ${USER} docker; newgrp docker`
+1. Install docker and podman: `sudo apt install docker podman`
+2. Add current user to docker group: `sudo addgroup ${USER} docker; newgrp docker`
+3. Install cross: `cargo install cross`
 
 Now, compile examples with cross:
 ```bash
