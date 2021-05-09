@@ -5,7 +5,7 @@
 use clap::{App, Arg};
 use std::fs;
 
-use crate::config::{Config, LinuxTarget, WindowsTarget};
+use crate::config::{Config, PlatformTarget};
 use crate::deb::build_deb;
 use crate::nsis::build_nsis;
 use crate::BuildError;
@@ -35,7 +35,7 @@ pub fn build() -> Result<(), BuildError> {
         fs::read_to_string(config_file).expect(&format!("Failed to read {}", config_file));
     let conf: Config = toml::from_str(&config_content).expect("Invalid config");
 
-    //build_linux(&conf)?;
+    build_linux(&conf)?;
 
     build_windows(&conf)
 }
@@ -47,7 +47,7 @@ fn build_linux(conf: &Config) -> Result<(), BuildError> {
         return Ok(());
     };
 
-    if linux_conf.targets.contains(&LinuxTarget::Deb) {
+    if linux_conf.targets.contains(&PlatformTarget::Deb) {
         for arch in &linux_conf.arch {
             build_deb(conf, linux_conf, *arch)?;
         }
@@ -63,7 +63,7 @@ fn build_windows(conf: &Config) -> Result<(), BuildError> {
         return Ok(());
     };
 
-    if windows_conf.targets.contains(&WindowsTarget::Nsis) {
+    if windows_conf.targets.contains(&PlatformTarget::Nsis) {
         for arch in &windows_conf.arch {
             build_nsis(conf, windows_conf, *arch)?;
         }

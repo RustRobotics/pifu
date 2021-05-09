@@ -24,7 +24,7 @@ pub struct LinuxConfig {
     pub arch: Vec<Arch>,
 
     #[serde(default = "default_linux_targets")]
-    pub targets: Vec<LinuxTarget>,
+    pub targets: Vec<PlatformTarget>,
 
     pub files: Option<Vec<FileSet>>,
 
@@ -35,18 +35,19 @@ fn default_arch() -> Vec<Arch> {
     vec![Arch::X86_64]
 }
 
-fn default_linux_targets() -> Vec<LinuxTarget> {
-    vec![LinuxTarget::Deb]
+fn default_linux_targets() -> Vec<PlatformTarget> {
+    vec![PlatformTarget::Deb]
 }
 
 #[derive(Debug, Deserialize, PartialEq)]
-pub enum LinuxTarget {
+pub enum PlatformTarget {
     #[serde(alias = "deb")]
     Deb,
 
     #[serde(alias = "rpm")]
     Rpm,
 
+    #[serde(alias = "app_image")]
     AppImage,
 
     #[serde(alias = "tar")]
@@ -54,6 +55,23 @@ pub enum LinuxTarget {
 
     #[serde(alias = "tgz")]
     TarGz,
+
+    #[serde(alias = "nsis")]
+    Nsis,
+}
+
+impl PlatformTarget {
+    /// Returns extension name of generated artifcate files.
+    pub fn extension(&self) -> &'static str {
+        match self {
+            PlatformTarget::Deb => "deb",
+            PlatformTarget::Rpm => "rpm",
+            PlatformTarget::AppImage => "app_image",
+            PlatformTarget::Tar => "tar",
+            PlatformTarget::TarGz => "tgz",
+            PlatformTarget::Nsis => "exe",
+        }
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -62,19 +80,13 @@ pub struct WindowsConfig {
     pub arch: Vec<Arch>,
 
     #[serde(default = "default_windows_targets")]
-    pub targets: Vec<WindowsTarget>,
+    pub targets: Vec<PlatformTarget>,
 
     pub files: Option<Vec<FileSet>>,
 
     pub nsis: Option<NsisConfig>,
 }
 
-fn default_windows_targets() -> Vec<WindowsTarget> {
-    vec![WindowsTarget::Nsis]
-}
-
-#[derive(Debug, Deserialize, PartialEq)]
-pub enum WindowsTarget {
-    #[serde(alias = "nsis")]
-    Nsis,
+fn default_windows_targets() -> Vec<PlatformTarget> {
+    vec![PlatformTarget::Nsis]
 }
