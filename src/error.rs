@@ -29,9 +29,19 @@ pub enum BuildError {
     /// `git` command not found or this is not a git repo.
     GitHashError,
 
+    EnvironmentNotSetError,
+
     Utf8Error,
 
     JsonError(serde_json::Error),
+
+    RegexError(regex::Error),
+}
+
+impl From<regex::Error> for BuildError {
+    fn from(err: regex::Error) -> Self {
+        BuildError::RegexError(err)
+    }
 }
 
 impl From<serde_json::Error> for BuildError {

@@ -36,7 +36,6 @@ pub fn build() -> Result<(), BuildError> {
     let conf: Config = toml::from_str(&config_content).expect("Invalid config");
 
     build_linux(&conf)?;
-
     build_windows(&conf)
 }
 

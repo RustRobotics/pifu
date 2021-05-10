@@ -28,7 +28,7 @@ files = [
 [linux.deb]
 
 [windows]
-targets = ["nsis"]
+targets = []
 
 files = [
 	{from = "target/x86_64-pc-windows-gnu/debug/examples/hello.exe", to="pifu-hello.exe"},

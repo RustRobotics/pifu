@@ -3,6 +3,8 @@
 // in the LICENSE file.
 
 use chrono::prelude::*;
+use regex::Regex;
+use std::env;
 use std::process::Command;
 
 use crate::BuildError;
@@ -36,27 +38,44 @@ fn get_timestamp() -> String {
     now.timestamp().to_string()
 }
 
+fn get_env(name: &str) -> Result<String, BuildError> {
+    for (key, value) in env::vars() {
+        if name == key {
+            return Ok(value);
+        }
+    }
+    Err(BuildError::EnvironmentNotSetError)
+}
+
 pub fn expand_file_macro(s: &str) -> Result<String, BuildError> {
     let mut content = s.to_string();
     if content.find("${git}").is_some() {
         let hash = get_git_hash()?;
-        content.replace("${git}", &hash);
+        content = content.replace("${git}", &hash);
     }
 
     if content.find("${date}").is_some() {
         let t = get_date();
-        content.replace("${date}", &t);
+        content = content.replace("${date}", &t);
     }
     if content.find("${date-time}").is_some() {
         let t = get_date_time();
-        content.replace("${date-time}", &t);
+        content = content.replace("${date-time}", &t);
     }
     if content.find("${timestamp}").is_some() {
         let t = get_timestamp();
-        content.replace("${timestamp}", &t);
+        content = content.replace("${timestamp}", &t);
+    }
+    let env_pattern = Regex::new(r"\$\{env\.(\w+)\}")?;
+    let mut new_content = content.clone();
+    if env_pattern.is_match(&content) {
+        for cap in env_pattern.captures(&content) {
+            let env_value = get_env(&cap[1])?;
+            new_content = new_content.replace(&cap[0], &env_value);
+        }
     }
 
-    Ok(content)
+    Ok(new_content)
 }
 
 #[cfg(test)]
@@ -89,6 +108,12 @@ mod tests {
     }
 
     #[test]
+    fn test_get_env() {
+        let s = get_env("USER");
+        assert!(s.is_ok());
+    }
+
+    #[test]
     fn test_expand_file_macro() {
         let s = "app-${git}.deb";
         let ret = expand_file_macro(s);
@@ -109,5 +134,11 @@ mod tests {
         let ret = expand_file_macro(s);
         assert!(ret.is_ok());
         assert_eq!(ret.unwrap().len(), 18);
+
+        let s = "app-${env.USER}.deb";
+        let ret = expand_file_macro(s);
+        println!("ret: {:?}", ret);
+        assert!(ret.is_ok());
+        assert!(ret.unwrap().len() > 9);
     }
 }

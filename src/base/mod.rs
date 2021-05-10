@@ -10,3 +10,4 @@ pub mod fileset;
 pub mod utils;
 
 pub use config::{Arch, GlobPatterns, Metadata};
+pub use file_pattern::expand_file_macro;
