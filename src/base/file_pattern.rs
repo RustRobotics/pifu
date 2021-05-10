@@ -36,25 +36,24 @@ fn get_timestamp() -> String {
     now.timestamp().to_string()
 }
 
-// TODO(Shaohua): Replace all instance
 pub fn expand_file_pattern(s: &str) -> Result<String, BuildError> {
     let mut content = s.to_string();
-    if let Some(git_offset) = content.find("${git}") {
+    if content.find("${git}").is_some() {
         let hash = get_git_hash()?;
-        content.replace_range(git_offset..git_offset + 6, &hash);
+        content.replace("${git}", &hash);
     }
 
-    if let Some(date_offset) = content.find("${date}") {
+    if content.find("${date}").is_some() {
         let t = get_date();
-        content.replace_range(date_offset..date_offset + 7, &t);
+        content.replace("${date}", &t);
     }
-    if let Some(date_time_offset) = content.find("${date-time}") {
+    if content.find("${date-time}").is_some() {
         let t = get_date_time();
-        content.replace_range(date_time_offset..date_time_offset + 12, &t);
+        content.replace("${date-time}", &t);
     }
-    if let Some(timestamp_offset) = content.find("${timestamp}") {
+    if content.find("${timestamp}").is_some() {
         let t = get_timestamp();
-        content.replace_range(timestamp_offset..timestamp_offset + 12, &t);
+        content.replace("${timestamp}", &t);
     }
 
     Ok(content)
