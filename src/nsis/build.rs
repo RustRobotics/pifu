@@ -8,7 +8,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use super::config::NsisConfig;
-use crate::base::Arch;
+use crate::base::{expand_file_macro, Arch, PlatformTarget};
 use crate::config::{Config, WindowsConfig};
 use crate::BuildError;
 
@@ -68,7 +68,9 @@ fn generate_nsis_file(
         writeln!(nsis_fd, "Unicode False")?;
     }
 
-    writeln!(nsis_fd, "OutFile \"{}\"", nsis_conf.artifact_name)?;
+    let artifact_name =
+        expand_file_macro(&nsis_conf.artifact_name, conf, arch, PlatformTarget::Nsis)?;
+    writeln!(nsis_fd, "OutFile \"{}\"", artifact_name)?;
     writeln!(
         nsis_fd,
         "SetCompressor /SOLID {}\n",

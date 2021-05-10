@@ -1,6 +1,6 @@
 use regex::Regex;
 
-use pifu::base::expand_file_macro;
+use pifu::base::expand_file_macro_simple;
 
 fn main() {
     let s = "app-${env.HOME}.deb";
@@ -10,6 +10,6 @@ fn main() {
         println!("cap: {:?}", &cap);
     }
 
-    let ret = expand_file_macro(s);
+    let ret = expand_file_macro_simple(s);
     println!("ret: {:?}", ret);
 }

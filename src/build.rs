@@ -5,7 +5,7 @@
 use clap::{App, Arg};
 use std::fs;
 
-use crate::base::PlatformTarget;
+use crate::base::{expand_file_macro_simple, PlatformTarget};
 use crate::config::Config;
 use crate::deb::build_deb;
 use crate::nsis::build_nsis;
@@ -34,8 +34,9 @@ pub fn build() -> Result<(), BuildError> {
 
     let config_content =
         fs::read_to_string(config_file).expect(&format!("Failed to read {}", config_file));
-    let conf: Config = toml::from_str(&config_content).expect("Invalid config");
+    let mut conf: Config = toml::from_str(&config_content).expect("Invalid config");
 
+    conf.metadata.build_id = expand_file_macro_simple(&conf.metadata.build_id)?;
     build_linux(&conf)?;
     build_windows(&conf)
 }
