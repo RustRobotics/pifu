@@ -275,8 +275,8 @@ fn generate_nsis_file(
     )?;
     writeln!(
         nsis_fd,
-        r#"WriteRegStr {} "{}" "DisplayIcon" "$INSTDIR\Uninstall.exe,0""#,
-        reg_section, reg_uninst_key
+        r#"WriteRegStr {} "{}" "DisplayIcon" "$INSTDIR\{},0""#,
+        reg_section, reg_uninst_key, &windows_conf.exe_file
     )?;
     writeln!(
         nsis_fd,
