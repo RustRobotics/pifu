@@ -309,7 +309,6 @@ fn generate_nsis_file(
             reg_section, &conf.metadata.product_name, &windows_conf.exe_file
         )?;
     }
-
     if nsis_conf.create_start_menu_shortcut {
         writeln!(
             nsis_fd,
@@ -317,7 +316,13 @@ fn generate_nsis_file(
             &conf.metadata.product_name, &windows_conf.exe_file
         )?;
     }
-
+    if nsis_conf.create_desktop_shortcut {
+        writeln!(
+            nsis_fd,
+            r#"  CreateShortcut "$DESKTOP\{}.lnk" "$INSTDIR\{}""#,
+            &conf.metadata.product_name, &windows_conf.exe_file
+        )?;
+    }
     writeln!(nsis_fd, "SectionEnd")?;
 
     // Uninstall section
@@ -340,6 +345,13 @@ fn generate_nsis_file(
         writeln!(
             nsis_fd,
             r#"  Delete "$SMPROGRAMS\{}.lnk""#,
+            &conf.metadata.product_name
+        )?;
+    }
+    if nsis_conf.create_desktop_shortcut {
+        writeln!(
+            nsis_fd,
+            r#"  Delete "$DESKTOP\{}.lnk""#,
             &conf.metadata.product_name
         )?;
     }
