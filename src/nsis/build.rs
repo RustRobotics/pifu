@@ -78,6 +78,8 @@ fn generate_nsis_file(
     if nsis_conf.warnings_as_errors {
         writeln!(nsis_fd, "!define MUI_ABORTWARNING")?;
     }
+
+    // Icons
     writeln!(
         nsis_fd,
         "!define MUI_ICON {:?}",
@@ -88,6 +90,15 @@ fn generate_nsis_file(
         "!define MUI_UNICON {:?}",
         fs::canonicalize(&nsis_conf.uninstaller_icon)?
     )?;
+
+    if let Some(header_icon) = nsis_conf.installer_header_icon.as_ref() {
+        writeln!(nsis_fd, "!define MUI_HEADERIMAGE")?;
+        writeln!(
+            nsis_fd,
+            "!define MUI_HEADERIMAGE_BITMAP {:?}",
+            fs::canonicalize(header_icon)?
+        )?;
+    }
     if let Some(installer_sidebar) = nsis_conf.installer_sidebar.as_ref() {
         writeln!(
             nsis_fd,

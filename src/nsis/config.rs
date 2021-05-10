@@ -39,6 +39,7 @@ pub struct NsisConfig {
     pub installer_header: Option<String>,
 
     /// String - one-click installer only. The path to header icon (above the progress bar),
+    /// Image format is bmp, and image size is 150x57 pixels.
     pub installer_header_icon: Option<String>,
 
     /// String - assisted installer only. MUI_WELCOMEFINISHPAGE_BITMAP.
