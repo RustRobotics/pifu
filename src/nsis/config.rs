@@ -29,32 +29,24 @@ pub struct NsisConfig {
     #[serde(default = "default_true")]
     pub allow_to_change_installation_directory: bool,
 
-    /// String - The path to installer icon, relative to the build resources or to the project directory.
-    /// Defaults to build/installerIcon.ico or application icon.
+    /// String - The path to installer icon.
     pub installer_icon: String,
 
-    /// String - The path to uninstaller icon, relative to the build resources or to the project directory.
-    /// Defaults to build/uninstallerIcon.ico or application icon.
+    /// String - The path to uninstaller icon.
     pub uninstaller_icon: String,
 
-    /// String - assisted installer only. MUI_HEADERIMAGE, relative to the build resources or to the project directory.
+    /// String - assisted installer only. MUI_HEADERIMAGE
     pub installer_header: Option<String>,
 
     /// String - one-click installer only. The path to header icon (above the progress bar),
-    /// relative to the build resources or to the project directory.
-    /// Defaults to build/installerHeaderIcon.ico or application icon.
     pub installer_header_icon: Option<String>,
 
-    /// String - assisted installer only. MUI_WELCOMEFINISHPAGE_BITMAP,
-    /// relative to the build resources or to the project directory.
-    /// Defaults to build/installerSidebar.bmp or ${NSISDIR}\\Contrib\\Graphics\\Wizard\\nsis3-metro.bmp.
-    /// Image size 164 × 314 pixels.
+    /// String - assisted installer only. MUI_WELCOMEFINISHPAGE_BITMAP.
+    /// Image format is bmp, and image size 164 × 314 pixels.
     pub installer_sidebar: Option<String>,
 
-    /// String - assisted installer only. MUI_UNWELCOMEFINISHPAGE_BITMAP,
-    /// relative to the build resources or to the project directory.
-    /// Defaults to installerSidebar option or build/uninstallerSidebar.bmp or build/installerSidebar.bmp
-    /// or ${NSISDIR}\\Contrib\\Graphics\\Wizard\\nsis3-metro.bmp.
+    /// String - assisted installer only. MUI_UNWELCOMEFINISHPAGE_BITMAP.
+    /// Image format is bmp, and image size 164 × 314 pixels.
     pub uninstaller_sidebar: Option<String>,
 
     /// String - The uninstaller display name in the control panel.

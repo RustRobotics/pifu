@@ -88,6 +88,13 @@ fn generate_nsis_file(
         "!define MUI_UNICON {:?}",
         fs::canonicalize(&nsis_conf.uninstaller_icon)?
     )?;
+    if let Some(installer_sidebar) = nsis_conf.installer_sidebar.as_ref() {
+        writeln!(
+            nsis_fd,
+            "!define MUI_WELCOMEFINISHPAGE_BITMAP {:?}",
+            fs::canonicalize(installer_sidebar)?
+        )?;
+    }
 
     if nsis_conf.one_click {
         writeln!(
@@ -121,9 +128,14 @@ fn generate_nsis_file(
 
         writeln!(nsis_fd, "")?;
 
+        if nsis_conf.installer_sidebar.is_some() {
+            writeln!(nsis_fd, "!insertmacro MUI_PAGE_WELCOME")?;
+        }
+
         if nsis_conf.allow_to_change_installation_directory {
             writeln!(nsis_fd, "!insertmacro MUI_PAGE_DIRECTORY")?;
         }
+
         writeln!(nsis_fd, "!insertmacro MUI_PAGE_INSTFILES")?;
         writeln!(nsis_fd, "!insertmacro MUI_UNPAGE_CONFIRM")?;
         writeln!(nsis_fd, "!insertmacro MUI_UNPAGE_INSTFILES")?;
