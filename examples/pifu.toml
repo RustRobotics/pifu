@@ -36,6 +36,7 @@ files = [
 
 [windows.nsis]
 #script = "target/pifu/nsis/app.nsi"
+include = "examples/empty-script.nsi"
 one_click = false
 per_machine = false
 installer_icon = "examples/install.ico"
