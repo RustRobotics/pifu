@@ -5,7 +5,8 @@
 use clap::{App, Arg};
 use std::fs;
 
-use crate::config::{Config, PlatformTarget};
+use crate::base::PlatformTarget;
+use crate::config::Config;
 use crate::deb::build_deb;
 use crate::nsis::build_nsis;
 use crate::BuildError;

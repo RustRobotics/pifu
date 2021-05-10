@@ -5,7 +5,7 @@
 use serde_derive::{Deserialize, Serialize};
 
 use crate::base::fileset::FileSet;
-use crate::base::{Arch, Metadata};
+use crate::base::{Arch, Metadata, PlatformTarget};
 use crate::deb::DebConfig;
 use crate::nsis::NsisConfig;
 
@@ -37,41 +37,6 @@ fn default_arch() -> Vec<Arch> {
 
 fn default_linux_targets() -> Vec<PlatformTarget> {
     vec![PlatformTarget::Deb]
-}
-
-#[derive(Debug, Deserialize, PartialEq, Serialize)]
-pub enum PlatformTarget {
-    #[serde(alias = "deb")]
-    Deb,
-
-    #[serde(alias = "rpm")]
-    Rpm,
-
-    #[serde(alias = "app_image")]
-    AppImage,
-
-    #[serde(alias = "tar")]
-    Tar,
-
-    #[serde(alias = "tgz")]
-    TarGz,
-
-    #[serde(alias = "nsis")]
-    Nsis,
-}
-
-impl PlatformTarget {
-    /// Returns extension name of generated artifcate files.
-    pub fn extension(&self) -> &'static str {
-        match self {
-            PlatformTarget::Deb => "deb",
-            PlatformTarget::Rpm => "rpm",
-            PlatformTarget::AppImage => "app_image",
-            PlatformTarget::Tar => "tar",
-            PlatformTarget::TarGz => "tgz",
-            PlatformTarget::Nsis => "exe",
-        }
-    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]

@@ -7,6 +7,8 @@ use regex::Regex;
 use std::env;
 use std::process::Command;
 
+use super::config::{Arch, PlatformTarget};
+use crate::config::Config;
 use crate::BuildError;
 
 /// Get git commit hash of HEAD ref.
@@ -47,7 +49,7 @@ fn get_env(name: &str) -> Result<String, BuildError> {
     Err(BuildError::EnvironmentNotSetError)
 }
 
-pub fn expand_file_macro(s: &str) -> Result<String, BuildError> {
+pub fn expand_file_macro_simple(s: &str) -> Result<String, BuildError> {
     let mut content = s.to_string();
     if content.find("${git}").is_some() {
         let hash = get_git_hash()?;
@@ -73,6 +75,50 @@ pub fn expand_file_macro(s: &str) -> Result<String, BuildError> {
             let env_value = get_env(&cap[1])?;
             new_content = new_content.replace(&cap[0], &env_value);
         }
+    }
+
+    Ok(new_content)
+}
+
+pub fn expand_file_macro(
+    s: &str,
+    conf: &Config,
+    arch: Arch,
+    target: PlatformTarget,
+) -> Result<String, BuildError> {
+    let mut content = expand_file_macro_simple(s)?;
+
+    if content.find("${ext}").is_some() {
+        let ext_name = target.extension();
+        content = content.replace("${ext}", ext_name);
+    }
+    if content.find("${arch}").is_some() {
+        let arch_name = arch.to_string();
+        content = content.replace("${arch}", &arch_name);
+    }
+    // TODO(Shaohua): Support ${os} macro
+
+    let key_pattern = Regex::new(r"\$\{(\w+)\}")?;
+    let mut new_content = content.clone();
+    if key_pattern.is_match(&content) {
+        // Expand metadata
+        match serde_json::to_value(&conf.metadata)? {
+            serde_json::Value::Object(metadata) => {
+                for cap in key_pattern.captures(&content) {
+                    if metadata.get(&cap[1]).is_some() {
+                        match metadata[&cap[1]] {
+                            serde_json::Value::String(ref new_value) => {
+                                new_content = new_content.replace(&cap[0], new_value);
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+            }
+            _ => {}
+        }
+
+        // TODO(Shaohua): Expand target specific properties.
     }
 
     Ok(new_content)
@@ -114,29 +160,29 @@ mod tests {
     }
 
     #[test]
-    fn test_expand_file_macro() {
+    fn test_expand_file_macro_simple() {
         let s = "app-${git}.deb";
-        let ret = expand_file_macro(s);
+        let ret = expand_file_macro_simple(s);
         assert!(ret.is_ok());
         assert_eq!(ret.unwrap().len(), 15);
 
         let s = "app-${date}.deb";
-        let ret = expand_file_macro(s);
+        let ret = expand_file_macro_simple(s);
         assert!(ret.is_ok());
         assert_eq!(ret.unwrap().len(), 16);
 
         let s = "app-${date-time}.deb";
-        let ret = expand_file_macro(s);
+        let ret = expand_file_macro_simple(s);
         assert!(ret.is_ok());
         assert_eq!(ret.unwrap().len(), 22);
 
         let s = "app-${timestamp}.deb";
-        let ret = expand_file_macro(s);
+        let ret = expand_file_macro_simple(s);
         assert!(ret.is_ok());
         assert_eq!(ret.unwrap().len(), 18);
 
         let s = "app-${env.USER}.deb";
-        let ret = expand_file_macro(s);
+        let ret = expand_file_macro_simple(s);
         println!("ret: {:?}", ret);
         assert!(ret.is_ok());
         assert!(ret.unwrap().len() > 9);

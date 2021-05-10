@@ -9,5 +9,5 @@ mod file_pattern;
 pub mod fileset;
 pub mod utils;
 
-pub use config::{Arch, GlobPatterns, Metadata};
-pub use file_pattern::expand_file_macro;
+pub use config::{Arch, GlobPatterns, Metadata, PlatformTarget};
+pub use file_pattern::{expand_file_macro, expand_file_macro_simple};

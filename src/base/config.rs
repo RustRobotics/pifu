@@ -48,3 +48,38 @@ pub struct Metadata {
     pub workdir: String,
     pub src_dir: String,
 }
+
+#[derive(Debug, Deserialize, PartialEq, Serialize)]
+pub enum PlatformTarget {
+    #[serde(alias = "deb")]
+    Deb,
+
+    #[serde(alias = "rpm")]
+    Rpm,
+
+    #[serde(alias = "app_image")]
+    AppImage,
+
+    #[serde(alias = "tar")]
+    Tar,
+
+    #[serde(alias = "tgz")]
+    TarGz,
+
+    #[serde(alias = "nsis")]
+    Nsis,
+}
+
+impl PlatformTarget {
+    /// Returns extension name of generated artifcate files.
+    pub fn extension(&self) -> &'static str {
+        match self {
+            PlatformTarget::Deb => "deb",
+            PlatformTarget::Rpm => "rpm",
+            PlatformTarget::AppImage => "app_image",
+            PlatformTarget::Tar => "tar",
+            PlatformTarget::TarGz => "tgz",
+            PlatformTarget::Nsis => "exe",
+        }
+    }
+}
