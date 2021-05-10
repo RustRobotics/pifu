@@ -36,7 +36,7 @@ fn get_timestamp() -> String {
     now.timestamp().to_string()
 }
 
-pub fn expand_file_pattern(s: &str) -> Result<String, BuildError> {
+pub fn expand_file_macro(s: &str) -> Result<String, BuildError> {
     let mut content = s.to_string();
     if content.find("${git}").is_some() {
         let hash = get_git_hash()?;
@@ -89,24 +89,24 @@ mod tests {
     }
 
     #[test]
-    fn test_expand_file_pattern() {
+    fn test_expand_file_macro() {
         let s = "app-${git}.deb";
-        let ret = expand_file_pattern(s);
+        let ret = expand_file_macro(s);
         assert!(ret.is_ok());
         assert_eq!(ret.unwrap().len(), 15);
 
         let s = "app-${date}.deb";
-        let ret = expand_file_pattern(s);
+        let ret = expand_file_macro(s);
         assert!(ret.is_ok());
         assert_eq!(ret.unwrap().len(), 16);
 
         let s = "app-${date-time}.deb";
-        let ret = expand_file_pattern(s);
+        let ret = expand_file_macro(s);
         assert!(ret.is_ok());
         assert_eq!(ret.unwrap().len(), 22);
 
         let s = "app-${timestamp}.deb";
-        let ret = expand_file_pattern(s);
+        let ret = expand_file_macro(s);
         assert!(ret.is_ok());
         assert_eq!(ret.unwrap().len(), 18);
     }

@@ -2,10 +2,10 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use serde_derive::Deserialize;
+use serde_derive::{Deserialize, Serialize};
 use std::fmt;
 
-#[derive(Debug, Copy, Clone, Deserialize, PartialEq)]
+#[derive(Debug, Copy, Clone, Deserialize, PartialEq, Serialize)]
 pub enum Arch {
     #[serde(alias = "x86")]
     X86,
@@ -27,10 +27,10 @@ impl fmt::Display for Arch {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct GlobPatterns(Vec<String>);
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Metadata {
     pub name: String,
     pub product_name: String,

@@ -2,14 +2,14 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use serde_derive::Deserialize;
+use serde_derive::{Deserialize, Serialize};
 
 use crate::base::fileset::FileSet;
 use crate::base::{Arch, Metadata};
 use crate::deb::DebConfig;
 use crate::nsis::NsisConfig;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Config {
     pub metadata: Metadata,
 
@@ -18,7 +18,7 @@ pub struct Config {
     pub linux: Option<LinuxConfig>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct LinuxConfig {
     #[serde(default = "default_arch")]
     pub arch: Vec<Arch>,
@@ -39,7 +39,7 @@ fn default_linux_targets() -> Vec<PlatformTarget> {
     vec![PlatformTarget::Deb]
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, PartialEq, Serialize)]
 pub enum PlatformTarget {
     #[serde(alias = "deb")]
     Deb,
@@ -74,7 +74,7 @@ impl PlatformTarget {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct WindowsConfig {
     #[serde(default = "default_arch")]
     pub arch: Vec<Arch>,

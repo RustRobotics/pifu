@@ -30,6 +30,14 @@ pub enum BuildError {
     GitHashError,
 
     Utf8Error,
+
+    JsonError(serde_json::Error),
+}
+
+impl From<serde_json::Error> for BuildError {
+    fn from(err: serde_json::Error) -> Self {
+        BuildError::JsonError(err)
+    }
 }
 
 impl From<time::SystemTimeError> for BuildError {

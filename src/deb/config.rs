@@ -2,11 +2,11 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use serde_derive::Deserialize;
+use serde_derive::{Deserialize, Serialize};
 
 use crate::base::fileset::FileSet;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct DebConfig {
     #[serde(default = "default_priority")]
     pub priority: String,

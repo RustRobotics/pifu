@@ -2,13 +2,13 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use serde_derive::Deserialize;
+use serde_derive::{Deserialize, Serialize};
 use std::fmt;
 
 use crate::base::fileset::FileSet;
 
 /// NsisConfig is defined based on https://www.electron.build/configuration/nsis
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct NsisConfig {
     pub files: Option<Vec<FileSet>>,
 
@@ -98,7 +98,7 @@ pub struct NsisConfig {
     pub compress_method: CompressMethod,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum CompressMethod {
     #[serde(alias = "bzip2")]
     BZip2,
