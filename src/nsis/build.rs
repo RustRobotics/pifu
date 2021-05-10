@@ -95,6 +95,13 @@ fn generate_nsis_file(
             fs::canonicalize(installer_sidebar)?
         )?;
     }
+    if let Some(uninstaller_sidebar) = nsis_conf.uninstaller_sidebar.as_ref() {
+        writeln!(
+            nsis_fd,
+            "!define MUI_UNWELCOMEFINISHPAGE_BITMAP {:?}",
+            fs::canonicalize(uninstaller_sidebar)?
+        )?;
+    }
 
     if nsis_conf.one_click {
         writeln!(
@@ -136,7 +143,11 @@ fn generate_nsis_file(
             writeln!(nsis_fd, "!insertmacro MUI_PAGE_DIRECTORY")?;
         }
 
-        writeln!(nsis_fd, "!insertmacro MUI_PAGE_INSTFILES")?;
+        writeln!(nsis_fd, "!insertmacro MUI_PAGE_INSTFILES\n")?;
+
+        if nsis_conf.uninstaller_sidebar.is_some() {
+            writeln!(nsis_fd, "!insertmacro MUI_UNPAGE_WELCOME")?;
+        }
         writeln!(nsis_fd, "!insertmacro MUI_UNPAGE_CONFIRM")?;
         writeln!(nsis_fd, "!insertmacro MUI_UNPAGE_INSTFILES")?;
     }
