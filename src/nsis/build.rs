@@ -322,6 +322,11 @@ fn generate_nsis_file(
             reg_section, &conf.metadata.product_name,
         )?;
     }
+    writeln!(
+        nsis_fd,
+        r#"  DeleteRegKey {} "{}""#,
+        reg_section, reg_uninst_key
+    )?;
     writeln!(nsis_fd, "SectionEnd")?;
 
     Ok(nsis_file)
