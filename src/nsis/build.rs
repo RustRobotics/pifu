@@ -256,6 +256,21 @@ fn generate_nsis_file(
     writeln!(nsis_fd, "\nSection \"Uninstall\"")?;
     writeln!(nsis_fd, "  Delete \"$INSTDIR\\Uninstall.exe\"")?;
     writeln!(nsis_fd, "  RMDir /r \"$INSTDIR\"")?;
+    if nsis_conf.run_on_startup {
+        if nsis_conf.per_machine {
+            writeln!(
+                nsis_fd,
+                "  DeleteRegKey HKLM \"Software\\Microsoft\\Windows\\CurrentVersion\\Run\\{}\"",
+                &conf.metadata.product_name,
+            )?;
+        } else {
+            writeln!(
+                nsis_fd,
+                "  DeleteRegKey HKCU \"Software\\Microsoft\\Windows\\CurrentVersion\\Run\\{}\"",
+                &conf.metadata.product_name,
+            )?;
+        }
+    }
     writeln!(nsis_fd, "SectionEnd")?;
 
     Ok(nsis_file)
