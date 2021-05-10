@@ -70,7 +70,7 @@ fn generate_nsis_file(
 
     let artifact_name =
         expand_file_macro(&nsis_conf.artifact_name, conf, arch, PlatformTarget::Nsis)?;
-    writeln!(nsis_fd, "OutFile \"{}\"", artifact_name)?;
+    writeln!(nsis_fd, r#"OutFile "{}""#, artifact_name)?;
     writeln!(
         nsis_fd,
         "SetCompressor /SOLID {}\n",
@@ -120,7 +120,7 @@ fn generate_nsis_file(
     if nsis_conf.one_click {
         writeln!(
             nsis_fd,
-            "InstallDir \"$LOCALAPPDATA\\Programs\\{}\"",
+            r#"InstallDir "$LOCALAPPDATA\Programs\{}""#,
             &conf.metadata.name
         )?;
         writeln!(nsis_fd, "RequestExecutionlevel User")?;
@@ -131,17 +131,21 @@ fn generate_nsis_file(
             if arch == Arch::X86_64 {
                 writeln!(
                     nsis_fd,
-                    "InstallDir \"$PROGRAMFILES64\\{}\"",
+                    r#"InstallDir "$PROGRAMFILES64\{}""#,
                     &conf.metadata.name
                 )?;
             } else {
-                writeln!(nsis_fd, "InstallDir $PROGRAMFILES\\{}", &conf.metadata.name)?;
+                writeln!(
+                    nsis_fd,
+                    r#"InstallDir $PROGRAMFILES\{}"#,
+                    &conf.metadata.name
+                )?;
             }
             writeln!(nsis_fd, "RequestExecutionlevel Admin")?;
         } else {
             writeln!(
                 nsis_fd,
-                "InstallDir \"$LocalAppData\\Programs\\{}\"",
+                r#"InstallDir "$LocalAppData\Programs\{}""#,
                 &conf.metadata.name
             )?;
             writeln!(nsis_fd, "RequestExecutionlevel User")?;
@@ -170,7 +174,7 @@ fn generate_nsis_file(
         if nsis_conf.run_after_finish {
             writeln!(
                 nsis_fd,
-                "!define MUI_FINISHPAGE_RUN \"$INSTDIR\\{}\"",
+                r#"!define MUI_FINISHPAGE_RUN "$INSTDIR\{}""#,
                 &windows_conf.exe_file
             )?;
             writeln!(nsis_fd, "!define MUI_FINISHPAGE_NOREBOOTSUPPORT")?;
@@ -185,91 +189,138 @@ fn generate_nsis_file(
     }
 
     writeln!(nsis_fd, "")?;
-    writeln!(nsis_fd, "!insertmacro MUI_LANGUAGE \"English\"")?;
+    writeln!(nsis_fd, r#"!insertmacro MUI_LANGUAGE "English""#)?;
 
     let build_version = format!("{}.{}", &conf.metadata.version, &conf.metadata.build_id);
 
     // Version information.
-    writeln!(nsis_fd, "VIProductVersion \"{}\"", &build_version)?;
-    writeln!(nsis_fd, "VIFileVersion \"{}\"", &build_version)?;
+    writeln!(nsis_fd, r#"VIProductVersion "{}""#, &build_version)?;
+    writeln!(nsis_fd, r#"VIFileVersion "{}""#, &build_version)?;
 
     writeln!(
         nsis_fd,
-        "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"ProductName\" \"{}\"",
+        r#"VIAddVersionKey /LANG=${{LANG_ENGLISH}} "ProductName" "{}""#,
         &conf.metadata.product_name
     )?;
     writeln!(
         nsis_fd,
-        "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"ProductVersion\" \"{}\"",
+        r#"VIAddVersionKey /LANG=${{LANG_ENGLISH}} "ProductVersion" "{}""#,
         &conf.metadata.version
     )?;
     writeln!(
         nsis_fd,
-        "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"FileDescription\" \"{}\"",
+        r#"VIAddVersionKey /LANG=${{LANG_ENGLISH}} "FileDescription" "{}""#,
         &conf.metadata.description
     )?;
     if let Some(ref company) = conf.metadata.company {
         writeln!(
             nsis_fd,
-            "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"CompanyName\" \"{}\"",
+            r#"VIAddVersionKey /LANG=${{LANG_ENGLISH}} "CompanyName" "{}""#,
             company
         )?;
     }
     if let Some(ref copyright) = conf.metadata.copyright {
         writeln!(
             nsis_fd,
-            "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"LegalCopyright\" \"{}\"",
+            r#"VIAddVersionKey /LANG=${{LANG_ENGLISH}} "LegalCopyright" "{}""#,
             copyright
         )?;
     }
     writeln!(
         nsis_fd,
-        "VIAddVersionKey /LANG=${{LANG_ENGLISH}} \"FileVersion\" \"{}\"",
+        r#"VIAddVersionKey /LANG=${{LANG_ENGLISH}} "FileVersion" "{}""#,
         &build_version
     )?;
 
     // Install section
     writeln!(nsis_fd, "\nSection \"Install\"")?;
-    writeln!(nsis_fd, "  SetOutPath \"$INSTDIR\"")?;
+    writeln!(nsis_fd, r#"  SetOutPath "$INSTDIR""#)?;
     let src = Path::new(".");
     for file in files {
         file.copy_to(&src, &nsis_dir)?;
         writeln!(nsis_fd, "  File {}", &file.to)?;
     }
-    writeln!(nsis_fd, "  WriteUninstaller \"$INSTDIR\\Uninstall.exe\"")?;
+    writeln!(nsis_fd, r#"  WriteUninstaller "$INSTDIR\Uninstall.exe""#)?;
+
+    let reg_section = if nsis_conf.per_machine {
+        "HKLM"
+    } else {
+        "HKCU"
+    };
+
+    let reg_uninst_key = format!(
+        r#"Software\Microsoft\Windows\CurrentVersion\Uninstall\{}"#,
+        &conf.metadata.product_name
+    );
+
+    writeln!(
+        nsis_fd,
+        r#"  WriteRegStr {} "{}" "UninstallString" '"$INSTDIR\Uninstall.exe"'"#,
+        reg_section, reg_uninst_key
+    )?;
+    writeln!(
+        nsis_fd,
+        r#"  WriteRegStr {} "{}" "QuietUninstallString" '"$INSTDIR\Uninstall.exe" /S'"#,
+        reg_section, reg_uninst_key
+    )?;
+    writeln!(
+        nsis_fd,
+        r#"  WriteRegStr {} "{}" "InstallLocation" "$INSTDIR""#,
+        reg_section, reg_uninst_key
+    )?;
+    writeln!(
+        nsis_fd,
+        r#"  WriteRegStr {} "{}" "DisplayName" "{}""#,
+        reg_section, reg_uninst_key, &conf.metadata.product_name
+    )?;
+    writeln!(
+        nsis_fd,
+        r#"WriteRegStr {} "{}" "DisplayIcon" "$INSTDIR\Uninstall.exe,0""#,
+        reg_section, reg_uninst_key
+    )?;
+    writeln!(
+        nsis_fd,
+        r#"WriteRegStr {} "{}" "DisplayVersion" "{}""#,
+        reg_section, reg_uninst_key, &conf.metadata.version
+    )?;
+    if let Some(company) = conf.metadata.company.as_ref() {
+        writeln!(
+            nsis_fd,
+            r#"WriteRegStr {} "{}" "Publisher" "{}""#,
+            reg_section, reg_uninst_key, company
+        )?;
+    }
+    writeln!(
+        nsis_fd,
+        r#"  WriteRegDWORD {} "{}" "NoModify" "1""#,
+        reg_section, reg_uninst_key
+    )?;
+    writeln!(
+        nsis_fd,
+        r#"  WriteRegDWORD {} "{}" "NoRepair" "1""#,
+        reg_section, reg_uninst_key
+    )?;
+    //WriteRegStr HKLM "${REG_UNINST_KEY}" "InstallDate" $1
+
     if nsis_conf.run_on_startup {
-        if nsis_conf.per_machine {
-            writeln!(nsis_fd, "  WriteRegStr HKLM \"Software\\Microsoft\\Windows\\CurrentVersion\\Run\" \"{}\" '\"$INSTDIR\\{}\"'",
-            &conf.metadata.product_name,
-            &windows_conf.exe_file,
-            )?;
-        } else {
-            writeln!(nsis_fd, "  WriteRegStr HKCU \"Software\\Microsoft\\Windows\\CurrentVersion\\Run\" \"{}\" '\"$INSTDIR\\{}\"'",
-            &conf.metadata.product_name,
-            &windows_conf.exe_file,
-            )?;
-        }
+        writeln!(
+            nsis_fd,
+            r#"  WriteRegStr {} "Software\Microsoft\Windows\CurrentVersion\Run" "{}" '"$INSTDIR\{}"'"#,
+            reg_section, &conf.metadata.product_name, &windows_conf.exe_file
+        )?;
     }
     writeln!(nsis_fd, "SectionEnd")?;
 
     // Uninstall section
     writeln!(nsis_fd, "\nSection \"Uninstall\"")?;
-    writeln!(nsis_fd, "  Delete \"$INSTDIR\\Uninstall.exe\"")?;
-    writeln!(nsis_fd, "  RMDir /r \"$INSTDIR\"")?;
+    writeln!(nsis_fd, r#"  Delete "$INSTDIR\Uninstall.exe""#)?;
+    writeln!(nsis_fd, r#"  RMDir /r "$INSTDIR""#)?;
     if nsis_conf.run_on_startup {
-        if nsis_conf.per_machine {
-            writeln!(
-                nsis_fd,
-                "  DeleteRegKey HKLM \"Software\\Microsoft\\Windows\\CurrentVersion\\Run\\{}\"",
-                &conf.metadata.product_name,
-            )?;
-        } else {
-            writeln!(
-                nsis_fd,
-                "  DeleteRegKey HKCU \"Software\\Microsoft\\Windows\\CurrentVersion\\Run\\{}\"",
-                &conf.metadata.product_name,
-            )?;
-        }
+        writeln!(
+            nsis_fd,
+            r#"  DeleteRegKey {} "Software\Microsoft\Windows\CurrentVersion\Run\{}""#,
+            reg_section, &conf.metadata.product_name,
+        )?;
     }
     writeln!(nsis_fd, "SectionEnd")?;
 
