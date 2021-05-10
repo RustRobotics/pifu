@@ -116,6 +116,7 @@ fn generate_nsis_file(
         )?;
     }
 
+    // Setup pages
     if nsis_conf.one_click {
         writeln!(
             nsis_fd,
@@ -236,6 +237,19 @@ fn generate_nsis_file(
         writeln!(nsis_fd, "  File {}", &file.to)?;
     }
     writeln!(nsis_fd, "  WriteUninstaller \"$INSTDIR\\Uninstall.exe\"")?;
+    if nsis_conf.run_on_startup {
+        if nsis_conf.per_machine {
+            writeln!(nsis_fd, "  WriteRegStr HKLM \"Software\\Microsoft\\Windows\\CurrentVersion\\Run\" \"{}\" '\"$INSTDIR\\{}\"'",
+            &conf.metadata.product_name,
+            &windows_conf.exe_file,
+            )?;
+        } else {
+            writeln!(nsis_fd, "  WriteRegStr HKCU \"Software\\Microsoft\\Windows\\CurrentVersion\\Run\" \"{}\" '\"$INSTDIR\\{}\"'",
+            &conf.metadata.product_name,
+            &windows_conf.exe_file,
+            )?;
+        }
+    }
     writeln!(nsis_fd, "SectionEnd")?;
 
     // Uninstall section

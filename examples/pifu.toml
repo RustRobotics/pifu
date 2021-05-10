@@ -48,3 +48,4 @@ uninstaller_icon = "examples/uninstall.ico"
 installer_header_icon = "examples/header.bmp"
 installer_sidebar = "examples/welcome.bmp"
 uninstaller_sidebar = "examples/unwelcome.bmp"
+run_on_startup = true

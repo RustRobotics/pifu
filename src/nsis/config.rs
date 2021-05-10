@@ -85,6 +85,10 @@ pub struct NsisConfig {
     #[serde(default = "default_true")]
     pub run_after_finish: bool,
 
+    /// Boolean - Whether to run app on user login to desktop environment.
+    #[serde(default = "default_false")]
+    pub run_on_startup: bool,
+
     /// Boolean | “always” - Whether to create desktop shortcut.
     /// Set to always if to recreate also on reinstall (even if removed by user).
     #[serde(default = "default_true")]
