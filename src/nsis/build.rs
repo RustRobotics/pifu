@@ -173,13 +173,21 @@ fn generate_nsis_file(
         &build_version
     )?;
 
-    writeln!(nsis_fd, "\nSection Install")?;
+    // Install section
+    writeln!(nsis_fd, "\nSection \"Install\"")?;
     writeln!(nsis_fd, "  SetOutPath \"$INSTDIR\"")?;
     let src = Path::new(".");
     for file in files {
         file.copy_to(&src, &nsis_dir)?;
         writeln!(nsis_fd, "  File {}", &file.to)?;
     }
+    writeln!(nsis_fd, "  WriteUninstaller \"$INSTDIR\\Uninstall.exe\"")?;
+    writeln!(nsis_fd, "SectionEnd")?;
+
+    // Uninstall section
+    writeln!(nsis_fd, "\nSection \"Uninstall\"")?;
+    writeln!(nsis_fd, "  Delete \"$INSTDIR\\Uninstall.exe\"")?;
+    writeln!(nsis_fd, "  RMDir /r \"$INSTDIR\"")?;
     writeln!(nsis_fd, "SectionEnd")?;
 
     Ok(nsis_file)
