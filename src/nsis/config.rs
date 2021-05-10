@@ -60,7 +60,7 @@ pub struct NsisConfig {
     /// String - The path to NSIS script to customize installer. Not recommanded.
     pub script: Option<String>,
 
-    /// String - The artifact file name template. Defaults to ${product_name} Setup ${version}.${build_id}.${ext}.
+    /// String - The artifact file name template. Defaults to ${product_name} Setup ${version}.${ext}.
     #[serde(default = "default_artifact_name")]
     pub artifact_name: String,
 
@@ -121,7 +121,7 @@ impl fmt::Display for CompressMethod {
 }
 
 fn default_artifact_name() -> String {
-    "${product_name} Setup ${version}.${build_id}.${ext}".to_string()
+    "${product_name} Setup ${version}.${ext}".to_string()
 }
 
 const fn default_false() -> bool {

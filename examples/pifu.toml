@@ -30,6 +30,8 @@ files = [
 [windows]
 targets = ["nsis"]
 
+exe_file = "pifu-hello.exe"
+
 files = [
 	{from = "target/x86_64-pc-windows-gnu/debug/examples/hello.exe", to="pifu-hello.exe"},
 	{from = "examples/hello.png", to = "pifu-hello.png"},

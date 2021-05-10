@@ -47,8 +47,13 @@ pub struct WindowsConfig {
     #[serde(default = "default_windows_targets")]
     pub targets: Vec<PlatformTarget>,
 
+    /// String - file to be run after install and desktop link refers to.
+    /// Relative to install directory.
+    pub exe_file: String,
+
     pub files: Option<Vec<FileSet>>,
 
+    /// Nsis specific config.
     pub nsis: Option<NsisConfig>,
 }
 

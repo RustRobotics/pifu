@@ -166,6 +166,16 @@ fn generate_nsis_file(
 
         writeln!(nsis_fd, "!insertmacro MUI_PAGE_INSTFILES\n")?;
 
+        if nsis_conf.run_after_finish {
+            writeln!(
+                nsis_fd,
+                "!define MUI_FINISHPAGE_RUN \"$INSTDIR\\{}\"",
+                &windows_conf.exe_file
+            )?;
+            writeln!(nsis_fd, "!define MUI_FINISHPAGE_NOREBOOTSUPPORT")?;
+            writeln!(nsis_fd, "!insertmacro MUI_PAGE_FINISH\n")?;
+        }
+
         if nsis_conf.uninstaller_sidebar.is_some() {
             writeln!(nsis_fd, "!insertmacro MUI_UNPAGE_WELCOME")?;
         }
