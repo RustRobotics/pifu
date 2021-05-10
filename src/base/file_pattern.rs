@@ -71,7 +71,7 @@ pub fn expand_file_macro_simple(s: &str) -> Result<String, BuildError> {
     let env_pattern = Regex::new(r"\$\{env\.(\w+)\}")?;
     let mut new_content = content.clone();
     if env_pattern.is_match(&content) {
-        for cap in env_pattern.captures(&content) {
+        for cap in env_pattern.captures_iter(&content) {
             let env_value = get_env(&cap[1])?;
             new_content = new_content.replace(&cap[0], &env_value);
         }
@@ -104,13 +104,16 @@ pub fn expand_file_macro(
         // Expand metadata
         match serde_json::to_value(&conf.metadata)? {
             serde_json::Value::Object(metadata) => {
-                for cap in key_pattern.captures(&content) {
+                for cap in key_pattern.captures_iter(&content) {
+                    log::info!("cap1: {:?}", &cap[1]);
                     if metadata.get(&cap[1]).is_some() {
                         match metadata[&cap[1]] {
                             serde_json::Value::String(ref new_value) => {
                                 new_content = new_content.replace(&cap[0], new_value);
                             }
-                            _ => {}
+                            _ => {
+                                log::error!("Invalid metadata property: {:?}", &cap[1]);
+                            }
                         }
                     }
                 }

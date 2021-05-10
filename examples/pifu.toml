@@ -8,7 +8,7 @@ copyright = "Copyright (c) Xu Shaohua"
 description = "Rust hello app"
 homepage = "https://biofan.org"
 version = "1.0.0"
-build_id = "${git}"
+build_id = "${date}"
 license = "GPL-3.0"
 license_file = "LICENSE"
 
