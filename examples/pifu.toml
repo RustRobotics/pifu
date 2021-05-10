@@ -10,6 +10,7 @@ homepage = "https://biofan.org"
 version = "1.0.0"
 build_id = "2"
 license = "GPL-3.0"
+license_file = "LICENSE"
 
 workdir = "target/pifu"
 src_dir = "."
@@ -32,6 +33,7 @@ targets = ["nsis"]
 files = [
 	{from = "target/x86_64-pc-windows-gnu/debug/examples/hello.exe", to="pifu-hello.exe"},
 	{from = "examples/hello.png", to = "pifu-hello.png"},
+	{from = "LICENSE", to = "LICENSE.txt"},
 ]
 
 [windows.nsis]

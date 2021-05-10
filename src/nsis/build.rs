@@ -150,6 +150,14 @@ fn generate_nsis_file(
             writeln!(nsis_fd, "!insertmacro MUI_PAGE_WELCOME")?;
         }
 
+        if let Some(license_file) = conf.metadata.license_file.as_ref() {
+            writeln!(
+                nsis_fd,
+                "!insertmacro MUI_PAGE_LICENSE {:?}",
+                fs::canonicalize(license_file)?
+            )?;
+        }
+
         if nsis_conf.allow_to_change_installation_directory {
             writeln!(nsis_fd, "!insertmacro MUI_PAGE_DIRECTORY")?;
         }
