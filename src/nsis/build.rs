@@ -309,6 +309,15 @@ fn generate_nsis_file(
             reg_section, &conf.metadata.product_name, &windows_conf.exe_file
         )?;
     }
+
+    if nsis_conf.create_start_menu_shortcut {
+        writeln!(
+            nsis_fd,
+            r#"  CreateShortcut "$SMPROGRAMS\{}.lnk" "$INSTDIR\{}""#,
+            &conf.metadata.product_name, &windows_conf.exe_file
+        )?;
+    }
+
     writeln!(nsis_fd, "SectionEnd")?;
 
     // Uninstall section
@@ -327,6 +336,13 @@ fn generate_nsis_file(
         r#"  DeleteRegKey {} "{}""#,
         reg_section, reg_uninst_key
     )?;
+    if nsis_conf.create_start_menu_shortcut {
+        writeln!(
+            nsis_fd,
+            r#"  Delete "$SMPROGRAMS\{}.lnk""#,
+            &conf.metadata.product_name
+        )?;
+    }
     writeln!(nsis_fd, "SectionEnd")?;
 
     Ok(nsis_file)
