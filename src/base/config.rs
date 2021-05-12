@@ -60,12 +60,7 @@ pub enum PlatformTarget {
     #[serde(alias = "app_image")]
     AppImage,
 
-    #[serde(alias = "tar")]
-    Tar,
-
-    #[serde(alias = "tgz")]
-    TarGz,
-
+    /// For windows exe file.
     #[serde(alias = "nsis")]
     Nsis,
 }
@@ -76,9 +71,7 @@ impl PlatformTarget {
         match self {
             PlatformTarget::Deb => "deb",
             PlatformTarget::Rpm => "rpm",
-            PlatformTarget::AppImage => "app_image",
-            PlatformTarget::Tar => "tar",
-            PlatformTarget::TarGz => "tgz",
+            PlatformTarget::AppImage => "AppImage",
             PlatformTarget::Nsis => "exe",
         }
     }

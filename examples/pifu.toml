@@ -17,7 +17,7 @@ workdir = "target/pifu"
 src_dir = "."
 
 [linux]
-targets = []
+targets = ["app_image"]
 arch = ["x86-64"]
 
 files = [
@@ -27,6 +27,8 @@ files = [
 ]
 
 [linux.deb]
+
+[linux.app_image]
 
 [windows]
 targets = ["nsis"]

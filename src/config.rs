@@ -36,7 +36,7 @@ fn default_arch() -> Vec<Arch> {
 }
 
 fn default_linux_targets() -> Vec<PlatformTarget> {
-    vec![PlatformTarget::Deb]
+    vec![PlatformTarget::Deb, PlatformTarget::AppImage]
 }
 
 #[derive(Debug, Deserialize, Serialize)]

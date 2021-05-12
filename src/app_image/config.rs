@@ -2,13 +2,7 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-mod app_image;
-pub mod base;
-mod build;
-pub mod config;
-mod deb;
-mod error;
-mod nsis;
+use serde_derive::{Deserialize, Serialize};
 
-pub use build::build;
-pub use error::BuildError;
+#[derive(Debug, Deserialize, Serialize)]
+pub struct AppImageConfig {}
