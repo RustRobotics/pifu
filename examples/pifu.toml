@@ -29,9 +29,17 @@ files = [
 [linux.deb]
 
 [linux.app_image]
+exe_files = ["pifu-hello"]
+
+files = [
+	{from = "target/debug/examples/hello", to = "pifu-hello"},
+	{from = "examples/hello.png", to = "pifu-hello.png"},
+	{from = "examples/hello.desktop", to = "pifu-hello.desktop"},
+	{from = "examples/AppRun", to = "AppRun"},
+]
 
 [windows]
-targets = ["nsis"]
+targets = []
 
 exe_file = "pifu-hello.exe"
 
