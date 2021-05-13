@@ -21,5 +21,17 @@ pub struct AppImageConfig {
 
     /// File list.
     pub files: Option<Vec<FileSet>>,
+
     // TODO(Shaohua): Add artifact_name
+    #[serde(default = "default_exclude_libs")]
+    pub exclude_libs: Vec<String>,
+}
+
+fn default_exclude_libs() -> Vec<String> {
+    vec![
+        "libc.so.6".to_string(),
+        "libdl.so.2".to_string(),
+        "libm.so.6".to_string(),
+        "libpthread.so.0".to_string(),
+    ]
 }

@@ -42,20 +42,30 @@ pub fn build_app_image(
 
     if app_image_conf.embed_libs {
         fs::create_dir_all(&libs_dir)?;
-        copy_libraries(&app_image_conf.exe_files, &libs_dir)?;
+        copy_libraries(
+            &app_image_conf.exe_files,
+            &app_image_conf.exclude_libs,
+            &libs_dir,
+        )?;
     }
 
     compile_app_image(&workdir, &app_image_dir_name, arch)
 }
 
-fn copy_libraries(exe_files: &[String], libs_dir: &Path) -> Result<(), BuildError> {
+fn copy_libraries(
+    exe_files: &[String],
+    exclude_libs: &[String],
+    libs_dir: &Path,
+) -> Result<(), BuildError> {
+    let pattern = Regex::new(r"\s+(.+)\s+=>\s+(\S+)\s+\(\S+\)")?;
     for exe_file in exe_files {
         let output = Command::new("ldd").arg(exe_file).output()?;
         let stdout = String::from_utf8(output.stdout)?;
-        let pattern = Regex::new(r"\s+(.+)\s+=>\s+(\S+)\s+\(\S+\)")?;
         for cap in pattern.captures_iter(&stdout) {
-            log::info!("cap: {:?}", &cap[2]);
-            fs::copy(&cap[2], Path::join(libs_dir, &cap[1]))?;
+            // TODO(Shaohua): No need to create another string object.
+            if !exclude_libs.contains(&cap[1].to_string()) {
+                fs::copy(&cap[2], Path::join(libs_dir, &cap[1]))?;
+            }
         }
     }
     Ok(())
