@@ -2,8 +2,9 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use std::fs::{self, File};
+use std::fs;
 use std::path::Path;
+use std::process::Command;
 
 use crate::base::fileset::copy_filesets;
 use crate::base::Arch;
@@ -30,11 +31,24 @@ pub fn build_app_image(
     };
 
     let workdir = Path::new(&conf.metadata.workdir);
-    let app_image_dir = workdir.join("app_image");
+    let app_image_dir_name = "app_image";
+    let app_image_dir = workdir.join(app_image_dir_name);
     fs::create_dir_all(&app_image_dir)?;
 
     let src = Path::new(".");
     copy_filesets(files, src, &app_image_dir)?;
 
-    Ok(())
+    compile_app_image(&workdir, &app_image_dir_name)
+}
+
+fn compile_app_image<P: AsRef<Path>>(workdir: &Path, dir: &P) -> Result<(), BuildError> {
+    let status = Command::new("appimagetool")
+        .current_dir(workdir)
+        .arg(dir.as_ref())
+        .status()?;
+    if status.success() {
+        Ok(())
+    } else {
+        Err(BuildError::AppImageCompilerError)
+    }
 }

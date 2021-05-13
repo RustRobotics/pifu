@@ -23,6 +23,8 @@ pub enum BuildError {
 
     InvalidConfError,
 
+    AppImageCompilerError,
+
     NsisCompilerError,
 
     /// Failed to get git commit hash.
