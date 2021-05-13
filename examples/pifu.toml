@@ -29,7 +29,7 @@ files = [
 [linux.deb]
 
 [linux.app_image]
-exe_files = ["pifu-hello"]
+exe_files = ["target/debug/examples/hello"]
 
 files = [
 	{from = "target/debug/examples/hello", to = "pifu-hello"},

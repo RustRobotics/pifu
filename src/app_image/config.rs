@@ -15,9 +15,11 @@ pub struct AppImageConfig {
 
     /// Boolean - whether to copy dependent libraries.
     /// This shall almost always be true.
+    /// Those libraries are copied to AppDir/libs folder.
     #[serde(default = "default_true")]
     pub embed_libs: bool,
 
     /// File list.
     pub files: Option<Vec<FileSet>>,
+    // TODO(Shaohua): Add artifact_name
 }
