@@ -5,6 +5,7 @@
 use clap::{App, Arg};
 use std::fs;
 
+use crate::app_image::build_app_image;
 use crate::base::{expand_file_macro_simple, PlatformTarget};
 use crate::config::Config;
 use crate::deb::build_deb;
@@ -51,6 +52,11 @@ fn build_linux(conf: &Config) -> Result<(), BuildError> {
     if linux_conf.targets.contains(&PlatformTarget::Deb) {
         for arch in &linux_conf.arch {
             build_deb(conf, linux_conf, *arch)?;
+        }
+    }
+    if linux_conf.targets.contains(&PlatformTarget::AppImage) {
+        for arch in &linux_conf.arch {
+            build_app_image(conf, linux_conf, *arch)?;
         }
     }
 

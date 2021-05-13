@@ -4,6 +4,7 @@
 
 use serde_derive::{Deserialize, Serialize};
 
+use crate::app_image::AppImageConfig;
 use crate::base::fileset::FileSet;
 use crate::base::{Arch, Metadata, PlatformTarget};
 use crate::deb::DebConfig;
@@ -28,7 +29,11 @@ pub struct LinuxConfig {
 
     pub files: Option<Vec<FileSet>>,
 
+    /// Specific config for Deb format.
     pub deb: Option<DebConfig>,
+
+    /// Specific config for AppImage format.
+    pub app_image: Option<AppImageConfig>,
 }
 
 fn default_arch() -> Vec<Arch> {

@@ -20,3 +20,11 @@ pub fn get_folder_size(dir: &Path) -> Result<u64, BuildError> {
 
     Ok(total_size)
 }
+
+pub const fn default_true() -> bool {
+    true
+}
+
+pub const fn default_false() -> bool {
+    false
+}

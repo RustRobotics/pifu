@@ -6,6 +6,7 @@ use serde_derive::{Deserialize, Serialize};
 use std::fmt;
 
 use crate::base::fileset::FileSet;
+use crate::base::utils::{default_false, default_true};
 
 /// NsisConfig is defined based on https://www.electron.build/configuration/nsis
 #[derive(Debug, Deserialize, Serialize)]
@@ -126,14 +127,6 @@ impl fmt::Display for CompressMethod {
 
 fn default_artifact_name() -> String {
     "${product_name} Setup ${version}.${ext}".to_string()
-}
-
-const fn default_false() -> bool {
-    false
-}
-
-const fn default_true() -> bool {
-    true
 }
 
 const fn default_compress_method() -> CompressMethod {
