@@ -27,6 +27,8 @@ pub enum BuildError {
 
     NsisCompilerError,
 
+    RpmCompilerError,
+
     /// Failed to get git commit hash.
     /// `git` command not found or this is not a git repo.
     GitHashError,

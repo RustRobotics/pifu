@@ -123,12 +123,17 @@ fn copy_files(
 }
 
 fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), BuildError> {
-    Command::new("rpmbuild")
+    let def = format!("_topdir {}", fs::canonicalize(rpm_dir)?.display());
+    let status = Command::new("rpmbuild")
         // Change rootdir of rpm build.
-        .arg("--define")
-        .arg(&format!(r#""_topdir {}""#, rpm_dir.display()))
+        .arg("-D")
+        .arg(&def)
         .arg("-bb")
         .arg(spec_file)
         .status()?;
-    Ok(())
+    if status.success() {
+        Ok(())
+    } else {
+        Err(BuildError::RpmCompilerError)
+    }
 }
