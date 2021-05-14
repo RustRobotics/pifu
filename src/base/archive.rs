@@ -13,7 +13,18 @@ use walkdir::WalkDir;
 use crate::BuildError;
 
 pub fn create_tar(dir: &Path, to: &Path) -> Result<(), BuildError> {
-    log::info!("tar {:?} > {:?}", dir, to);
+    let to_file = File::create(to)?;
+    let mut builder = tar::Builder::new(to_file);
+    if let Some(dirname) = dir.file_name() {
+        builder.append_dir_all(dirname, dir)?;
+        builder.finish()?;
+        Ok(())
+    } else {
+        Err(BuildError::InvalidDirname)
+    }
+}
+
+pub fn create_tar_without_rootdir(dir: &Path, to: &Path) -> Result<(), BuildError> {
     let to_file = File::create(to)?;
     let mut builder = tar::Builder::new(to_file);
     builder.append_dir_all(".", dir)?;
