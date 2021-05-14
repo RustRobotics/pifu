@@ -17,7 +17,7 @@ workdir = "target/pifu"
 src_dir = "."
 
 [linux]
-targets = ["app_image"]
+targets = ["rpm"]
 arch = ["x86-64"]
 
 files = [
@@ -25,8 +25,6 @@ files = [
 	{from = "examples/hello.png", to = "usr/share/icons/hicolor/128x128/apps/pifu-hello.png"},
 	{from = "examples/hello.desktop", to = "usr/share/applications/pifu-hello.desktop"},
 ]
-
-[linux.deb]
 
 [linux.app_image]
 exe_files = ["target/debug/examples/hello"]
@@ -37,6 +35,10 @@ files = [
 	{from = "examples/hello.desktop", to = "pifu-hello.desktop"},
 	{from = "examples/AppRun", to = "AppRun"},
 ]
+
+[linux.deb]
+
+[linux.rpm]
 
 [windows]
 targets = []
