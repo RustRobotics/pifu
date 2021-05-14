@@ -10,6 +10,7 @@ use crate::base::{expand_file_macro_simple, PlatformTarget};
 use crate::config::Config;
 use crate::deb::build_deb;
 use crate::nsis::build_nsis;
+use crate::rpm::build_rpm;
 use crate::BuildError;
 
 pub fn build() -> Result<(), BuildError> {
@@ -49,14 +50,19 @@ fn build_linux(conf: &Config) -> Result<(), BuildError> {
         return Ok(());
     };
 
+    if linux_conf.targets.contains(&PlatformTarget::AppImage) {
+        for arch in &linux_conf.arch {
+            build_app_image(conf, linux_conf, *arch)?;
+        }
+    }
     if linux_conf.targets.contains(&PlatformTarget::Deb) {
         for arch in &linux_conf.arch {
             build_deb(conf, linux_conf, *arch)?;
         }
     }
-    if linux_conf.targets.contains(&PlatformTarget::AppImage) {
+    if linux_conf.targets.contains(&PlatformTarget::Rpm) {
         for arch in &linux_conf.arch {
-            build_app_image(conf, linux_conf, *arch)?;
+            build_rpm(conf, linux_conf, *arch)?;
         }
     }
 

@@ -38,6 +38,8 @@ pub enum BuildError {
     JsonError(serde_json::Error),
 
     RegexError(regex::Error),
+
+    InvalidDirname,
 }
 
 impl From<regex::Error> for BuildError {

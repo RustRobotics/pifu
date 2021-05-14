@@ -9,6 +9,7 @@ pub mod config;
 mod deb;
 mod error;
 mod nsis;
+mod rpm;
 
 pub use build::build;
 pub use error::BuildError;

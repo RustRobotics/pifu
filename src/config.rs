@@ -9,6 +9,7 @@ use crate::base::fileset::FileSet;
 use crate::base::{Arch, Metadata, PlatformTarget};
 use crate::deb::DebConfig;
 use crate::nsis::NsisConfig;
+use crate::rpm::RpmConfig;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Config {
@@ -29,11 +30,13 @@ pub struct LinuxConfig {
 
     pub files: Option<Vec<FileSet>>,
 
+    /// Specific config for AppImage format.
+    pub app_image: Option<AppImageConfig>,
+
     /// Specific config for Deb format.
     pub deb: Option<DebConfig>,
 
-    /// Specific config for AppImage format.
-    pub app_image: Option<AppImageConfig>,
+    pub rpm: Option<RpmConfig>,
 }
 
 fn default_arch() -> Vec<Arch> {
