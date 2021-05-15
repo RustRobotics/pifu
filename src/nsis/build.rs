@@ -234,9 +234,8 @@ fn generate_nsis_file(
     // Install section
     writeln!(nsis_fd, "\nSection \"Install\"")?;
     writeln!(nsis_fd, r#"  SetOutPath "$INSTDIR""#)?;
-    let src = Path::new(".");
     for file in files {
-        file.copy_to(&src, &nsis_dir)?;
+        file.copy_to(&conf.metadata.src_dir, &nsis_dir)?;
         writeln!(nsis_fd, "  File {}", &file.to)?;
     }
     writeln!(nsis_fd, r#"  WriteUninstaller "$INSTDIR\Uninstall.exe""#)?;

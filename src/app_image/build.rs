@@ -37,8 +37,7 @@ pub fn build_app_image(
     let libs_dir = app_image_dir.join("libs");
     fs::create_dir_all(&app_image_dir)?;
 
-    let src = Path::new(".");
-    copy_filesets(files, src, &app_image_dir)?;
+    copy_filesets(files, &conf.metadata.src_dir, &app_image_dir)?;
 
     if app_image_conf.embed_libs {
         fs::create_dir_all(&libs_dir)?;

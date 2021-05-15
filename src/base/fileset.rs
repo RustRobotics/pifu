@@ -18,18 +18,22 @@ pub struct FileSet {
 }
 
 impl FileSet {
-    pub fn copy_to(&self, src: &Path, dest: &Path) -> Result<(), BuildError> {
-        let src_path = src.join(&self.from);
+    pub fn copy_to(&self, src: &str, dest: &Path) -> Result<(), BuildError> {
         let dest_path = dest.join(&self.to);
         let dest_dir = dest_path.parent().unwrap();
         fs::create_dir_all(dest_dir)?;
-        log::info!("Copy {:?} > {:?}", src_path, dest_path);
-        fs::copy(src_path, dest_path)?;
+        let current_dir = std::env::current_dir()?;
+        std::env::set_current_dir(src)?;
+        for entry in glob::glob(&self.from)? {
+            let entry = entry?;
+            fs::copy(&entry, &dest_path)?;
+        }
+        std::env::set_current_dir(current_dir)?;
         Ok(())
     }
 }
 
-pub fn copy_filesets(files: &[FileSet], src: &Path, dest: &Path) -> Result<(), BuildError> {
+pub fn copy_filesets(files: &[FileSet], src: &str, dest: &Path) -> Result<(), BuildError> {
     for ref file in files {
         file.copy_to(src, dest)?;
     }

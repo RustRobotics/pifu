@@ -42,6 +42,21 @@ pub enum BuildError {
     RegexError(regex::Error),
 
     InvalidDirname,
+
+    GlobPatternError(glob::PatternError),
+    GlobError(glob::GlobError),
+}
+
+impl From<glob::GlobError> for BuildError {
+    fn from(err: glob::GlobError) -> Self {
+        BuildError::GlobError(err)
+    }
+}
+
+impl From<glob::PatternError> for BuildError {
+    fn from(err: glob::PatternError) -> Self {
+        BuildError::GlobPatternError(err)
+    }
 }
 
 impl From<regex::Error> for BuildError {

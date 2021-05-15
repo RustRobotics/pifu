@@ -32,10 +32,9 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> Result<
     let workdir = Path::new(&conf.metadata.workdir);
     let deb_dir = workdir.join("deb");
     let data_dir = deb_dir.join("data");
-    let src_dir = Path::new(&conf.metadata.src_dir);
     let control_dir = deb_dir.join("control");
 
-    fileset::copy_filesets(files, &src_dir, &data_dir)?;
+    fileset::copy_filesets(files, &conf.metadata.src_dir, &data_dir)?;
 
     let data_tar_file = deb_dir.join("data.tar");
     archive::create_tar_chown(&data_dir, &data_tar_file)?;

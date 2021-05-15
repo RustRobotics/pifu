@@ -34,7 +34,16 @@ pub fn build_rpm(conf: &Config, linux_conf: &LinuxConfig, _arch: Arch) -> Result
     fs::create_dir_all(&source_dir)?;
 
     generate_spec_file(conf, rpm_conf, &mut spec_fd)?;
-    copy_files(linux_conf, rpm_conf, &source_dir)?;
+
+    // Copy files.
+    let files = if let Some(files) = rpm_conf.files.as_ref() {
+        files
+    } else if let Some(files) = linux_conf.files.as_ref() {
+        files
+    } else {
+        return Err(BuildError::FilesNotSet);
+    };
+    copy_filesets(files, &conf.metadata.src_dir, &source_dir)?;
 
     // Create binary tarbal.
     let source_tar_file = rpm_dir.join(format!("{}.tar", &conf.metadata.name));
@@ -101,24 +110,6 @@ cp -rfa * %{{buildroot}}
 "#
     )?;
 
-    Ok(())
-}
-
-fn copy_files(
-    linux_conf: &LinuxConfig,
-    rpm_conf: &RpmConfig,
-    source_dir: &Path,
-) -> Result<(), BuildError> {
-    let files = if let Some(files) = rpm_conf.files.as_ref() {
-        files
-    } else if let Some(files) = linux_conf.files.as_ref() {
-        files
-    } else {
-        return Err(BuildError::FilesNotSet);
-    };
-
-    let pwd = Path::new(".");
-    copy_filesets(files, pwd, source_dir)?;
     Ok(())
 }
 
