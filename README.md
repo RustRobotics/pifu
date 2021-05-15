@@ -3,9 +3,9 @@
 Pifu(a.k.a. 蚍蜉), is a cross platform package builder.
 
 ## Build dependencies
-- exe: nsis
-- AppImage: appimagetool, libc-bin (for `ldd`)
-- rpm: rpm
+- exe: [nsis](https://nsis.sourceforge.io/)
+- AppImage: [appimagetool](https://github.com/AppImage/AppImageKit/releases), libc-bin (for `ldd`)
+- rpm: rpm (for `rpmbuild` command)
 
 ## Run dependencies
 - AppImage: glusterfs-client
