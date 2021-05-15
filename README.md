@@ -1,6 +1,6 @@
 
 # About
-Pifu(a.k.a. 蜌蜉), is a cross platform package builder.
+Pifu(a.k.a. 蚍蜉), is a cross platform package builder.
 
 ## Build dependencies
 - exe: nsis
