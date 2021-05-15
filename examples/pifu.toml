@@ -17,7 +17,7 @@ workdir = "target/pifu"
 src_dir = "."
 
 [linux]
-targets = ["rpm"]
+targets = ["deb", "rpm", "app_image"]
 arch = ["x86-64"]
 
 files = [
@@ -53,12 +53,12 @@ files = [
 
 [windows.nsis]
 #script = "target/pifu/nsis/app.nsi"
-include = "examples/empty-script.nsi"
+include = "examples/nsis/empty-script.nsi"
 one_click = false
 per_machine = false
-installer_icon = "examples/install.ico"
-uninstaller_icon = "examples/uninstall.ico"
-installer_header_icon = "examples/header.bmp"
-installer_sidebar = "examples/welcome.bmp"
-uninstaller_sidebar = "examples/unwelcome.bmp"
+installer_icon = "examples/nsis/install.ico"
+uninstaller_icon = "examples/nsis/uninstall.ico"
+installer_header_icon = "examples/nsis/header.bmp"
+installer_sidebar = "examples/nsis/welcome.bmp"
+uninstaller_sidebar = "examples/nsis/unwelcome.bmp"
 run_on_startup = true
