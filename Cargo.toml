@@ -3,8 +3,11 @@ name = "pifu"
 version = "0.1.0"
 edition = "2018"
 authors = ["Xu Shaohua <shaohua@biofan.org"]
+repository = "https://github.com/PifuProject/pifu"
 readme = "README.md"
 license = "GPL-3.0"
+description = "Cross platform package build tool"
+categories = ["development-tools::build-utils"]
 
 [dependencies]
 ar = "0.8.0"
