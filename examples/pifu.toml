@@ -36,10 +36,6 @@ files = [
 	{from = "examples/AppRun", to = "AppRun"},
 ]
 
-[linux.deb]
-
-[linux.rpm]
-
 [windows]
 targets = []
 

@@ -22,13 +22,11 @@ impl FileSet {
         let dest_path = dest.join(&self.to);
         let dest_dir = dest_path.parent().unwrap();
         fs::create_dir_all(dest_dir)?;
-        let current_dir = std::env::current_dir()?;
-        std::env::set_current_dir(src)?;
-        for entry in glob::glob(&self.from)? {
+        let src_pattern = format!("{}/{}", src, &self.from);
+        for entry in glob::glob(&src_pattern)? {
             let entry = entry?;
             fs::copy(&entry, &dest_path)?;
         }
-        std::env::set_current_dir(current_dir)?;
         Ok(())
     }
 }
