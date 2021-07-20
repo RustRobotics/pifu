@@ -7,7 +7,7 @@ use serde_derive::{Deserialize, Serialize};
 use crate::base::fileset::FileSet;
 use crate::base::utils::default_true;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct AppImageConfig {
     /// A list of elf executable files. If they are dynamically linked, dependent
     /// libraries will be copied.
@@ -25,6 +25,17 @@ pub struct AppImageConfig {
     // TODO(Shaohua): Add artifact_name
     #[serde(default = "default_exclude_libs")]
     pub exclude_libs: Vec<String>,
+}
+
+impl Default for AppImageConfig {
+    fn default() -> Self {
+        AppImageConfig {
+            exe_files: Vec::new(),
+            embed_libs: true,
+            files: None,
+            exclude_libs: default_exclude_libs(),
+        }
+    }
 }
 
 fn default_exclude_libs() -> Vec<String> {

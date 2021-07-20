@@ -17,11 +17,7 @@ pub fn build_app_image(
     linux_conf: &LinuxConfig,
     arch: Arch,
 ) -> Result<(), BuildError> {
-    let app_image_conf = if let Some(app_image_conf) = linux_conf.app_image.as_ref() {
-        app_image_conf
-    } else {
-        return Err(BuildError::InvalidConfError);
-    };
+    let app_image_conf = &linux_conf.app_image;
 
     let files = if let Some(files) = app_image_conf.files.as_ref() {
         files
