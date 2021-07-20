@@ -26,8 +26,8 @@ pub fn generate_control(
     writeln!(&mut fd, "Version: {}", metadata.version)?;
     writeln!(&mut fd, "Architecture: {}", arch_name(arch))?;
 
-    let linux = conf.linux.as_ref().unwrap();
-    let deb = linux.deb.as_ref().unwrap();
+    let linux = conf.linux.as_ref().expect("Linux conf is not set");
+    let deb = &linux.deb;
     if let Some(section) = deb.section.as_ref() {
         writeln!(&mut fd, "Section: {}", section)?;
     }

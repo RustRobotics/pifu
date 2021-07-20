@@ -34,7 +34,8 @@ pub struct LinuxConfig {
     pub app_image: Option<AppImageConfig>,
 
     /// Specific config for Deb format.
-    pub deb: Option<DebConfig>,
+    #[serde(default = "DebConfig::default")]
+    pub deb: DebConfig,
 
     pub rpm: Option<RpmConfig>,
 }
