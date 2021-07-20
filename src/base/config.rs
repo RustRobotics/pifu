@@ -5,7 +5,7 @@
 use serde_derive::{Deserialize, Serialize};
 use std::fmt;
 
-#[derive(Debug, Copy, Clone, Deserialize, PartialEq, Serialize)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq)]
 pub enum Arch {
     #[serde(alias = "x86")]
     X86,
@@ -27,10 +27,10 @@ impl fmt::Display for Arch {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct GlobPatterns(Vec<String>);
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Metadata {
     pub name: String,
     pub product_name: String,
@@ -49,7 +49,7 @@ pub struct Metadata {
     pub src_dir: String,
 }
 
-#[derive(Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq)]
 pub enum PlatformTarget {
     #[serde(alias = "deb")]
     Deb,

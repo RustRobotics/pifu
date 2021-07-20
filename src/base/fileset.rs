@@ -9,7 +9,7 @@ use std::path::Path;
 use crate::base::GlobPatterns;
 use crate::BuildError;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct FileSet {
     pub from: String,
     pub to: String,

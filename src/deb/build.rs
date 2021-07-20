@@ -10,15 +10,14 @@ use crate::base::fileset;
 use crate::base::utils;
 use crate::base::Arch;
 use crate::config::{Config, LinuxConfig};
-use crate::deb::control;
+use crate::deb::{control, DebConfig};
 use crate::BuildError;
 
 pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> Result<(), BuildError> {
-    let deb_conf = if let Some(deb_conf) = linux_conf.deb.as_ref() {
+    let deb_conf = if let Some(deb_conf) = linux_conf.deb.clone() {
         deb_conf
     } else {
-        // TODO(Shaohua): Returns error
-        return Ok(());
+        DebConfig::default()
     };
 
     let files = if let Some(files) = deb_conf.files.as_ref() {

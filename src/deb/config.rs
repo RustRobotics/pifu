@@ -6,7 +6,7 @@ use serde_derive::{Deserialize, Serialize};
 
 use crate::base::fileset::FileSet;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct DebConfig {
     #[serde(default = "default_priority")]
     pub priority: String,
@@ -24,4 +24,20 @@ pub struct DebConfig {
 
 fn default_priority() -> String {
     "utility".to_string()
+}
+
+impl Default for DebConfig {
+    fn default() -> Self {
+        DebConfig {
+            priority: default_priority(),
+            section: None,
+            depends: None,
+            recommends: None,
+            conflicts: None,
+            breaks: None,
+            replaces: None,
+            provides: None,
+            files: None,
+        }
+    }
 }
