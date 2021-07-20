@@ -16,11 +16,7 @@ use crate::config::{Config, LinuxConfig};
 use crate::BuildError;
 
 pub fn build_rpm(conf: &Config, linux_conf: &LinuxConfig, _arch: Arch) -> Result<(), BuildError> {
-    let rpm_conf = if let Some(rpm_conf) = linux_conf.rpm.as_ref() {
-        rpm_conf
-    } else {
-        return Err(BuildError::InvalidConfError);
-    };
+    let rpm_conf = &linux_conf.rpm;
 
     let workdir = Path::new(&conf.metadata.workdir);
     let rpm_dir = workdir.join("rpm");

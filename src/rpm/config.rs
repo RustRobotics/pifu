@@ -6,7 +6,7 @@ use serde_derive::{Deserialize, Serialize};
 
 use crate::base::fileset::FileSet;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Default, Clone, Deserialize, Serialize)]
 pub struct RpmConfig {
     /// File list.
     pub files: Option<Vec<FileSet>>,

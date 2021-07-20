@@ -37,7 +37,9 @@ pub struct LinuxConfig {
     #[serde(default = "DebConfig::default")]
     pub deb: DebConfig,
 
-    pub rpm: Option<RpmConfig>,
+    /// Specific config for Rpm format.
+    #[serde(default = "RpmConfig::default")]
+    pub rpm: RpmConfig,
 }
 
 fn default_arch() -> Vec<Arch> {
