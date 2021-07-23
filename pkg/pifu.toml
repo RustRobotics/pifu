@@ -1,0 +1,58 @@
+
+[metadata]
+name = "pifu"
+product_name = "Pifu Example"
+app_id = "org.biofan.pifu"
+author = "Xu Shaohua <shaohua@biofan.org"
+copyright = "Copyright (c) Xu Shaohua"
+description = "Cross platform package builder"
+homepage = "https://biofan.org"
+company = "Biofan .Org"
+version = "1.0.0"
+build_id = "${date}"
+license = "GPL-3.0"
+license_file = "LICENSE"
+
+workdir = "target/pifu"
+src_dir = "."
+
+[linux]
+targets = ["deb"]
+arch = ["x86-64"]
+
+files = [
+	{from = "target/release/pifu", to = "usr/bin/pifu"},
+	{from = "pkg/pifu.png", to = "usr/share/icons/hicolor/128x128/apps/pifu.png"},
+	{from = "pkg/pifu.desktop", to = "usr/share/applications/pifu.desktop"},
+]
+
+[linux.app_image]
+exe_files = ["target/release/pifu"]
+
+files = [
+	{from = "target/release/pifu", to = "pifu"},
+	{from = "pkg/pifu.png", to = "pifu.png"},
+	{from = "pkg/pifu.desktop", to = "pifu.desktop"},
+	{from = "pkg/AppRun", to = "AppRun"},
+]
+
+[windows]
+targets = []
+
+exe_file = "pifu.exe"
+
+files = [
+	{from = "target/x86_64-pc-windows-gnu/release/pifu.exe", to="pifu.exe"},
+	{from = "pkg/pifu.png", to = "pifu.png"},
+	{from = "LICENSE", to = "LICENSE.txt"},
+]
+
+[windows.nsis]
+one_click = false
+per_machine = false
+installer_icon = "pkg/nsis/install.ico"
+uninstaller_icon = "pkg/nsis/uninstall.ico"
+installer_header_icon = "pkg/nsis/header.bmp"
+installer_sidebar = "pkg/nsis/welcome.bmp"
+uninstaller_sidebar = "pkg/nsis/unwelcome.bmp"
+run_on_startup = false
