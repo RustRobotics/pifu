@@ -5,7 +5,9 @@
 use pifu::{build, Error};
 
 fn main() -> Result<(), Error> {
-    std::env::set_var("RUST_LOG", "info");
+    if cfg!(debug_assertions) {
+        std::env::set_var("RUST_LOG", "info");
+    }
     env_logger::init();
 
     build()

@@ -130,13 +130,17 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
         rpm_dir
     );
     let def = format!("_topdir {}", fs::canonicalize(rpm_dir)?.display());
-    let status = Command::new("rpmbuild")
-        // Change rootdir of rpm build.
+
+    let mut cmd = Command::new("rpmbuild");
+    if cfg!(not(debug_assertions)) {
+        cmd.stdout(Stdio::null()).stderr(Stdio::null());
+    }
+    // Change rootdir of rpm build.
+    let status = cmd
         .arg("-D")
         .arg(&def)
         .arg("-bb")
         .arg(spec_file)
-        .stdout(Stdio::null())
         .status()
         .map_err(|err| {
             Error::from_string(
@@ -144,6 +148,7 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
                 format!("Failed to run `rpmbuild` command, error: {:?}, please check `rpm` package is installed", err),
             )
         })?;
+
     if status.success() {
         Ok(())
     } else {

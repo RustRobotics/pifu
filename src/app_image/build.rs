@@ -66,11 +66,16 @@ fn copy_libraries(
 }
 
 fn compile_app_image<P: AsRef<Path>>(workdir: &Path, dir: &P, arch: Arch) -> Result<(), Error> {
-    let status = Command::new("appimagetool")
+    let mut cmd = Command::new("appimagetool");
+    if cfg!(not(debug_assertions)) {
+        cmd.stdout(Stdio::null()).stderr(Stdio::null());
+    }
+    let status = cmd
         .env("ARCH", &arch.to_string())
         .current_dir(workdir)
         .arg(dir.as_ref())
         .stdout(Stdio::null())
+        .stderr(Stdio::null())
         .status()?;
     if status.success() {
         Ok(())
