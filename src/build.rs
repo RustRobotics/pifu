@@ -4,6 +4,7 @@
 
 use clap::{App, Arg};
 use std::fs;
+use std::path::Path;
 
 use crate::app_image::build_app_image;
 use crate::base::{expand_file_macro_simple, PlatformTarget};
@@ -31,11 +32,14 @@ pub fn build() -> Result<(), Error> {
         )
         .get_matches();
 
-    let config_file = matches.value_of("config").unwrap_or("pifu.toml");
+    let mut config_file = matches.value_of("config").unwrap_or("pkg/pifu.toml");
+    if !Path::new(config_file).exists() {
+        config_file = "pifu.toml";
+    }
     log::info!("config file: {:?}", config_file);
 
-    let config_content =
-        fs::read_to_string(config_file).expect(&format!("Failed to read {}", config_file));
+    let config_content = fs::read_to_string(config_file)
+        .expect(&format!("Failed to read config at {}", config_file));
     let mut conf: Config = toml::from_str(&config_content).expect("Invalid config");
 
     conf.metadata.build_id = expand_file_macro_simple(&conf.metadata.build_id)?;

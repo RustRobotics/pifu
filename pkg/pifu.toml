@@ -17,7 +17,7 @@ workdir = "target/pifu"
 src_dir = "."
 
 [linux]
-targets = ["deb"]
+targets = ["deb", "rpm"]
 arch = ["x86-64"]
 
 files = [
