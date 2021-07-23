@@ -5,7 +5,7 @@
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::Path;
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 use super::config::RpmConfig;
 use crate::base::archive;
@@ -136,6 +136,7 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
         .arg(&def)
         .arg("-bb")
         .arg(spec_file)
+        .stdout(Stdio::null())
         .status()
         .map_err(|err| {
             Error::from_string(

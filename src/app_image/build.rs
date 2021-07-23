@@ -5,7 +5,7 @@
 use regex::Regex;
 use std::fs;
 use std::path::Path;
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 use crate::base::fileset::copy_filesets;
 use crate::base::Arch;
@@ -70,6 +70,7 @@ fn compile_app_image<P: AsRef<Path>>(workdir: &Path, dir: &P, arch: Arch) -> Res
         .env("ARCH", &arch.to_string())
         .current_dir(workdir)
         .arg(dir.as_ref())
+        .stdout(Stdio::null())
         .status()?;
     if status.success() {
         Ok(())
