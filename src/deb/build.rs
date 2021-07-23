@@ -14,6 +14,7 @@ use crate::deb::control;
 use crate::error::{Error, ErrorKind};
 
 pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> Result<(), Error> {
+    log::info!("build_deb() conf: {:?}", conf);
     let deb_conf = &linux_conf.deb;
 
     let files = if let Some(files) = deb_conf.files.as_ref() {

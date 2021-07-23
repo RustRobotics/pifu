@@ -17,6 +17,7 @@ pub fn generate_control(
     size: u64,
     dest_file: &Path,
 ) -> Result<(), Error> {
+    log::info!("generate_control() dest: {:?}", dest_file);
     let dest_dir = dest_file.parent().unwrap();
     fs::create_dir_all(dest_dir)?;
     let mut fd = File::create(dest_file)?;
@@ -59,6 +60,7 @@ pub fn generate_control(
 }
 
 fn md5_file(file: &Path) -> Result<String, Error> {
+    log::info!("md5_file() file: {:?}", file);
     let mut in_file = File::open(file)?;
     let mut context = md5::Context::new();
     io::copy(&mut in_file, &mut context)?;
@@ -69,6 +71,11 @@ fn md5_file(file: &Path) -> Result<String, Error> {
 }
 
 pub fn generate_md5sum(dir: &Path, dest_file: &Path) -> Result<(), Error> {
+    log::info!(
+        "generate_md5sum() dir: {:?}, dest_file: {:?}",
+        dir,
+        dest_file
+    );
     let dest_dir = dest_file.parent().unwrap();
     fs::create_dir_all(dest_dir)?;
     let mut dest_fd = File::create(dest_file)?;
