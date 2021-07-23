@@ -44,17 +44,15 @@ pub fn build() -> Result<(), Error> {
 }
 
 fn build_linux(conf: &Config) -> Result<(), Error> {
+    log::info!("build_linux() conf: {:?}", conf);
+
+    // Skip if `linux` section is not set.
     let linux_conf = if let Some(linux_conf) = conf.linux.as_ref() {
         linux_conf
     } else {
         return Ok(());
     };
 
-    if linux_conf.targets.contains(&PlatformTarget::AppImage) {
-        for arch in &linux_conf.arch {
-            build_app_image(conf, linux_conf, *arch)?;
-        }
-    }
     if linux_conf.targets.contains(&PlatformTarget::Deb) {
         for arch in &linux_conf.arch {
             build_deb(conf, linux_conf, *arch)?;
@@ -63,6 +61,11 @@ fn build_linux(conf: &Config) -> Result<(), Error> {
     if linux_conf.targets.contains(&PlatformTarget::Rpm) {
         for arch in &linux_conf.arch {
             build_rpm(conf, linux_conf, *arch)?;
+        }
+    }
+    if linux_conf.targets.contains(&PlatformTarget::AppImage) {
+        for arch in &linux_conf.arch {
+            build_app_image(conf, linux_conf, *arch)?;
         }
     }
 
