@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Pifu
+GenericName=Pifu Package Builder
+Comment=Pifu
+Exec=pifu
+Icon=pifu
+Terminal=true
+Categories=System;ConsoleOnly;Development;
+Keywords=system;dev

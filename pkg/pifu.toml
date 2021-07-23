@@ -22,7 +22,7 @@ arch = ["x86-64"]
 
 files = [
 	{from = "target/release/pifu", to = "usr/bin/pifu"},
-	{from = "pkg/pifu.png", to = "usr/share/icons/hicolor/128x128/apps/pifu.png"},
+	{from = "pkg/pifu.svg", to = "usr/share/icons/hicolor/scalable/apps/pifu.png"},
 	{from = "pkg/pifu.desktop", to = "usr/share/applications/pifu.desktop"},
 ]
 
@@ -31,7 +31,7 @@ exe_files = ["target/release/pifu"]
 
 files = [
 	{from = "target/release/pifu", to = "pifu"},
-	{from = "pkg/pifu.png", to = "pifu.png"},
+	{from = "pkg/pifu.svg", to = "pifu.svg"},
 	{from = "pkg/pifu.desktop", to = "pifu.desktop"},
 	{from = "pkg/AppRun", to = "AppRun"},
 ]
