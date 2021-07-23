@@ -11,9 +11,9 @@ use crate::base::utils;
 use crate::base::Arch;
 use crate::config::{Config, LinuxConfig};
 use crate::deb::control;
-use crate::BuildError;
+use crate::error::{Error, ErrorKind};
 
-pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> Result<(), BuildError> {
+pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> Result<(), Error> {
     let deb_conf = &linux_conf.deb;
 
     let files = if let Some(files) = deb_conf.files.as_ref() {
@@ -21,7 +21,10 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> Result<
     } else if let Some(files) = linux_conf.files.as_ref() {
         files
     } else {
-        return Err(BuildError::FilesNotSet);
+        return Err(Error::new(
+            ErrorKind::FilesNotSet,
+            "`files` property not set for deb format",
+        ));
     };
 
     let workdir = Path::new(&conf.metadata.workdir);

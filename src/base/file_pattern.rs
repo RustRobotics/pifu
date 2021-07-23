@@ -9,10 +9,10 @@ use std::process::Command;
 
 use super::config::{Arch, PlatformTarget};
 use crate::config::Config;
-use crate::BuildError;
+use crate::error::{Error, ErrorKind};
 
 /// Get git commit hash of HEAD ref.
-pub fn get_git_hash() -> Result<String, BuildError> {
+pub fn get_git_hash() -> Result<String, Error> {
     let output = Command::new("git")
         .arg("rev-parse")
         .arg("--short")
@@ -40,16 +40,19 @@ fn get_timestamp() -> String {
     now.timestamp().to_string()
 }
 
-fn get_env(name: &str) -> Result<String, BuildError> {
+fn get_env(name: &str) -> Result<String, Error> {
     for (key, value) in env::vars() {
         if name == key {
             return Ok(value);
         }
     }
-    Err(BuildError::EnvironmentNotSetError)
+    Err(Error::from_string(
+        ErrorKind::EnvironmentNotSetError,
+        format!("Environment with name `{:?}` not set!", name),
+    ))
 }
 
-pub fn expand_file_macro_simple(s: &str) -> Result<String, BuildError> {
+pub fn expand_file_macro_simple(s: &str) -> Result<String, Error> {
     let mut content = s.to_string();
     if content.find("${git}").is_some() {
         let hash = get_git_hash()?;
@@ -85,7 +88,7 @@ pub fn expand_file_macro(
     conf: &Config,
     arch: Arch,
     target: PlatformTarget,
-) -> Result<String, BuildError> {
+) -> Result<String, Error> {
     let mut content = expand_file_macro_simple(s)?;
 
     if content.find("${ext}").is_some() {

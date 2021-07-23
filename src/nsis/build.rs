@@ -2,6 +2,7 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
+use std::fmt::Debug;
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
@@ -10,17 +11,16 @@ use std::process::Command;
 use super::config::NsisConfig;
 use crate::base::{expand_file_macro, Arch, PlatformTarget};
 use crate::config::{Config, WindowsConfig};
-use crate::BuildError;
+use crate::error::{Error, ErrorKind};
 
-pub fn build_nsis(
-    conf: &Config,
-    windows_conf: &WindowsConfig,
-    arch: Arch,
-) -> Result<(), BuildError> {
+pub fn build_nsis(conf: &Config, windows_conf: &WindowsConfig, arch: Arch) -> Result<(), Error> {
     let nsis_conf = if let Some(nsis_conf) = windows_conf.nsis.as_ref() {
         nsis_conf
     } else {
-        return Err(BuildError::InvalidConfError);
+        return Err(Error::new(
+            ErrorKind::InvalidConfError,
+            "`nsis` config not set!",
+        ));
     };
 
     if let Some(script) = nsis_conf.script.as_ref() {
@@ -36,13 +36,16 @@ fn generate_nsis_file(
     windows_conf: &WindowsConfig,
     arch: Arch,
     nsis_conf: &NsisConfig,
-) -> Result<PathBuf, BuildError> {
+) -> Result<PathBuf, Error> {
     let files = if let Some(files) = nsis_conf.files.as_ref() {
         files
     } else if let Some(files) = windows_conf.files.as_ref() {
         files
     } else {
-        return Err(BuildError::FilesNotSet);
+        return Err(Error::new(
+            ErrorKind::FilesNotSet,
+            "`files` property not set for nsis",
+        ));
     };
 
     let workdir = Path::new(&conf.metadata.workdir);
@@ -359,11 +362,17 @@ fn generate_nsis_file(
 }
 
 /// Compile nsis script
-fn compile_nsis<P: AsRef<Path>>(nsis_file: &P) -> Result<(), BuildError> {
+fn compile_nsis<P>(nsis_file: &P) -> Result<(), Error>
+where
+    P: AsRef<Path> + Debug,
+{
     let status = Command::new("makensis").arg(nsis_file.as_ref()).status()?;
     if status.success() {
         Ok(())
     } else {
-        Err(BuildError::NsisCompilerError)
+        Err(Error::from_string(
+            ErrorKind::NsisCompilerError,
+            format!("`makensis` returns error while compiling {:?}", nsis_file),
+        ))
     }
 }

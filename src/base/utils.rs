@@ -6,9 +6,9 @@ use std::fs;
 use std::path::Path;
 use walkdir::WalkDir;
 
-use crate::BuildError;
+use crate::Error;
 
-pub fn get_folder_size(dir: &Path) -> Result<u64, BuildError> {
+pub fn get_folder_size(dir: &Path) -> Result<u64, Error> {
     let mut total_size = 0;
     for entry in WalkDir::new(dir) {
         let entry = entry?;

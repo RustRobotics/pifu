@@ -9,9 +9,9 @@ use std::path::Path;
 use xz2::stream::MtStreamBuilder;
 use xz2::write::XzEncoder;
 
-use crate::BuildError;
+use crate::Error;
 
-pub fn create_gz(in_path: &Path, out_path: &Path) -> Result<(), BuildError> {
+pub fn create_gz(in_path: &Path, out_path: &Path) -> Result<(), Error> {
     let out_file = File::create(out_path)?;
     let mut encoder = GzBuilder::new().write(out_file, Compression::default());
     let mut in_file = File::open(in_path)?;
@@ -21,7 +21,7 @@ pub fn create_gz(in_path: &Path, out_path: &Path) -> Result<(), BuildError> {
     Ok(())
 }
 
-pub fn create_xz2(in_path: &Path, out_path: &Path) -> Result<(), BuildError> {
+pub fn create_xz2(in_path: &Path, out_path: &Path) -> Result<(), Error> {
     let xz_level = 6;
     let stream = MtStreamBuilder::new()
         .preset(xz_level)

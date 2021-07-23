@@ -12,4 +12,4 @@ mod nsis;
 mod rpm;
 
 pub use build::build;
-pub use error::BuildError;
+pub use error::Error;

@@ -10,13 +10,9 @@ use std::process::Command;
 use crate::base::fileset::copy_filesets;
 use crate::base::Arch;
 use crate::config::{Config, LinuxConfig};
-use crate::BuildError;
+use crate::error::{Error, ErrorKind};
 
-pub fn build_app_image(
-    conf: &Config,
-    linux_conf: &LinuxConfig,
-    arch: Arch,
-) -> Result<(), BuildError> {
+pub fn build_app_image(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> Result<(), Error> {
     let app_image_conf = &linux_conf.app_image;
 
     let files = if let Some(files) = app_image_conf.files.as_ref() {
@@ -24,7 +20,10 @@ pub fn build_app_image(
     } else if let Some(files) = linux_conf.files.as_ref() {
         files
     } else {
-        return Err(BuildError::FilesNotSet);
+        return Err(Error::new(
+            ErrorKind::FilesNotSet,
+            "`files` property not set for app_image format",
+        ));
     };
 
     let workdir = Path::new(&conf.metadata.workdir);
@@ -51,7 +50,7 @@ fn copy_libraries(
     exe_files: &[String],
     exclude_libs: &[String],
     libs_dir: &Path,
-) -> Result<(), BuildError> {
+) -> Result<(), Error> {
     let pattern = Regex::new(r"\s+(.+)\s+=>\s+(\S+)\s+\(\S+\)")?;
     for exe_file in exe_files {
         let output = Command::new("ldd").arg(exe_file).output()?;
@@ -66,11 +65,7 @@ fn copy_libraries(
     Ok(())
 }
 
-fn compile_app_image<P: AsRef<Path>>(
-    workdir: &Path,
-    dir: &P,
-    arch: Arch,
-) -> Result<(), BuildError> {
+fn compile_app_image<P: AsRef<Path>>(workdir: &Path, dir: &P, arch: Arch) -> Result<(), Error> {
     let status = Command::new("appimagetool")
         .env("ARCH", &arch.to_string())
         .current_dir(workdir)
@@ -79,6 +74,9 @@ fn compile_app_image<P: AsRef<Path>>(
     if status.success() {
         Ok(())
     } else {
-        Err(BuildError::AppImageCompilerError)
+        Err(Error::from_string(
+            ErrorKind::AppImageCompilerError,
+            format!("`appimagetool` returns error, workdir: {:?}", workdir),
+        ))
     }
 }

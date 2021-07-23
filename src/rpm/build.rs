@@ -13,9 +13,9 @@ use crate::base::compress;
 use crate::base::fileset::copy_filesets;
 use crate::base::Arch;
 use crate::config::{Config, LinuxConfig};
-use crate::BuildError;
+use crate::error::{Error, ErrorKind};
 
-pub fn build_rpm(conf: &Config, linux_conf: &LinuxConfig, _arch: Arch) -> Result<(), BuildError> {
+pub fn build_rpm(conf: &Config, linux_conf: &LinuxConfig, _arch: Arch) -> Result<(), Error> {
     let rpm_conf = &linux_conf.rpm;
 
     let workdir = Path::new(&conf.metadata.workdir);
@@ -37,7 +37,10 @@ pub fn build_rpm(conf: &Config, linux_conf: &LinuxConfig, _arch: Arch) -> Result
     } else if let Some(files) = linux_conf.files.as_ref() {
         files
     } else {
-        return Err(BuildError::FilesNotSet);
+        return Err(Error::new(
+            ErrorKind::FilesNotSet,
+            "`files` property not set for rpm format",
+        ));
     };
     copy_filesets(files, &conf.metadata.src_dir, &source_dir)?;
 
@@ -60,7 +63,7 @@ fn generate_spec_file(
     conf: &Config,
     rpm_conf: &RpmConfig,
     spec_fd: &mut File,
-) -> Result<(), BuildError> {
+) -> Result<(), Error> {
     // Generate spec file.
     writeln!(spec_fd, "Name: {}", &conf.metadata.name)?;
     writeln!(spec_fd, "Version: {}", &conf.metadata.version)?;
@@ -109,7 +112,7 @@ cp -rfa * %{{buildroot}}
     Ok(())
 }
 
-fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), BuildError> {
+fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
     let def = format!("_topdir {}", fs::canonicalize(rpm_dir)?.display());
     let status = Command::new("rpmbuild")
         // Change rootdir of rpm build.
@@ -121,6 +124,9 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), BuildError>
     if status.success() {
         Ok(())
     } else {
-        Err(BuildError::RpmCompilerError)
+        Err(Error::from_string(
+            ErrorKind::RpmCompilerError,
+            format!("rpm file: {:?}", spec_file),
+        ))
     }
 }

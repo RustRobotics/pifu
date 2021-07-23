@@ -11,9 +11,9 @@ use crate::config::Config;
 use crate::deb::build_deb;
 use crate::nsis::build_nsis;
 use crate::rpm::build_rpm;
-use crate::BuildError;
+use crate::Error;
 
-pub fn build() -> Result<(), BuildError> {
+pub fn build() -> Result<(), Error> {
     // read config
     // build packages one by one
 
@@ -43,7 +43,7 @@ pub fn build() -> Result<(), BuildError> {
     build_windows(&conf)
 }
 
-fn build_linux(conf: &Config) -> Result<(), BuildError> {
+fn build_linux(conf: &Config) -> Result<(), Error> {
     let linux_conf = if let Some(linux_conf) = conf.linux.as_ref() {
         linux_conf
     } else {
@@ -69,7 +69,7 @@ fn build_linux(conf: &Config) -> Result<(), BuildError> {
     Ok(())
 }
 
-fn build_windows(conf: &Config) -> Result<(), BuildError> {
+fn build_windows(conf: &Config) -> Result<(), Error> {
     let windows_conf = if let Some(windows_conf) = conf.windows.as_ref() {
         windows_conf
     } else {

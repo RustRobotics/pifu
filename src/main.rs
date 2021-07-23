@@ -2,9 +2,9 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use pifu::{build, BuildError};
+use pifu::{build, Error};
 
-fn main() -> Result<(), BuildError> {
+fn main() -> Result<(), Error> {
     std::env::set_var("RUST_LOG", "info");
     env_logger::init();
 

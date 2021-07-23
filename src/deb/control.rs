@@ -9,14 +9,14 @@ use walkdir::WalkDir;
 
 use crate::base::Arch;
 use crate::config::Config;
-use crate::BuildError;
+use crate::Error;
 
 pub fn generate_control(
     conf: &Config,
     arch: Arch,
     size: u64,
     dest_file: &Path,
-) -> Result<(), BuildError> {
+) -> Result<(), Error> {
     let dest_dir = dest_file.parent().unwrap();
     fs::create_dir_all(dest_dir)?;
     let mut fd = File::create(dest_file)?;
@@ -58,7 +58,7 @@ pub fn generate_control(
     Ok(())
 }
 
-fn md5_file(file: &Path) -> Result<String, BuildError> {
+fn md5_file(file: &Path) -> Result<String, Error> {
     let mut in_file = File::open(file)?;
     let mut context = md5::Context::new();
     io::copy(&mut in_file, &mut context)?;
@@ -68,7 +68,7 @@ fn md5_file(file: &Path) -> Result<String, BuildError> {
     Ok(hash)
 }
 
-pub fn generate_md5sum(dir: &Path, dest_file: &Path) -> Result<(), BuildError> {
+pub fn generate_md5sum(dir: &Path, dest_file: &Path) -> Result<(), Error> {
     let dest_dir = dest_file.parent().unwrap();
     fs::create_dir_all(dest_dir)?;
     let mut dest_fd = File::create(dest_file)?;
@@ -86,7 +86,7 @@ pub fn generate_md5sum(dir: &Path, dest_file: &Path) -> Result<(), BuildError> {
     Ok(())
 }
 
-pub fn generate_deb_binary(path: &Path) -> Result<(), BuildError> {
+pub fn generate_deb_binary(path: &Path) -> Result<(), Error> {
     let mut fd = File::create(path)?;
     writeln!(fd, "2.0")?;
     Ok(())
