@@ -2,6 +2,7 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
+use std::fmt::Debug;
 use std::fs::{self, File};
 use std::io;
 #[cfg(not(target_os = "windows"))]
@@ -13,6 +14,7 @@ use walkdir::WalkDir;
 use crate::error::{Error, ErrorKind};
 
 pub fn create_tar(dir: &Path, to: &Path) -> Result<(), Error> {
+    log::info!("create_tar_chown(), dir: {:?}, to: {:?}", dir, to);
     let to_file = File::create(to)?;
     let mut builder = tar::Builder::new(to_file);
     if let Some(dirname) = dir.file_name() {
@@ -28,6 +30,7 @@ pub fn create_tar(dir: &Path, to: &Path) -> Result<(), Error> {
 }
 
 pub fn create_tar_without_rootdir(dir: &Path, to: &Path) -> Result<(), Error> {
+    log::info!("create_tar_without_rootdir() {:?} > {:?}", dir, to);
     let to_file = File::create(to)?;
     let mut builder = tar::Builder::new(to_file);
     builder.append_dir_all(".", dir)?;
@@ -37,7 +40,7 @@ pub fn create_tar_without_rootdir(dir: &Path, to: &Path) -> Result<(), Error> {
 }
 
 pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), Error> {
-    log::info!("tar {:?} > {:?}", dir, to);
+    log::info!("create_tar_chown() {:?} > {:?}", dir, to);
     let to_file = File::create(to)?;
     let mut builder = tar::Builder::new(to_file);
 
@@ -92,7 +95,7 @@ pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), Error> {
 }
 
 pub fn create_ar(dir: &Path, to: &Path) -> Result<(), Error> {
-    log::info!("ar {:?} > {:?}", dir, to);
+    log::info!("create_ar() {:?} > {:?}", dir, to);
     let to_file = File::create(to)?;
     let mut builder = ar::Builder::new(to_file);
 
@@ -107,7 +110,11 @@ pub fn create_ar(dir: &Path, to: &Path) -> Result<(), Error> {
     Ok(())
 }
 
-pub fn create_ar_files<P: AsRef<Path>>(files: &[&P], to: &Path) -> Result<(), Error> {
+pub fn create_ar_files<P>(files: &[&P], to: &Path) -> Result<(), Error>
+where
+    P: AsRef<Path> + Debug,
+{
+    log::info!("create_ar_files() files: {:?}, to: {:?}", files, to);
     let to_file = File::create(to)?;
     let mut builder = ar::Builder::new(to_file);
 

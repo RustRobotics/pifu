@@ -7,7 +7,7 @@ use std::fs;
 use std::path::Path;
 
 use crate::base::GlobPatterns;
-use crate::Error;
+use crate::error::{Error, ErrorKind};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct FileSet {
@@ -21,11 +21,24 @@ impl FileSet {
     pub fn copy_to(&self, src: &str, dest: &Path) -> Result<(), Error> {
         let dest_path = dest.join(&self.to);
         let dest_dir = dest_path.parent().unwrap();
-        fs::create_dir_all(dest_dir)?;
+        fs::create_dir_all(dest_dir).map_err(|_err| {
+            Error::from_string(
+                ErrorKind::IoError,
+                format!("Failed to create directory `{:?}`", dest_dir),
+            )
+        })?;
         let src_pattern = format!("{}/{}", src, &self.from);
         for entry in glob::glob(&src_pattern)? {
             let entry = entry?;
-            fs::copy(&entry, &dest_path)?;
+            fs::copy(&entry, &dest_path).map_err(|_err| {
+                Error::from_string(
+                    ErrorKind::IoError,
+                    format!(
+                        "Failed to copy file from `{:?}` to `{:?}`",
+                        &entry, &dest_path
+                    ),
+                )
+            })?;
         }
         Ok(())
     }
