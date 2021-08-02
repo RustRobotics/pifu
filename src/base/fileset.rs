@@ -48,15 +48,34 @@ impl FileSet {
         for entry in entries {
             entry_not_match = false;
             let entry = entry?;
-            fs::copy(&entry, &dest_path).map_err(|_err| {
-                Error::from_string(
+            let metadata = fs::metadata(&entry)?;
+            if metadata.is_file() {
+                fs::copy(&entry, &dest_path).map_err(|err| {
+                    Error::from_string(
+                        ErrorKind::IoError,
+                        format!(
+                            "Failed to copy file from `{:?}` to `{:?}`, err: {:?}",
+                            &entry, &dest_path, err
+                        ),
+                    )
+                })?;
+            } else if metadata.is_dir() {
+                let options = fs_extra::dir::CopyOptions::new();
+                fs_extra::dir::copy(&entry, &dest_path, &options).map_err(|err| {
+                    Error::from_string(
+                        ErrorKind::IoError,
+                        format!(
+                            "Failed to copy folder from `{:?}` to `{:?}`, err: {:?}",
+                            &entry, &dest_path, &err
+                        ),
+                    )
+                })?;
+            } else {
+                return Err(Error::from_string(
                     ErrorKind::IoError,
-                    format!(
-                        "Failed to copy file from `{:?}` to `{:?}`",
-                        &entry, &dest_path
-                    ),
-                )
-            })?;
+                    format!("Unsupported file type: {:?}", entry),
+                ));
+            }
         }
         if entry_not_match {
             Err(Error::from_string(
