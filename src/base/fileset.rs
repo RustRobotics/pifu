@@ -71,7 +71,9 @@ impl FileSet {
                     )
                 })?;
 
-                let options = fs_extra::dir::CopyOptions::new();
+                let mut options = fs_extra::dir::CopyOptions::new();
+                options.overwrite = true;
+                options.copy_inside = true;
                 fs_extra::dir::copy(&entry, &dest_path, &options).map_err(|err| {
                     Error::from_string(
                         ErrorKind::IoError,
