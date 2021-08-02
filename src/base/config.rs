@@ -17,6 +17,19 @@ pub enum Arch {
     AArch64,
 }
 
+pub const fn get_target_arch() -> Option<Arch> {
+    if cfg!(target_arch = "x86") {
+        return Some(Arch::X86);
+    }
+    if cfg!(target_arch = "x86_64") {
+        return Some(Arch::X86_64);
+    }
+    if cfg!(target_arch = "aarch64") {
+        return Some(Arch::AArch64);
+    }
+    return None;
+}
+
 impl fmt::Display for Arch {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {

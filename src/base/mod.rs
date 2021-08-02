@@ -4,7 +4,7 @@
 
 pub mod archive;
 pub mod compress;
-mod config;
+pub mod config;
 mod file_pattern;
 pub mod fileset;
 pub mod utils;
