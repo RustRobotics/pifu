@@ -1,6 +1,6 @@
 [package]
 name = "pifu"
-version = "0.2.2"
+version = "0.2.3"
 edition = "2018"
 authors = ["Xu Shaohua <shaohua@biofan.org"]
 repository = "https://github.com/PifuProject/pifu"
