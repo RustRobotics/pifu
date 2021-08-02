@@ -60,13 +60,24 @@ impl FileSet {
                     )
                 })?;
             } else if metadata.is_dir() {
+                // `dest_path` must be a directory.
+                fs::create_dir_all(&dest_path).map_err(|err| {
+                    Error::from_string(
+                        ErrorKind::IoError,
+                        format!(
+                            "Failed to create directory `{:?}`, error: {:?}",
+                            &dest_path, err
+                        ),
+                    )
+                })?;
+
                 let options = fs_extra::dir::CopyOptions::new();
                 fs_extra::dir::copy(&entry, &dest_path, &options).map_err(|err| {
                     Error::from_string(
                         ErrorKind::IoError,
                         format!(
                             "Failed to copy folder from `{:?}` to `{:?}`, err: {:?}",
-                            &entry, &dest_path, &err
+                            &entry, &dest_path, err
                         ),
                     )
                 })?;
