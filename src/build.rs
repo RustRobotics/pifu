@@ -19,8 +19,8 @@ pub fn build() -> Result<(), Error> {
     // read config
     // build packages one by one
 
-    let matches = App::new("Rust builder")
-        .version("0.1.0")
+    let matches = App::new("Pifu package builder")
+        .version("0.2.4")
         .author("Xu Shaohua <shaohua@biofan.org>")
         .about("General package builder")
         .arg(
