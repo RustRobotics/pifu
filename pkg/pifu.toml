@@ -8,7 +8,7 @@ copyright = "Copyright (c) Xu Shaohua"
 description = "Cross platform package builder"
 homepage = "https://biofan.org"
 company = "Biofan .Org"
-version = "0.2.3"
+version = "0.2.4"
 build_id = "${date}"
 license = "GPL-3.0"
 license_file = "LICENSE"
@@ -17,12 +17,12 @@ workdir = "target/pifu"
 src_dir = "."
 
 [linux]
-targets = ["deb", "rpm"]
+targets = ["deb", "rpm", "app_image"]
 arch = ["x86-64"]
 
 files = [
 	{from = "target/release/pifu", to = "usr/bin/pifu"},
-	{from = "pkg/pifu.svg", to = "usr/share/icons/hicolor/scalable/apps/pifu.png"},
+	{from = "pkg/pifu.svg", to = "usr/share/icons/hicolor/scalable/apps/pifu.svg"},
 	{from = "pkg/pifu.desktop", to = "usr/share/applications/pifu.desktop"},
 ]
 
