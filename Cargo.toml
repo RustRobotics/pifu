@@ -13,6 +13,7 @@ categories = ["development-tools::build-utils"]
 ar = "0.8.0"
 chrono = "0.4.19"
 clap = "2.33.3"
+directories = "3.0.2"
 env_logger = "0.9.0"
 flate2 = "1.0.20"
 fs_extra = "1.2.0"

@@ -46,6 +46,9 @@ pub enum ErrorKind {
 
     GlobPatternError,
     GlobError,
+
+    // $HOME does not refer to a valid path.
+    HomeDirError,
 }
 
 #[derive(Debug, Clone)]

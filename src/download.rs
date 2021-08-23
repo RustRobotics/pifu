@@ -5,6 +5,7 @@
 use serde_derive::{Deserialize, Serialize};
 
 use crate::base::config::Arch;
+use crate::config::get_binary_dir;
 use crate::Error;
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -16,6 +17,14 @@ struct DownloadEntry {
 }
 
 pub fn download() -> Result<(), Error> {
+    // 0. get local binary directory.
+    let binary_dir = get_binary_dir()?;
+    log::info!("binary dir: {:?}", binary_dir);
+
+    // 1. read and parse file list
+    // 2. check file exists and file hash matches
+    // 3. download file one by one with reqwest crate
+    // 4. check downloaded file hash
     Ok(())
 }
 

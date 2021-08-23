@@ -2,12 +2,15 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
+use directories::ProjectDirs;
 use serde_derive::{Deserialize, Serialize};
+use std::path::PathBuf;
 
 use crate::app_image::AppImageConfig;
 use crate::base::fileset::FileSet;
 use crate::base::{Arch, Metadata, PlatformTarget};
 use crate::deb::DebConfig;
+use crate::error::{Error, ErrorKind};
 use crate::nsis::NsisConfig;
 use crate::rpm::RpmConfig;
 
@@ -71,4 +74,17 @@ pub struct WindowsConfig {
 
 fn default_windows_targets() -> Vec<PlatformTarget> {
     vec![PlatformTarget::Nsis]
+}
+
+pub fn get_project_dir() -> Result<ProjectDirs, Error> {
+    match ProjectDirs::from("org", "biofan", "pifu") {
+        Some(dir) => Ok(dir),
+        None => Err(Error::new(ErrorKind::HomeDirError, "Invalid $HOME")),
+    }
+}
+
+pub fn get_binary_dir() -> Result<PathBuf, Error> {
+    let project_dir = get_project_dir()?;
+    let conf_dir = project_dir.config_dir();
+    Ok(conf_dir.join("bin"))
 }
