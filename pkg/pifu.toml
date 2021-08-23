@@ -36,6 +36,9 @@ files = [
 	{from = "pkg/AppRun", to = "AppRun"},
 ]
 
+[linux.deb]
+depends = "libc-bin, nsis, rpm"
+
 [windows]
 targets = []
 
