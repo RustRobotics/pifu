@@ -2,16 +2,8 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-mod app_image;
-pub mod base;
-mod build;
-mod cmdline;
-pub mod config;
-mod deb;
-mod download;
-mod error;
-mod nsis;
-mod rpm;
+use crate::Error;
 
-pub use cmdline::read_cmdline;
-pub use error::Error;
+pub fn download() -> Result<(), Error> {
+    Ok(())
+}

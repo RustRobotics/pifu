@@ -2,7 +2,7 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use pifu::{build, Error};
+use pifu::{read_cmdline, Error};
 
 fn main() -> Result<(), Error> {
     if cfg!(debug_assertions) {
@@ -10,5 +10,5 @@ fn main() -> Result<(), Error> {
     }
     env_logger::init();
 
-    build()
+    read_cmdline()
 }
