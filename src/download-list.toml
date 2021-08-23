@@ -1,0 +1,24 @@
+
+[[appimagetool]]
+arch = "aarch64"
+filename = "appimagetool-aarch64.AppImage"
+sha256 = ""
+url = "https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-aarch64.AppImage",
+
+#[[appimagetool]]
+#arch = "armhf"
+#filename = "appimagetool-armhf.AppImage"
+#sha256 = ""
+#url = "https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-armhf.AppImage"
+
+[[appimagetool]]
+arch = "x86"
+filename = "appimagetool-i686.AppImage"
+sha256 = ""
+url = "https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-i686.AppImage"
+
+[[appimagetool]]
+arch = "x86-64"
+filename = "appimagetool-x86_64.AppImage"
+sha256 = ""
+url = "https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage"
