@@ -4,7 +4,7 @@
 
 use serde_derive::{Deserialize, Serialize};
 use shell_rs::hashsum;
-use std::fs::File;
+use std::fs::{create_dir_all, File};
 use std::path::Path;
 
 use crate::base::config::Arch;
@@ -12,7 +12,12 @@ use crate::config::get_binary_dir;
 use crate::Error;
 
 #[derive(Debug, Deserialize, Serialize)]
-struct DownloadEntry {
+struct TaskList {
+    appimagetool: Vec<Task>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+struct Task {
     arch: Arch,
     url: String,
     filename: String,
@@ -23,23 +28,24 @@ pub fn download() -> Result<(), Error> {
     // 0. get local binary directory.
     let binary_dir = get_binary_dir()?;
     log::info!("binary dir: {:?}", binary_dir);
+    create_dir_all(&binary_dir)?;
 
     // 1. read and parse file list
-    let download_list_str = include_str!("download-list.toml");
-    let entry_list: Vec<DownloadEntry> = toml::from_str(download_list_str)?;
+    let task_list_str = include_str!("download-list.toml");
+    let task_list: TaskList = toml::from_str(task_list_str)?;
 
-    for entry in &entry_list {
+    for task in &task_list.appimagetool {
         // 2. check file exists and file hash matches
-        let filepath = Path::new(&binary_dir).join(&entry.filename);
+        let filepath = Path::new(&binary_dir).join(&task.filename);
         if filepath.exists() {
             if let Ok(file_hash) = hashsum::sha256sum(&filepath, &hashsum::Options::default()) {
-                if file_hash == entry.sha256 {
+                if file_hash == task.sha256 {
                     log::info!("Skip exists file: {:?}", &filepath);
                     continue;
                 } else {
                     log::error!(
                         "Hash mismatch, expected {:?}, got {:?}",
-                        entry.sha256,
+                        task.sha256,
                         &file_hash
                     );
                 }
@@ -48,20 +54,20 @@ pub fn download() -> Result<(), Error> {
 
         for _retry in 0..3 {
             // 3. download file one by one with reqwest crate
-            if let Err(err) = download_file(&entry.url, &filepath) {
-                log::error!("Failed to download {:?}, got error: {:?}", &entry.url, err);
+            if let Err(err) = download_file(&task.url, &filepath) {
+                log::error!("Failed to download {:?}, got error: {:?}", &task.url, err);
                 continue;
             }
 
             // 4. check downloaded file hash
             match hashsum::sha256sum(&filepath, &hashsum::Options::default()) {
                 Ok(file_hash) => {
-                    if file_hash == entry.sha256 {
+                    if file_hash == task.sha256 {
                         break;
                     } else {
                         log::error!(
                             "Hash mismatch, expected {:?}, got {:?}",
-                            entry.sha256,
+                            task.sha256,
                             &file_hash
                         );
                     }
