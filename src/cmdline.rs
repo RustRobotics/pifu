@@ -6,11 +6,11 @@ use clap::{App, Arg};
 use std::fs;
 use std::path::Path;
 
-use crate::base::expand_file_macro_simple;
+use crate::base::{expand_file_macro_simple, Arch, PlatformTarget};
 use crate::build;
 use crate::config::Config;
 use crate::download;
-use crate::Error;
+use crate::error::{Error, ErrorKind};
 
 pub fn read_cmdline() -> Result<(), Error> {
     let matches = App::new("Pifu package builder")
@@ -28,8 +28,9 @@ pub fn read_cmdline() -> Result<(), Error> {
         .arg(
             Arg::with_name("os")
                 .long("os")
+                .multiple(true)
                 .help("Build specific OS platforms")
-                .takes_value(false),
+                .takes_value(true),
         )
         .arg(
             Arg::with_name("download")
@@ -57,6 +58,28 @@ pub fn read_cmdline() -> Result<(), Error> {
     conf.metadata.build_id = expand_file_macro_simple(&conf.metadata.build_id)?;
 
     let mut options = build::BuildOptions::default();
+    if let Some(os_list) = matches.values_of("os") {
+        options.targets.clear();
+        for os in os_list {
+            if os == "linux" {
+                options.targets.extend([
+                    PlatformTarget::Deb,
+                    PlatformTarget::Rpm,
+                    PlatformTarget::AppImage,
+                ]);
+            } else if os == "win" {
+                options.targets.push(PlatformTarget::Nsis);
+            } else {
+                log::error!("Invalid --os {}", &os);
+                return Err(Error::from_string(
+                    ErrorKind::CmdlineError,
+                    format!("Invalid --os {}, available values are `linux` or `win`", os),
+                ));
+            }
+        }
+    }
 
-    build::build(conf, &options)
+    log::info!("options: {:#?}", options);
+    //build::build(conf, &options)
+    Ok(())
 }

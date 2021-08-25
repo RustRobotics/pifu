@@ -54,6 +54,8 @@ pub enum ErrorKind {
     HomeDirError,
 
     HttpError,
+
+    CmdlineError,
 }
 
 #[derive(Debug, Clone)]
