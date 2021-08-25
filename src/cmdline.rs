@@ -42,6 +42,14 @@ pub fn read_cmdline() -> Result<(), Error> {
                 .takes_value(true),
         )
         .arg(
+            Arg::with_name("arch")
+                .long("arch")
+                .short("a")
+                .multiple(true)
+                .help("Build specific architecture")
+                .takes_value(true),
+        )
+        .arg(
             Arg::with_name("download")
                 .long("download")
                 .help("Download required tools from github")
@@ -102,7 +110,23 @@ pub fn read_cmdline() -> Result<(), Error> {
         }
     }
 
+    if let Some(arch_list) = matches.values_of("arch") {
+        options.arches.clear();
+        for arch in arch_list {
+            if let Ok(arch) = Arch::from_str(&arch) {
+                options.arches.push(arch);
+            } else {
+                return Err(Error::from_string(
+                    ErrorKind::CmdlineError,
+                    format!(
+                        "Invalid --arch {}, available values are `x86_64`, `x86` or `aarch64`",
+                        arch
+                    ),
+                ));
+            }
+        }
+    }
+
     log::info!("options: {:#?}", options);
-    //build::build(conf, &options)
-    Ok(())
+    build::build(conf, &options)
 }

@@ -4,6 +4,7 @@
 
 use serde_derive::{Deserialize, Serialize};
 use std::fmt;
+use std::str::FromStr;
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq)]
 pub enum Arch {
@@ -36,6 +37,23 @@ impl fmt::Display for Arch {
             Arch::X86 => write!(f, "x86"),
             Arch::X86_64 => write!(f, "x86_64"),
             Arch::AArch64 => write!(f, "aarch64"),
+        }
+    }
+}
+
+impl FromStr for Arch {
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        match input {
+            "x86" => Ok(Arch::X86),
+            "i386" => Ok(Arch::X86),
+            "i686" => Ok(Arch::X86),
+            "x86_64" => Ok(Arch::X86_64),
+            "amd64" => Ok(Arch::X86_64),
+            "arm64" => Ok(Arch::AArch64),
+            "aarch64" => Ok(Arch::AArch64),
+            _ => Err(()),
         }
     }
 }
@@ -78,7 +96,7 @@ pub enum PlatformTarget {
     Nsis,
 }
 
-impl std::str::FromStr for PlatformTarget {
+impl FromStr for PlatformTarget {
     type Err = ();
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
