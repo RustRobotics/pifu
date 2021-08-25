@@ -26,10 +26,9 @@ pub fn read_cmdline() -> Result<(), Error> {
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("cross-build")
-                .short("x")
-                .long("cross-build")
-                .help("Enable corss build")
+            Arg::with_name("os")
+                .long("os")
+                .help("Build specific OS platforms")
                 .takes_value(false),
         )
         .arg(
@@ -57,7 +56,7 @@ pub fn read_cmdline() -> Result<(), Error> {
 
     conf.metadata.build_id = expand_file_macro_simple(&conf.metadata.build_id)?;
 
-    let cross_build = matches.is_present("cross-build");
+    let mut options = build::BuildOptions::default();
 
-    build::build(conf, cross_build)
+    build::build(conf, &options)
 }
