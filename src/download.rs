@@ -4,7 +4,7 @@
 
 use serde_derive::{Deserialize, Serialize};
 use shell_rs::hashsum;
-use std::fs::{create_dir_all, File};
+use std::fs::{self, File};
 use std::path::Path;
 
 use crate::base::config::Arch;
@@ -28,7 +28,7 @@ pub fn download() -> Result<(), Error> {
     // 0. get local binary directory.
     let binary_dir = get_binary_dir()?;
     log::info!("binary dir: {:?}", binary_dir);
-    create_dir_all(&binary_dir)?;
+    fs::create_dir_all(&binary_dir)?;
 
     // 1. read and parse file list
     let task_list_str = include_str!("download-list.toml");
@@ -63,6 +63,9 @@ pub fn download() -> Result<(), Error> {
             match hashsum::sha256sum(&filepath, &hashsum::Options::default()) {
                 Ok(file_hash) => {
                     if file_hash == task.sha256 {
+                        if cfg!(unix) {
+                            add_executable_permission(&filepath)?;
+                        }
                         break;
                     } else {
                         log::error!(
@@ -86,5 +89,12 @@ fn download_file<P: AsRef<Path>>(url: &str, filepath: P) -> Result<(), Error> {
     let mut fd = File::create(filepath)?;
     std::io::copy(&mut response, &mut fd)
         .map(drop)
-        .map_err(|err| err.into())
+        .map_err(Into::into)
+}
+
+fn add_executable_permission<P: AsRef<Path>>(filepath: P) -> Result<(), Error> {
+    use std::os::unix::fs::PermissionsExt;
+    let mut perms = fs::metadata(&filepath)?.permissions();
+    perms.set_mode(0o755);
+    fs::set_permissions(&filepath, perms).map_err(Into::into)
 }
