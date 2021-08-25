@@ -5,6 +5,7 @@
 use clap::{App, Arg};
 use std::fs;
 use std::path::Path;
+use std::str::FromStr;
 
 use crate::base::{expand_file_macro_simple, Arch, PlatformTarget};
 use crate::build;
@@ -29,7 +30,15 @@ pub fn read_cmdline() -> Result<(), Error> {
             Arg::with_name("os")
                 .long("os")
                 .multiple(true)
-                .help("Build specific OS platforms")
+                .help("Build for specific OS platform")
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("target")
+                .long("target")
+                .short("t")
+                .multiple(true)
+                .help("Build specific target")
                 .takes_value(true),
         )
         .arg(
@@ -74,6 +83,20 @@ pub fn read_cmdline() -> Result<(), Error> {
                 return Err(Error::from_string(
                     ErrorKind::CmdlineError,
                     format!("Invalid --os {}, available values are `linux` or `win`", os),
+                ));
+            }
+        }
+    }
+
+    if let Some(target_list) = matches.values_of("target") {
+        options.targets.clear();
+        for target in target_list {
+            if let Ok(target) = PlatformTarget::from_str(&target) {
+                options.targets.push(target);
+            } else {
+                return Err(Error::from_string(
+                    ErrorKind::CmdlineError,
+                    format!("Invalid --target {}, available values are `deb`, `rpm`, `app_image` or `nsis`", target),
                 ));
             }
         }

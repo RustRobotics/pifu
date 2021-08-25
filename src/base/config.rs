@@ -78,6 +78,22 @@ pub enum PlatformTarget {
     Nsis,
 }
 
+impl std::str::FromStr for PlatformTarget {
+    type Err = ();
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        match input {
+            "deb" => Ok(PlatformTarget::Deb),
+            "rpm" => Ok(PlatformTarget::Rpm),
+            "app_image" => Ok(PlatformTarget::AppImage),
+            "appImage" => Ok(PlatformTarget::AppImage),
+            "AppImage" => Ok(PlatformTarget::AppImage),
+            "nsis" => Ok(PlatformTarget::Nsis),
+            _ => Err(()),
+        }
+    }
+}
+
 impl PlatformTarget {
     /// Returns extension name of generated artifcate files.
     pub fn extension(&self) -> &'static str {
