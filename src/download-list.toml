@@ -18,7 +18,7 @@ sha256 = "104978205c888cb2ad42d1799e03d4621cb9a6027cfb375d069b394a82ff15d1"
 url = "https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-i686.AppImage"
 
 [[appimagetool]]
-arch = "x86-64"
-filename = "appimagetool-x86-64.AppImage"
+arch = "x86_64"
+filename = "appimagetool-x86_64.AppImage"
 sha256 = "df3baf5ca5facbecfc2f3fa6713c29ab9cefa8fd8c1eac5d283b79cab33e4acb"
 url = "https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage"

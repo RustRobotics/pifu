@@ -17,8 +17,8 @@ workdir = "target/pifu"
 src_dir = "."
 
 [linux]
-targets = ["app_image"]
-arch = ["x86-64"]
+targets = ["deb", "rpm", "app_image"]
+arch = ["x86_64"]
 
 files = [
 	{from = "target/release/pifu", to = "usr/bin/pifu"},

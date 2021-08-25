@@ -18,7 +18,7 @@ src_dir = "."
 
 [linux]
 targets = ["deb", "rpm", "app_image"]
-arch = ["x86-64"]
+arch = ["x86_64"]
 
 files = [
 	{from = "target/debug/examples/hello", to = "usr/bin/pifu-hello"},

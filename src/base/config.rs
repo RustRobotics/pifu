@@ -10,7 +10,7 @@ pub enum Arch {
     #[serde(alias = "x86")]
     X86,
 
-    #[serde(alias = "x86-64")]
+    #[serde(alias = "x86_64")]
     X86_64,
 
     #[serde(alias = "aarch64")]
@@ -34,7 +34,7 @@ impl fmt::Display for Arch {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Arch::X86 => write!(f, "x86"),
-            Arch::X86_64 => write!(f, "x86-64"),
+            Arch::X86_64 => write!(f, "x86_64"),
             Arch::AArch64 => write!(f, "aarch64"),
         }
     }
