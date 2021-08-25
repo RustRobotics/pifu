@@ -19,7 +19,7 @@ pub fn build(conf: Config, cross_build: bool) -> Result<(), Error> {
 }
 
 fn build_linux(conf: &Config, cross_build: bool) -> Result<(), Error> {
-    log::info!("build_linux() conf: {:?}", conf);
+    log::info!("build_linux() conf: {:#?}", conf);
 
     // Skip if `linux` section is not set.
     let linux_conf = if let Some(linux_conf) = conf.linux.as_ref() {
