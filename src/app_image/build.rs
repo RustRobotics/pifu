@@ -73,7 +73,7 @@ fn get_appimage_tool(arch: Arch) -> Result<PathBuf, Error> {
 
 fn compile_app_image<P: AsRef<Path>>(workdir: &Path, dir: &P, arch: Arch) -> Result<(), Error> {
     let appimage_tool = get_appimage_tool(arch)?;
-    log::info!("Using {:?}", &appimage_tool);
+    log::info!("Using appimagetool: {:?}", &appimage_tool);
     let mut cmd = Command::new(appimage_tool.as_os_str());
     if cfg!(not(debug_assertions)) {
         cmd.stdout(Stdio::null()).stderr(Stdio::null());
@@ -84,7 +84,14 @@ fn compile_app_image<P: AsRef<Path>>(workdir: &Path, dir: &P, arch: Arch) -> Res
         .arg(dir.as_ref())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
-        .status()?;
+        .status()
+        .map_err(|err| {
+            Error::from_string(
+                ErrorKind::AppImageCompilerError,
+                format!("Failed to run `appimagetool` command, error: {:?}, please install with `pifu --download` command", err),
+            )
+        })?;
+
     if status.success() {
         Ok(())
     } else {
