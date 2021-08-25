@@ -4,12 +4,12 @@
 
 use regex::Regex;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
 use crate::base::fileset::copy_filesets;
 use crate::base::Arch;
-use crate::config::{Config, LinuxConfig};
+use crate::config::{get_binary_dir, Config, LinuxConfig};
 use crate::error::{Error, ErrorKind};
 
 pub fn build_app_image(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> Result<(), Error> {
@@ -65,8 +65,16 @@ fn copy_libraries(
     Ok(())
 }
 
+fn get_appimage_tool(arch: Arch) -> Result<PathBuf, Error> {
+    let mut binary_dir = get_binary_dir()?;
+    binary_dir.push(format!("appimagetool-{}.AppImage", arch));
+    Ok(binary_dir)
+}
+
 fn compile_app_image<P: AsRef<Path>>(workdir: &Path, dir: &P, arch: Arch) -> Result<(), Error> {
-    let mut cmd = Command::new("appimagetool");
+    let appimage_tool = get_appimage_tool(arch)?;
+    log::info!("Using {:?}", &appimage_tool);
+    let mut cmd = Command::new(appimage_tool.as_os_str());
     if cfg!(not(debug_assertions)) {
         cmd.stdout(Stdio::null()).stderr(Stdio::null());
     }
