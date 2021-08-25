@@ -48,7 +48,10 @@ pub enum ErrorKind {
     GlobError,
 
     // $HOME does not refer to a valid path.
+    // TODO(Shaohua): Merge to `InvalidDirname`
     HomeDirError,
+
+    HttpError,
 }
 
 #[derive(Debug, Clone)]
@@ -127,5 +130,11 @@ impl From<io::Error> for Error {
 impl From<string::FromUtf8Error> for Error {
     fn from(err: string::FromUtf8Error) -> Self {
         Error::from_string(ErrorKind::Utf8Error, format!("{}", err))
+    }
+}
+
+impl From<reqwest::Error> for Error {
+    fn from(err: reqwest::Error) -> Self {
+        Error::from_string(ErrorKind::HttpError, format!("{}", err))
     }
 }
