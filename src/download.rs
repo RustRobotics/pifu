@@ -4,6 +4,7 @@
 
 use serde_derive::{Deserialize, Serialize};
 use shell_rs::hashsum;
+use std::fs::File;
 use std::path::Path;
 
 use crate::base::config::Arch;
@@ -25,7 +26,7 @@ pub fn download() -> Result<(), Error> {
 
     // 1. read and parse file list
     let download_list_str = include_str!("download-list.toml");
-    let entry_list: Vec<DownloadEntry> = toml::from_str(download_list_str).unwrap();
+    let entry_list: Vec<DownloadEntry> = toml::from_str(download_list_str)?;
 
     for entry in &entry_list {
         // 2. check file exists and file hash matches
@@ -54,13 +55,16 @@ pub fn download() -> Result<(), Error> {
 
             // 4. check downloaded file hash
             match hashsum::sha256sum(&filepath, &hashsum::Options::default()) {
-                Ok(file_hash) if file_hash == entry.sha256 => break,
                 Ok(file_hash) => {
-                    log::error!(
-                        "Hash mismatch, expected {:?}, got {:?}",
-                        entry.sha256,
-                        &file_hash
-                    );
+                    if file_hash == entry.sha256 {
+                        break;
+                    } else {
+                        log::error!(
+                            "Hash mismatch, expected {:?}, got {:?}",
+                            entry.sha256,
+                            &file_hash
+                        );
+                    }
                 }
                 Err(err) => log::error!("err: {:?}", err),
             }
@@ -71,5 +75,10 @@ pub fn download() -> Result<(), Error> {
 }
 
 fn download_file<P: AsRef<Path>>(url: &str, filepath: P) -> Result<(), Error> {
-    Ok(())
+    log::info!("Downloading {} to {:?}", url, filepath.as_ref());
+    let mut response = reqwest::blocking::get(url)?;
+    let mut fd = File::create(filepath)?;
+    std::io::copy(&mut response, &mut fd)
+        .map(drop)
+        .map_err(|err| err.into())
 }

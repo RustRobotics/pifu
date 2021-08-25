@@ -40,6 +40,8 @@ pub enum ErrorKind {
 
     JsonError,
 
+    TomlError,
+
     RegexError,
 
     InvalidDirname,
@@ -136,5 +138,11 @@ impl From<string::FromUtf8Error> for Error {
 impl From<reqwest::Error> for Error {
     fn from(err: reqwest::Error) -> Self {
         Error::from_string(ErrorKind::HttpError, format!("{}", err))
+    }
+}
+
+impl From<toml::de::Error> for Error {
+    fn from(err: toml::de::Error) -> Self {
+        Error::from_string(ErrorKind::TomlError, format!("{}", err))
     }
 }
