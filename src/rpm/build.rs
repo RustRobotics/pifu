@@ -16,7 +16,6 @@ use crate::config::{Config, LinuxConfig};
 use crate::error::{Error, ErrorKind};
 
 pub fn build_rpm(conf: &Config, linux_conf: &LinuxConfig, _arch: Arch) -> Result<(), Error> {
-    log::info!("build_rpm() conf: {:?}", conf);
     let rpm_conf = &linux_conf.rpm;
 
     let workdir = Path::new(&conf.metadata.workdir);
@@ -65,7 +64,10 @@ pub fn build_rpm(conf: &Config, linux_conf: &LinuxConfig, _arch: Arch) -> Result
     let new_source_xz_file = rpm_source_dir.join(format!("{}.tar.xz", &conf.metadata.name));
     fs::rename(&source_xz_file, new_source_xz_file)?;
 
-    generate_rpm_file(&spec_file, &rpm_dir)
+    generate_rpm_file(&spec_file, &rpm_dir)?;
+
+    let rpm_dir = rpm_dir.to_str().unwrap();
+    move_rpm_files(rpm_dir)
 }
 
 fn generate_spec_file(
@@ -157,4 +159,16 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
             format!("rpm file: {:?}", spec_file),
         ))
     }
+}
+
+fn move_rpm_files(rpm_dir: &str) -> Result<(), Error> {
+    let rpm_files = format!("{}/RPMS/*/*.rpm", rpm_dir);
+    shell_rs::mv::mv(&rpm_files, rpm_dir, &shell_rs::mv::Options::default())
+        .map(drop)
+        .map_err(|err| {
+            Error::from_string(
+                ErrorKind::IoError,
+                format!("Failed to move {} to {}, {}", rpm_files, rpm_dir, err),
+            )
+        })
 }
