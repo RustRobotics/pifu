@@ -1,7 +1,7 @@
 [package]
 name = "pifu"
 version = "0.3.1"
-edition = "2018"
+edition = "2021"
 authors = ["Xu Shaohua <shaohua@biofan.org"]
 repository = "https://github.com/PifuProject/pifu"
 readme = "README.md"
