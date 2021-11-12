@@ -162,13 +162,14 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
 }
 
 fn move_rpm_files(rpm_dir: &str) -> Result<(), Error> {
-    let rpm_files = format!("{}/RPMS/*/*.rpm", rpm_dir);
-    shell_rs::mv::mv(&rpm_files, rpm_dir, &shell_rs::mv::Options::default())
-        .map(drop)
-        .map_err(|err| {
-            Error::from_string(
-                ErrorKind::IoError,
-                format!("Failed to move {} to {}, {}", rpm_files, rpm_dir, err),
-            )
-        })
+    todo!()
+    //    let rpm_files = format!("{}/RPMS/*/*.rpm", rpm_dir);
+    //    mv(&rpm_files, rpm_dir, &shell_rs::mv::Options::default())
+    //        .map(drop)
+    //        .map_err(|err| {
+    //            Error::from_string(
+    //                ErrorKind::IoError,
+    //                format!("Failed to move {} to {}, {}", rpm_files, rpm_dir, err),
+    //            )
+    //        })
 }

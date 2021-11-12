@@ -3,11 +3,11 @@
 // in the LICENSE file.
 
 use serde_derive::{Deserialize, Serialize};
-use shell_rs::hashsum;
 use std::fs::{self, File};
 use std::path::Path;
 
 use crate::base::config::Arch;
+use crate::base::hash::sha256sum;
 use crate::config::get_binary_dir;
 use crate::Error;
 
@@ -38,7 +38,7 @@ pub fn download() -> Result<(), Error> {
         // 2. check file exists and file hash matches
         let filepath = Path::new(&binary_dir).join(&task.filename);
         if filepath.exists() {
-            if let Ok(file_hash) = hashsum::sha256sum(&filepath, &hashsum::Options::default()) {
+            if let Ok(file_hash) = sha256sum(&filepath) {
                 if file_hash == task.sha256 {
                     log::info!("Skip exists file: {:?}", &filepath);
                     continue;
@@ -60,7 +60,7 @@ pub fn download() -> Result<(), Error> {
             }
 
             // 4. check downloaded file hash
-            match hashsum::sha256sum(&filepath, &hashsum::Options::default()) {
+            match sha256sum(&filepath) {
                 Ok(file_hash) => {
                     if file_hash == task.sha256 {
                         if cfg!(unix) {
