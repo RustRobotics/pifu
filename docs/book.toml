@@ -1,0 +1,6 @@
+[book]
+authors = ["Xu Shaohua"]
+language = "en_US"
+multilingual = false
+src = "src"
+title = "Pifu: Cross platform package builder"
