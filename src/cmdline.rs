@@ -21,8 +21,8 @@ const OPT_DOWNLOAD: &str = "download";
 const OPT_IGNORE_ERROR: &str = "ignore-error";
 
 pub fn read_cmdline() -> Result<(), Error> {
-    let matches = App::new("Pifu package builder")
-        .version("0.2.4")
+    let matches = App::new("Pifu - Cross platform package builder")
+        .version("0.3.3")
         .author("Xu Shaohua <shaohua@biofan.org>")
         .about("General package builder")
         .arg(
