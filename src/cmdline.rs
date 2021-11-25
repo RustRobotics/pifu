@@ -13,62 +13,69 @@ use crate::config::Config;
 use crate::download;
 use crate::error::{Error, ErrorKind};
 
+const OPT_CONFIG: &str = "config";
+const OPT_OS: &str = "os";
+const OPT_TARGET: &str = "target";
+const OPT_ARCH: &str = "arch";
+const OPT_DOWNLOAD: &str = "download";
+const OPT_IGNORE_ERROR: &str = "ignore-error";
+
 pub fn read_cmdline() -> Result<(), Error> {
     let matches = App::new("Pifu package builder")
         .version("0.2.4")
         .author("Xu Shaohua <shaohua@biofan.org>")
         .about("General package builder")
         .arg(
-            Arg::with_name("config")
+            Arg::with_name(OPT_CONFIG)
                 .short("c")
-                .long("config")
+                .long(OPT_CONFIG)
                 .value_name("toml file")
                 .help("Specify a custom toml config file")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("os")
-                .long("os")
+            Arg::with_name(OPT_OS)
+                .long(OPT_OS)
                 .multiple(true)
                 .help("Build for specific OS platform")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("target")
-                .long("target")
+            Arg::with_name(OPT_TARGET)
+                .long(OPT_TARGET)
                 .short("t")
                 .multiple(true)
                 .help("Build specific target")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("arch")
-                .long("arch")
+            Arg::with_name(OPT_ARCH)
+                .long(OPT_ARCH)
                 .short("a")
                 .multiple(true)
                 .help("Build specific architecture")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("download")
-                .long("download")
+            Arg::with_name(OPT_DOWNLOAD)
+                .long(OPT_DOWNLOAD)
                 .help("Download required tools from github")
                 .takes_value(false),
         )
         .arg(
-            Arg::with_name("ignore_error")
-                .long("ignore_error")
+            Arg::with_name(OPT_IGNORE_ERROR)
+                .long(OPT_IGNORE_ERROR)
                 .help("Ignore build errors and continue")
                 .takes_value(false),
         )
         .get_matches();
 
-    if matches.is_present("download") {
+    if matches.is_present(OPT_DOWNLOAD) {
         return download::download();
     }
 
     // read config
-    let mut config_file = matches.value_of("config").unwrap_or("pkg/pifu.toml");
+    let mut config_file = matches.value_of(OPT_CONFIG).unwrap_or("pkg/pifu.toml");
     if !Path::new(config_file).exists() {
         config_file = "pifu.toml";
     }
@@ -81,9 +88,9 @@ pub fn read_cmdline() -> Result<(), Error> {
     conf.metadata.build_id = expand_file_macro_simple(&conf.metadata.build_id)?;
 
     let mut options = build::BuildOptions::default();
-    options.ignore_error = matches.is_present("ignore_error");
+    options.ignore_error = matches.is_present(OPT_IGNORE_ERROR);
 
-    if let Some(os_list) = matches.values_of("os") {
+    if let Some(os_list) = matches.values_of(OPT_OS) {
         options.targets.clear();
         for os in os_list {
             if os == "linux" {
@@ -104,7 +111,7 @@ pub fn read_cmdline() -> Result<(), Error> {
         }
     }
 
-    if let Some(target_list) = matches.values_of("target") {
+    if let Some(target_list) = matches.values_of(OPT_TARGET) {
         options.targets.clear();
         for target in target_list {
             if let Ok(target) = PlatformTarget::from_str(&target) {
@@ -118,7 +125,7 @@ pub fn read_cmdline() -> Result<(), Error> {
         }
     }
 
-    if let Some(arch_list) = matches.values_of("arch") {
+    if let Some(arch_list) = matches.values_of(OPT_ARCH) {
         options.arches.clear();
         for arch in arch_list {
             if let Ok(arch) = Arch::from_str(&arch) {
