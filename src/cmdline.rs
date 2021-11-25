@@ -55,6 +55,12 @@ pub fn read_cmdline() -> Result<(), Error> {
                 .help("Download required tools from github")
                 .takes_value(false),
         )
+        .arg(
+            Arg::with_name("ignore_error")
+                .long("ignore_error")
+                .help("Ignore build errors and continue")
+                .takes_value(false),
+        )
         .get_matches();
 
     if matches.is_present("download") {
@@ -75,6 +81,8 @@ pub fn read_cmdline() -> Result<(), Error> {
     conf.metadata.build_id = expand_file_macro_simple(&conf.metadata.build_id)?;
 
     let mut options = build::BuildOptions::default();
+    options.ignore_error = matches.is_present("ignore_error");
+
     if let Some(os_list) = matches.values_of("os") {
         options.targets.clear();
         for os in os_list {

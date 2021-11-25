@@ -86,7 +86,7 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
                 Err(err) => {
                     if options.ignore_error {
                         println!(" {}", "Failed".red());
-                        eprintln!("{} {:?}", "Error:".red(), err);
+                        println!("{} {:?}", "Error:".red(), err);
                     } else {
                         return Err(err);
                     }
@@ -102,7 +102,7 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
                 Err(err) => {
                     if options.ignore_error {
                         println!(" {}", "Failed".red());
-                        eprintln!("{} {:?}", "Error:".red(), err);
+                        println!("{} {:?}", "Error:".red(), err);
                     } else {
                         return Err(err);
                     }
@@ -118,7 +118,7 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
                 Err(err) => {
                     if options.ignore_error {
                         println!(" {}", "Failed".red());
-                        eprintln!("{} {:?}", "Error:".red(), err);
+                        println!("{} {:?}", "Error:".red(), err);
                     } else {
                         return Err(err);
                     }
@@ -145,7 +145,7 @@ fn build_windows(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
                 Err(err) => {
                     if options.ignore_error {
                         println!(" {}", "Failed".red());
-                        eprintln!("{} {:?}", "Error:".red(), err);
+                        println!("{} {:?}", "Error:".red(), err);
                     } else {
                         return Err(err);
                     }
