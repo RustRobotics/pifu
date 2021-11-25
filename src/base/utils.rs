@@ -34,6 +34,6 @@ pub fn rmdir<P: AsRef<Path>>(p: P) -> Result<(), Error> {
     Ok(())
 }
 
-pub fn mv<P: AsRef<Path>>(_src: &str, _dest: P) -> Result<(), Error> {
+pub fn mv<P: AsRef<Path>>(_src_pathtern: &str, _dest: P) -> Result<(), Error> {
     Ok(())
 }

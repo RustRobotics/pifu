@@ -13,6 +13,7 @@ categories = ["development-tools::build-utils"]
 ar = "0.9.0"
 chrono = "0.4.19"
 clap = "2.33.3"
+colored = "2.0.0"
 directories = "4.0.1"
 env_logger = "0.9.0"
 flate2 = "1.0.22"
@@ -37,3 +38,5 @@ xz2 = "0.1.6"
 lto = true
 opt-level = 3
 debug = false
+
+[features]

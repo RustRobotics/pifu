@@ -2,6 +2,8 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
+use colored::Colorize;
+
 use crate::app_image::build_app_image;
 use crate::base::config::get_target_arch;
 use crate::base::{Arch, PlatformTarget};
@@ -78,17 +80,23 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
 
     if targets.contains(&PlatformTarget::Deb) {
         for arch in &arches {
+            print!("Build deb package for {}...", arch);
             build_deb(conf, linux_conf, *arch)?;
+            println!(" {}", "Ok".green());
         }
     }
     if targets.contains(&PlatformTarget::Rpm) {
         for arch in &arches {
+            print!("Build rpm package for {}...", arch);
             build_rpm(conf, linux_conf, *arch)?;
+            println!(" {}", "Ok".green());
         }
     }
     if targets.contains(&PlatformTarget::AppImage) {
         for arch in &arches {
+            print!("Build AppImage package for {}...", arch);
             build_app_image(conf, linux_conf, *arch)?;
+            println!(" {}", "Ok".green());
         }
     }
 

@@ -137,9 +137,9 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
     let def = format!("_topdir {}", fs::canonicalize(rpm_dir)?.display());
 
     let mut cmd = Command::new("rpmbuild");
-    if cfg!(not(debug_assertions)) {
-        cmd.stdout(Stdio::null()).stderr(Stdio::null());
-    }
+    //if cfg!(not(debug_assertions)) {
+    cmd.stdout(Stdio::null()).stderr(Stdio::null());
+    //}
     // Change rootdir of rpm build.
     let status = cmd
         .arg("-D")
