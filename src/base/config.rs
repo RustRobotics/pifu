@@ -16,6 +16,9 @@ pub enum Arch {
 
     #[serde(alias = "aarch64")]
     AArch64,
+
+    #[serde(alias = "mips64")]
+    Mips64,
 }
 
 pub const fn get_target_arch() -> Option<Arch> {
@@ -28,6 +31,9 @@ pub const fn get_target_arch() -> Option<Arch> {
     if cfg!(target_arch = "aarch64") {
         return Some(Arch::AArch64);
     }
+    if cfg!(target_arch = "mips64") {
+        return Some(Arch::Mips64);
+    }
     return None;
 }
 
@@ -37,6 +43,7 @@ impl fmt::Display for Arch {
             Arch::X86 => write!(f, "x86"),
             Arch::X86_64 => write!(f, "x86_64"),
             Arch::AArch64 => write!(f, "aarch64"),
+            Arch::Mips64 => write!(f, "mips64"),
         }
     }
 }
@@ -53,6 +60,7 @@ impl FromStr for Arch {
             "amd64" => Ok(Arch::X86_64),
             "arm64" => Ok(Arch::AArch64),
             "aarch64" => Ok(Arch::AArch64),
+            "mips64" => Ok(Arch::Mips64),
             _ => Err(()),
         }
     }

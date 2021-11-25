@@ -104,5 +104,6 @@ pub const fn arch_name(arch: Arch) -> &'static str {
         Arch::X86 => "i386",
         Arch::X86_64 => "amd64",
         Arch::AArch64 => "arm64",
+        Arch::Mips64 => "mips64",
     }
 }
