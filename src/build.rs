@@ -84,8 +84,8 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
             match build_deb(conf, linux_conf, *arch) {
                 Ok(_) => println!(" {}", "Ok".green()),
                 Err(err) => {
+                    println!(" {}", "Failed".red());
                     if options.ignore_error {
-                        println!(" {}", "Failed".red());
                         println!("{} {:?}", "Error:".red(), err);
                     } else {
                         return Err(err);
@@ -100,8 +100,8 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
             match build_rpm(conf, linux_conf, *arch) {
                 Ok(_) => println!(" {}", "Ok".green()),
                 Err(err) => {
+                    println!(" {}", "Failed".red());
                     if options.ignore_error {
-                        println!(" {}", "Failed".red());
                         println!("{} {:?}", "Error:".red(), err);
                     } else {
                         return Err(err);
@@ -116,8 +116,8 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
             match build_app_image(conf, linux_conf, *arch) {
                 Ok(_) => println!(" {}", "Ok".green()),
                 Err(err) => {
+                    println!(" {}", "Failed".red());
                     if options.ignore_error {
-                        println!(" {}", "Failed".red());
                         println!("{} {:?}", "Error:".red(), err);
                     } else {
                         return Err(err);
