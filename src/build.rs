@@ -44,7 +44,7 @@ impl Default for BuildOptions {
 }
 
 pub fn build(conf: Config, options: &BuildOptions) -> Result<(), Error> {
-    log::info!("build() conf: {:#?}", conf);
+    log::debug!("build() conf: {:#?}", conf);
 
     if let Err(err) = build_linux(&conf, options) {
         if options.ignore_error {
@@ -81,22 +81,37 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
     if targets.contains(&PlatformTarget::Deb) {
         for arch in &arches {
             print!("Build deb package for {}...", arch);
-            build_deb(conf, linux_conf, *arch)?;
-            println!(" {}", "Ok".green());
+            match build_deb(conf, linux_conf, *arch) {
+                Ok(_) => println!(" {}", "Ok".green()),
+                Err(err) => {
+                    println!(" {}", "Failed".red());
+                    eprintln!("{} {:?}", "Error:".red(), err);
+                }
+            }
         }
     }
     if targets.contains(&PlatformTarget::Rpm) {
         for arch in &arches {
             print!("Build rpm package for {}...", arch);
-            build_rpm(conf, linux_conf, *arch)?;
-            println!(" {}", "Ok".green());
+            match build_rpm(conf, linux_conf, *arch) {
+                Ok(_) => println!(" {}", "Ok".green()),
+                Err(err) => {
+                    println!(" {}", "Failed".red());
+                    eprintln!("{} {:?}", "Error:".red(), err);
+                }
+            }
         }
     }
     if targets.contains(&PlatformTarget::AppImage) {
         for arch in &arches {
             print!("Build AppImage package for {}...", arch);
-            build_app_image(conf, linux_conf, *arch)?;
-            println!(" {}", "Ok".green());
+            match build_app_image(conf, linux_conf, *arch) {
+                Ok(_) => println!(" {}", "Ok".green()),
+                Err(err) => {
+                    println!(" {}", "Failed".red());
+                    eprintln!("{} {:?}", "Error:".red(), err);
+                }
+            }
         }
     }
 

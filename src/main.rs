@@ -6,7 +6,7 @@ use pifu::{read_cmdline, Error};
 
 fn main() -> Result<(), Error> {
     if cfg!(debug_assertions) {
-        //std::env::set_var("RUST_LOG", "info");
+        std::env::set_var("RUST_LOG", "info");
     }
     env_logger::init();
 
