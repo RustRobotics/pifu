@@ -32,6 +32,8 @@ pub fn build_deb(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> Result<
     let data_dir = deb_dir.join("data");
     let control_dir = deb_dir.join("control");
 
+    utils::rmdir(&deb_dir)?;
+
     fileset::copy_filesets(files, &conf.metadata.src_dir, &data_dir)?;
 
     let data_tar_file = deb_dir.join("data.tar");

@@ -11,6 +11,7 @@ use super::config::RpmConfig;
 use crate::base::archive;
 use crate::base::compress;
 use crate::base::fileset::copy_filesets;
+use crate::base::utils;
 use crate::base::Arch;
 use crate::config::{Config, LinuxConfig};
 use crate::error::{Error, ErrorKind};
@@ -20,6 +21,8 @@ pub fn build_rpm(conf: &Config, linux_conf: &LinuxConfig, _arch: Arch) -> Result
 
     let workdir = Path::new(&conf.metadata.workdir);
     let rpm_dir = workdir.join("rpm");
+    utils::rmdir(&rpm_dir)?;
+
     fs::create_dir_all(&rpm_dir)?;
     let spec_file = rpm_dir.join(format!("{}.spec", &conf.metadata.name));
     let mut spec_fd = File::create(&spec_file).map_err(|err| {
@@ -162,14 +165,6 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
 }
 
 fn move_rpm_files(rpm_dir: &str) -> Result<(), Error> {
-    todo!()
-    //    let rpm_files = format!("{}/RPMS/*/*.rpm", rpm_dir);
-    //    mv(&rpm_files, rpm_dir, &shell_rs::mv::Options::default())
-    //        .map(drop)
-    //        .map_err(|err| {
-    //            Error::from_string(
-    //                ErrorKind::IoError,
-    //                format!("Failed to move {} to {}, {}", rpm_files, rpm_dir, err),
-    //            )
-    //        })
+    let rpm_files = format!("{}/RPMS/*/*.rpm", rpm_dir);
+    utils::mv(&rpm_files, rpm_dir)
 }

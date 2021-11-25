@@ -28,3 +28,12 @@ pub const fn default_true() -> bool {
 pub const fn default_false() -> bool {
     false
 }
+
+pub fn rmdir<P: AsRef<Path>>(p: P) -> Result<(), Error> {
+    fs::remove_dir_all(p)?;
+    Ok(())
+}
+
+pub fn mv<P: AsRef<Path>>(_src: &str, _dest: P) -> Result<(), Error> {
+    Ok(())
+}
