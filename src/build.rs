@@ -54,7 +54,7 @@ pub fn build(conf: Config, options: &BuildOptions) -> Result<(), Error> {
         }
     }
 
-    build_windows(&conf)
+    build_windows(&conf, options)
 }
 
 fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
@@ -84,8 +84,12 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
             match build_deb(conf, linux_conf, *arch) {
                 Ok(_) => println!(" {}", "Ok".green()),
                 Err(err) => {
-                    println!(" {}", "Failed".red());
-                    eprintln!("{} {:?}", "Error:".red(), err);
+                    if options.ignore_error {
+                        println!(" {}", "Failed".red());
+                        eprintln!("{} {:?}", "Error:".red(), err);
+                    } else {
+                        return Err(err);
+                    }
                 }
             }
         }
@@ -96,8 +100,12 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
             match build_rpm(conf, linux_conf, *arch) {
                 Ok(_) => println!(" {}", "Ok".green()),
                 Err(err) => {
-                    println!(" {}", "Failed".red());
-                    eprintln!("{} {:?}", "Error:".red(), err);
+                    if options.ignore_error {
+                        println!(" {}", "Failed".red());
+                        eprintln!("{} {:?}", "Error:".red(), err);
+                    } else {
+                        return Err(err);
+                    }
                 }
             }
         }
@@ -108,8 +116,12 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
             match build_app_image(conf, linux_conf, *arch) {
                 Ok(_) => println!(" {}", "Ok".green()),
                 Err(err) => {
-                    println!(" {}", "Failed".red());
-                    eprintln!("{} {:?}", "Error:".red(), err);
+                    if options.ignore_error {
+                        println!(" {}", "Failed".red());
+                        eprintln!("{} {:?}", "Error:".red(), err);
+                    } else {
+                        return Err(err);
+                    }
                 }
             }
         }
@@ -118,7 +130,7 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
     Ok(())
 }
 
-fn build_windows(conf: &Config) -> Result<(), Error> {
+fn build_windows(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
     let windows_conf = if let Some(windows_conf) = conf.windows.as_ref() {
         windows_conf
     } else {
@@ -127,7 +139,18 @@ fn build_windows(conf: &Config) -> Result<(), Error> {
 
     if windows_conf.targets.contains(&PlatformTarget::Nsis) {
         for arch in &windows_conf.arch {
-            build_nsis(conf, windows_conf, *arch)?;
+            print!("Build AppImage package for {}...", arch);
+            match build_nsis(conf, windows_conf, *arch) {
+                Ok(_) => println!(" {}", "Ok".green()),
+                Err(err) => {
+                    if options.ignore_error {
+                        println!(" {}", "Failed".red());
+                        eprintln!("{} {:?}", "Error:".red(), err);
+                    } else {
+                        return Err(err);
+                    }
+                }
+            }
         }
     }
 
