@@ -82,13 +82,15 @@ pub fn read_cmdline() -> Result<(), Error> {
     log::info!("config file: {:?}", config_file);
 
     let config_content = fs::read_to_string(config_file)
-        .expect(&format!("Failed to read config at {}", config_file));
+        .unwrap_or_else(|_| panic!("Failed to read config at {}", config_file));
     let mut conf: Config = toml::from_str(&config_content).expect("Invalid config");
 
     conf.metadata.build_id = expand_file_macro_simple(&conf.metadata.build_id)?;
 
-    let mut options = build::BuildOptions::default();
-    options.ignore_error = matches.is_present(OPT_IGNORE_ERROR);
+    let mut options = build::BuildOptions {
+        ignore_error: matches.is_present(OPT_IGNORE_ERROR),
+        ..Default::default()
+    };
 
     if let Some(os_list) = matches.values_of(OPT_OS) {
         options.targets.clear();
@@ -114,7 +116,7 @@ pub fn read_cmdline() -> Result<(), Error> {
     if let Some(target_list) = matches.values_of(OPT_TARGET) {
         options.targets.clear();
         for target in target_list {
-            if let Ok(target) = PlatformTarget::from_str(&target) {
+            if let Ok(target) = PlatformTarget::from_str(target) {
                 options.targets.push(target);
             } else {
                 return Err(Error::from_string(
@@ -128,7 +130,7 @@ pub fn read_cmdline() -> Result<(), Error> {
     if let Some(arch_list) = matches.values_of(OPT_ARCH) {
         options.arches.clear();
         for arch in arch_list {
-            if let Ok(arch) = Arch::from_str(&arch) {
+            if let Ok(arch) = Arch::from_str(arch) {
                 options.arches.push(arch);
             } else {
                 return Err(Error::from_string(

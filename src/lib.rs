@@ -2,7 +2,7 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-#![deny(warnings, clippy::all)]
+#![deny(warnings, clippy::all, clippy::cargo)]
 
 mod app_image;
 mod base;

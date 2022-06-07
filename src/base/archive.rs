@@ -94,6 +94,7 @@ pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), Error> {
     Ok(())
 }
 
+#[allow(dead_code)]
 pub fn create_ar(dir: &Path, to: &Path) -> Result<(), Error> {
     log::info!("create_ar() {:?} > {:?}", dir, to);
     let to_file = File::create(to)?;

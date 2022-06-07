@@ -11,6 +11,7 @@ use xz2::write::XzEncoder;
 
 use crate::error::{Error, ErrorKind};
 
+#[allow(dead_code)]
 pub fn create_gz(in_path: &Path, out_path: &Path) -> Result<(), Error> {
     log::info!("create_gz(), in: {:?}, out: {:?}", in_path, out_path);
     let out_file = File::create(out_path)?;
