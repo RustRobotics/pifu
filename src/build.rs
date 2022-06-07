@@ -38,7 +38,7 @@ impl Default for BuildOptions {
     }
 }
 
-pub fn build(conf: Config, options: &BuildOptions) -> Result<(), Error> {
+pub fn build(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
     log::debug!("build() conf: {:#?}", conf);
 
     if let Err(err) = build_linux(&conf, options) {

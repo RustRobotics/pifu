@@ -65,6 +65,7 @@ pub struct Error {
 }
 
 impl Error {
+    #[must_use]
     pub fn new(kind: ErrorKind, message: &str) -> Self {
         Self {
             kind,
@@ -72,6 +73,7 @@ impl Error {
         }
     }
 
+    #[must_use]
     pub const fn from_string(kind: ErrorKind, message: String) -> Self {
         Self { kind, message }
     }

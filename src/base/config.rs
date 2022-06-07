@@ -21,6 +21,7 @@ pub enum Arch {
     Mips64,
 }
 
+#[must_use]
 pub const fn get_target_arch() -> Option<Arch> {
     if cfg!(target_arch = "x86") {
         return Some(Arch::X86);
@@ -53,13 +54,9 @@ impl FromStr for Arch {
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         match input {
-            "x86" => Ok(Self::X86),
-            "i386" => Ok(Self::X86),
-            "i686" => Ok(Self::X86),
-            "x86_64" => Ok(Self::X86_64),
-            "amd64" => Ok(Self::X86_64),
-            "arm64" => Ok(Self::AArch64),
-            "aarch64" => Ok(Self::AArch64),
+            "x86" | "i386" | "i686" => Ok(Self::X86),
+            "x86_64" | "amd64" => Ok(Self::X86_64),
+            "arm64" | "aarch64" => Ok(Self::AArch64),
             "mips64" => Ok(Self::Mips64),
             _ => Err(()),
         }
@@ -111,9 +108,7 @@ impl FromStr for PlatformTarget {
         match input {
             "deb" => Ok(Self::Deb),
             "rpm" => Ok(Self::Rpm),
-            "app_image" => Ok(Self::AppImage),
-            "appImage" => Ok(Self::AppImage),
-            "AppImage" => Ok(Self::AppImage),
+            "app_image" | "appImage" | "AppImage" => Ok(Self::AppImage),
             "nsis" => Ok(Self::Nsis),
             _ => Err(()),
         }
@@ -122,6 +117,7 @@ impl FromStr for PlatformTarget {
 
 impl PlatformTarget {
     /// Returns extension name of generated artifcate files.
+    #[must_use]
     pub const fn extension(&self) -> &'static str {
         match self {
             Self::Deb => "deb",

@@ -2,12 +2,17 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-#![deny(warnings, clippy::all, clippy::cargo, clippy::nursery)]
-
-//clippy::pedantic
+#![deny(
+    warnings,
+    clippy::all,
+    clippy::cargo,
+    clippy::nursery,
+    clippy::pedantic
+)]
+#![allow(clippy::module_name_repetitions)]
 
 mod app_image;
-mod base;
+pub mod base;
 mod build;
 mod cmdline;
 mod config;

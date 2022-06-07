@@ -145,5 +145,5 @@ pub fn read_cmdline() -> Result<(), Error> {
     }
 
     log::debug!("options: {:#?}", options);
-    build::build(conf, &options)
+    build::build(&conf, &options)
 }

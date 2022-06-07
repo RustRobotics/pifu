@@ -21,10 +21,12 @@ pub fn get_folder_size(dir: &Path) -> Result<u64, Error> {
     Ok(total_size)
 }
 
+#[must_use]
 pub const fn default_true() -> bool {
     true
 }
 
+#[must_use]
 pub const fn default_false() -> bool {
     false
 }

@@ -42,13 +42,13 @@ pub fn download() -> Result<(), Error> {
                 if file_hash == task.sha256 {
                     log::info!("Skip exists file: {:?}", &filepath);
                     continue;
-                } else {
-                    log::error!(
-                        "Hash mismatch, expected {:?}, got {:?}",
-                        task.sha256,
-                        &file_hash
-                    );
                 }
+
+                log::error!(
+                    "Hash mismatch, expected {:?}, got {:?}",
+                    task.sha256,
+                    &file_hash
+                );
             }
         }
 
@@ -67,13 +67,13 @@ pub fn download() -> Result<(), Error> {
                             add_executable_permission(&filepath)?;
                         }
                         break;
-                    } else {
-                        log::error!(
-                            "Hash mismatch, expected {:?}, got {:?}",
-                            task.sha256,
-                            &file_hash
-                        );
                     }
+
+                    log::error!(
+                        "Hash mismatch, expected {:?}, got {:?}",
+                        task.sha256,
+                        &file_hash
+                    );
                 }
                 Err(err) => log::error!("err: {:?}", err),
             }
