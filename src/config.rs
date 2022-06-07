@@ -3,7 +3,7 @@
 // in the LICENSE file.
 
 use directories::ProjectDirs;
-use serde_derive::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 use crate::app_image::AppImageConfig;

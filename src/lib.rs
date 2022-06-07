@@ -2,14 +2,7 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-#![deny(
-    warnings,
-    clippy::all,
-    clippy::cargo,
-    clippy::nursery,
-    clippy::pedantic
-)]
-#![warning(dead_code)]
+#![deny(warnings, clippy::all)]
 
 mod app_image;
 mod base;

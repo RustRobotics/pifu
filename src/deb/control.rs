@@ -86,7 +86,7 @@ pub fn generate_md5sum(dir: &Path, dest_file: &Path) -> Result<(), Error> {
         if path.is_file() {
             let filename = path.strip_prefix(dir)?;
             let hash = md5_file(path)?;
-            write!(dest_fd, "{} {}\n", hash, filename.display())?;
+            writeln!(dest_fd, "{} {}", hash, filename.display())?;
         }
     }
 

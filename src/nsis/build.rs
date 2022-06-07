@@ -153,7 +153,7 @@ fn generate_nsis_file(
             writeln!(nsis_fd, "RequestExecutionlevel User")?;
         }
 
-        writeln!(nsis_fd, "")?;
+        writeln!(nsis_fd)?;
 
         if nsis_conf.installer_sidebar.is_some() {
             writeln!(nsis_fd, "!insertmacro MUI_PAGE_WELCOME")?;
@@ -190,7 +190,7 @@ fn generate_nsis_file(
         writeln!(nsis_fd, "!insertmacro MUI_UNPAGE_INSTFILES")?;
     }
 
-    writeln!(nsis_fd, "")?;
+    writeln!(nsis_fd)?;
     writeln!(nsis_fd, r#"!insertmacro MUI_LANGUAGE "English""#)?;
 
     let build_version = format!("{}.{}", &conf.metadata.version, &conf.metadata.build_id);
