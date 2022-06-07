@@ -29,7 +29,7 @@ pub struct AppImageConfig {
 
 impl Default for AppImageConfig {
     fn default() -> Self {
-        AppImageConfig {
+        Self {
             exe_files: Vec::new(),
             embed_libs: true,
             files: None,

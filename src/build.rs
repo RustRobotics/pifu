@@ -24,12 +24,7 @@ pub struct BuildOptions {
 
 impl Default for BuildOptions {
     fn default() -> Self {
-        let arches = if let Some(arch) = get_target_arch() {
-            vec![arch]
-        } else {
-            Vec::new()
-        };
-
+        let arches = get_target_arch().map_or_else(Vec::new, |arch| vec![arch]);
         Self {
             ignore_error: false,
             targets: vec![

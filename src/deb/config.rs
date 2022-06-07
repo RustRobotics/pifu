@@ -28,7 +28,7 @@ fn default_priority() -> String {
 
 impl Default for DebConfig {
     fn default() -> Self {
-        DebConfig {
+        Self {
             priority: default_priority(),
             section: None,
             depends: None,

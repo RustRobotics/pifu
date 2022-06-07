@@ -118,9 +118,9 @@ pub enum CompressMethod {
 impl fmt::Display for CompressMethod {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            CompressMethod::BZip2 => write!(f, "bzip2"),
-            CompressMethod::Lzma => write!(f, "lzma"),
-            CompressMethod::Zlib => write!(f, "zlib"),
+            Self::BZip2 => write!(f, "bzip2"),
+            Self::Lzma => write!(f, "lzma"),
+            Self::Zlib => write!(f, "zlib"),
         }
     }
 }

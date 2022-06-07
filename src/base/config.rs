@@ -40,10 +40,10 @@ pub const fn get_target_arch() -> Option<Arch> {
 impl fmt::Display for Arch {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Arch::X86 => write!(f, "x86"),
-            Arch::X86_64 => write!(f, "x86_64"),
-            Arch::AArch64 => write!(f, "aarch64"),
-            Arch::Mips64 => write!(f, "mips64"),
+            Self::X86 => write!(f, "x86"),
+            Self::X86_64 => write!(f, "x86_64"),
+            Self::AArch64 => write!(f, "aarch64"),
+            Self::Mips64 => write!(f, "mips64"),
         }
     }
 }
@@ -53,14 +53,14 @@ impl FromStr for Arch {
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         match input {
-            "x86" => Ok(Arch::X86),
-            "i386" => Ok(Arch::X86),
-            "i686" => Ok(Arch::X86),
-            "x86_64" => Ok(Arch::X86_64),
-            "amd64" => Ok(Arch::X86_64),
-            "arm64" => Ok(Arch::AArch64),
-            "aarch64" => Ok(Arch::AArch64),
-            "mips64" => Ok(Arch::Mips64),
+            "x86" => Ok(Self::X86),
+            "i386" => Ok(Self::X86),
+            "i686" => Ok(Self::X86),
+            "x86_64" => Ok(Self::X86_64),
+            "amd64" => Ok(Self::X86_64),
+            "arm64" => Ok(Self::AArch64),
+            "aarch64" => Ok(Self::AArch64),
+            "mips64" => Ok(Self::Mips64),
             _ => Err(()),
         }
     }
@@ -109,12 +109,12 @@ impl FromStr for PlatformTarget {
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         match input {
-            "deb" => Ok(PlatformTarget::Deb),
-            "rpm" => Ok(PlatformTarget::Rpm),
-            "app_image" => Ok(PlatformTarget::AppImage),
-            "appImage" => Ok(PlatformTarget::AppImage),
-            "AppImage" => Ok(PlatformTarget::AppImage),
-            "nsis" => Ok(PlatformTarget::Nsis),
+            "deb" => Ok(Self::Deb),
+            "rpm" => Ok(Self::Rpm),
+            "app_image" => Ok(Self::AppImage),
+            "appImage" => Ok(Self::AppImage),
+            "AppImage" => Ok(Self::AppImage),
+            "nsis" => Ok(Self::Nsis),
             _ => Err(()),
         }
     }
@@ -122,12 +122,12 @@ impl FromStr for PlatformTarget {
 
 impl PlatformTarget {
     /// Returns extension name of generated artifcate files.
-    pub fn extension(&self) -> &'static str {
+    pub const fn extension(&self) -> &'static str {
         match self {
-            PlatformTarget::Deb => "deb",
-            PlatformTarget::Rpm => "rpm",
-            PlatformTarget::AppImage => "AppImage",
-            PlatformTarget::Nsis => "exe",
+            Self::Deb => "deb",
+            Self::Rpm => "rpm",
+            Self::AppImage => "AppImage",
+            Self::Nsis => "exe",
         }
     }
 }
