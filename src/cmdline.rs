@@ -2,7 +2,7 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use clap::{App, Arg};
+use clap::{Arg, Command};
 use std::fs;
 use std::path::Path;
 use std::str::FromStr;
@@ -21,49 +21,49 @@ const OPT_DOWNLOAD: &str = "download";
 const OPT_IGNORE_ERROR: &str = "ignore-error";
 
 pub fn read_cmdline() -> Result<(), Error> {
-    let matches = App::new("Pifu - Cross platform package builder")
+    let matches = Command::new("Pifu - Cross platform package builder")
         .version("0.3.3")
         .author("Xu Shaohua <shaohua@biofan.org>")
         .about("General package builder")
         .arg(
-            Arg::with_name(OPT_CONFIG)
-                .short("c")
+            Arg::new(OPT_CONFIG)
+                .short('c')
                 .long(OPT_CONFIG)
                 .value_name("toml file")
                 .help("Specify a custom toml config file")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name(OPT_OS)
+            Arg::new(OPT_OS)
                 .long(OPT_OS)
-                .multiple(true)
+                .multiple_occurrences(true)
                 .help("Build for specific OS platform")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name(OPT_TARGET)
+            Arg::new(OPT_TARGET)
                 .long(OPT_TARGET)
-                .short("t")
-                .multiple(true)
+                .short('t')
+                .multiple_occurrences(true)
                 .help("Build specific target")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name(OPT_ARCH)
+            Arg::new(OPT_ARCH)
                 .long(OPT_ARCH)
-                .short("a")
-                .multiple(true)
+                .short('a')
+                .multiple_occurrences(true)
                 .help("Build specific architecture")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name(OPT_DOWNLOAD)
+            Arg::new(OPT_DOWNLOAD)
                 .long(OPT_DOWNLOAD)
                 .help("Download required tools from github")
                 .takes_value(false),
         )
         .arg(
-            Arg::with_name(OPT_IGNORE_ERROR)
+            Arg::new(OPT_IGNORE_ERROR)
                 .long(OPT_IGNORE_ERROR)
                 .help("Ignore build errors and continue")
                 .takes_value(false),

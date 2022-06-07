@@ -75,6 +75,16 @@ impl Error {
     pub fn from_string(kind: ErrorKind, message: String) -> Self {
         Error { kind, message }
     }
+
+    #[must_use]
+    pub const fn kind(&self) -> ErrorKind {
+        self.kind
+    }
+
+    #[must_use]
+    pub fn message(&self) -> &str {
+        &self.message
+    }
 }
 
 impl From<glob::GlobError> for Error {
