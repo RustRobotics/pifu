@@ -1,6 +1,6 @@
 [package]
 name = "pifu"
-version = "0.3.3"
+version = "0.3.4"
 edition = "2021"
 authors = ["Xu Shaohua <shaohua@biofan.org"]
 repository = "https://github.com/PifuProject/pifu"
@@ -11,7 +11,7 @@ categories = [
   "development-tools::build-utils"
 ]
 keywords = [
-  "build tools",
+  "build-utils",
   "packaging",
 ]
 
