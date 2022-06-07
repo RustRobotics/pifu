@@ -68,7 +68,7 @@ pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), Error> {
             header.set_path(&path_str)?;
             header.set_cksum();
             let fd = File::open(path)?;
-            builder.append(&mut header, fd)?;
+            builder.append(&header, fd)?;
         } else if path.is_dir() {
             let mut header = tar::Header::new_gnu();
             header.set_mtime(mtime);
@@ -85,7 +85,7 @@ pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), Error> {
             header.set_path(&filename)?;
             header.set_entry_type(tar::EntryType::Directory);
             header.set_cksum();
-            builder.append(&mut header, &mut io::empty())?;
+            builder.append(&header, &mut io::empty())?;
         }
     }
 

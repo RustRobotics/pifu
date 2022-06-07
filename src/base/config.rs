@@ -34,7 +34,7 @@ pub const fn get_target_arch() -> Option<Arch> {
     if cfg!(target_arch = "mips64") {
         return Some(Arch::Mips64);
     }
-    return None;
+    None
 }
 
 impl fmt::Display for Arch {

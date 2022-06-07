@@ -46,7 +46,7 @@ pub fn build_app_image(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> R
         )?;
     }
 
-    compile_app_image(&workdir, &app_image_dir_name, arch)
+    compile_app_image(workdir, &app_image_dir_name, arch)
 }
 
 fn copy_libraries(
