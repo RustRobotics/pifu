@@ -54,22 +54,26 @@ fn get_env(name: &str) -> Result<String, Error> {
 
 pub fn expand_file_macro_simple(s: &str) -> Result<String, Error> {
     let mut content = s.to_string();
-    if content.find("${git}").is_some() {
+    let content_git = "${git}";
+    if content.contains(content_git) {
         let hash = get_git_hash()?;
-        content = content.replace("${git}", &hash);
+        content = content.replace(content_git, &hash);
     }
 
-    if content.find("${date}").is_some() {
+    let content_date = "${date}";
+    if content.contains(content_date) {
         let t = get_date();
-        content = content.replace("${date}", &t);
+        content = content.replace(content_date, &t);
     }
-    if content.find("${date-time}").is_some() {
+    let content_date_time = "${date-time}";
+    if content.contains(content_date_time) {
         let t = get_date_time();
-        content = content.replace("${date-time}", &t);
+        content = content.replace(content_date_time, &t);
     }
-    if content.find("${timestamp}").is_some() {
+    let content_timestamp = "${timestamp}";
+    if content.contains(content_timestamp) {
         let t = get_timestamp();
-        content = content.replace("${timestamp}", &t);
+        content = content.replace(content_timestamp, &t);
     }
     let env_pattern = Regex::new(r"\$\{env\.(\w+)\}")?;
     let mut new_content = content.clone();
@@ -91,13 +95,15 @@ pub fn expand_file_macro(
 ) -> Result<String, Error> {
     let mut content = expand_file_macro_simple(s)?;
 
-    if content.find("${ext}").is_some() {
+    let content_ext = "${ext}";
+    if content.contains(content_ext) {
         let ext_name = target.extension();
-        content = content.replace("${ext}", ext_name);
+        content = content.replace(content_ext, ext_name);
     }
-    if content.find("${arch}").is_some() {
+    let content_arch = "${arch}";
+    if content.contains(content_arch) {
         let arch_name = arch.to_string();
-        content = content.replace("${arch}", &arch_name);
+        content = content.replace(content_arch, &arch_name);
     }
     // TODO(Shaohua): Support ${os} macro
 
@@ -105,23 +111,20 @@ pub fn expand_file_macro(
     let mut new_content = content.clone();
     if key_pattern.is_match(&content) {
         // Expand metadata
-        match serde_json::to_value(&conf.metadata)? {
-            serde_json::Value::Object(metadata) => {
-                for cap in key_pattern.captures_iter(&content) {
-                    log::info!("cap1: {:?}", &cap[1]);
-                    if metadata.get(&cap[1]).is_some() {
-                        match metadata[&cap[1]] {
-                            serde_json::Value::String(ref new_value) => {
-                                new_content = new_content.replace(&cap[0], new_value);
-                            }
-                            _ => {
-                                log::error!("Invalid metadata property: {:?}", &cap[1]);
-                            }
+        if let serde_json::Value::Object(metadata) = serde_json::to_value(&conf.metadata)? {
+            for cap in key_pattern.captures_iter(&content) {
+                log::info!("cap1: {:?}", &cap[1]);
+                if metadata.get(&cap[1]).is_some() {
+                    match metadata[&cap[1]] {
+                        serde_json::Value::String(ref new_value) => {
+                            new_content = new_content.replace(&cap[0], new_value);
+                        }
+                        _ => {
+                            log::error!("Invalid metadata property: {:?}", &cap[1]);
                         }
                     }
                 }
             }
-            _ => {}
         }
 
         // TODO(Shaohua): Expand target specific properties.

@@ -69,13 +69,13 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
         .arch
         .iter()
         .filter(|a| options.arches.contains(a))
-        .map(|a| *a)
+        .copied()
         .collect::<Vec<Arch>>();
     let targets = linux_conf
         .targets
         .iter()
         .filter(|t| options.targets.contains(t))
-        .map(|t| *t)
+        .copied()
         .collect::<Vec<PlatformTarget>>();
 
     if targets.contains(&PlatformTarget::Deb) {

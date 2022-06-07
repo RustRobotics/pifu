@@ -21,10 +21,12 @@ impl FileSet {
     pub fn copy_to(&self, src: &str, dest: &Path) -> Result<(), Error> {
         log::info!("FileSet::copy_to() src: {:?}, dest: {:?}", src, dest);
         let dest_path = dest.join(&self.to);
-        let dest_dir = dest_path.parent().ok_or(Error::from_string(
-            ErrorKind::IoError,
-            format!("Failed to get parent dir of dest_path: {:?}", dest_path),
-        ))?;
+        let dest_dir = dest_path.parent().ok_or_else(|| {
+            Error::from_string(
+                ErrorKind::IoError,
+                format!("Failed to get parent dir of dest_path: {:?}", dest_path),
+            )
+        })?;
         fs::create_dir_all(dest_dir).map_err(|err| {
             Error::from_string(
                 ErrorKind::IoError,
@@ -108,7 +110,7 @@ pub fn copy_filesets(files: &[FileSet], src: &str, dest: &Path) -> Result<(), Er
         src,
         dest
     );
-    for ref file in files {
+    for file in files {
         file.copy_to(src, dest)?;
     }
 
