@@ -18,7 +18,7 @@ keywords = [
 [dependencies]
 ar = "0.9.0"
 chrono = "0.4.19"
-clap = "3.1.18"
+clap = "3.2.8"
 colored = "2.0.0"
 directories = "4.0.1"
 env_logger = "0.9.0"
@@ -29,10 +29,10 @@ hex = "0.4.3"
 log = "0.4.17"
 md5 = "0.7.0"
 num_cpus = "1.13.1"
-regex = "1.5.6"
-reqwest = { version = "0.11.10", default-features = false, features = ["blocking", "rustls-tls"] }
-serde = { version = "1.0.137", features = ["derive"] }
-serde_json = "1.0.81"
+regex = "1.6.0"
+reqwest = { version = "0.11.11", default-features = false, features = ["blocking", "rustls-tls"] }
+serde = { version = "1.0.138", features = ["derive"] }
+serde_json = "1.0.82"
 sha2 = "0.10.2"
 tar = "0.4.38"
 toml = "0.5.9"
