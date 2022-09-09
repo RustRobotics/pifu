@@ -81,7 +81,7 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
                 Err(err) => {
                     println!(" {}", "Failed".red());
                     if options.ignore_error {
-                        println!("{} {:?}", "Error:".red(), err);
+                        println!("Error: {:?}", err);
                     } else {
                         return Err(err);
                     }

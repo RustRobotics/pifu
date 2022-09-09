@@ -21,7 +21,7 @@ pub fn build_rpm(conf: &Config, linux_conf: &LinuxConfig, _arch: Arch) -> Result
 
     let workdir = Path::new(&conf.metadata.workdir);
     let rpm_dir = workdir.join("rpm");
-    utils::rmdir(&rpm_dir)?;
+    let _ = utils::rmdir(&rpm_dir);
 
     fs::create_dir_all(&rpm_dir)?;
     let spec_file = rpm_dir.join(format!("{}.spec", &conf.metadata.name));

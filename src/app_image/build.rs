@@ -30,7 +30,7 @@ pub fn build_app_image(conf: &Config, linux_conf: &LinuxConfig, arch: Arch) -> R
     let workdir = Path::new(&conf.metadata.workdir);
     let app_image_dir_name = "app_image";
     let app_image_dir = workdir.join(app_image_dir_name);
-    utils::rmdir(&app_image_dir)?;
+    let _ = utils::rmdir(&app_image_dir);
 
     let libs_dir = app_image_dir.join("libs");
     fs::create_dir_all(&app_image_dir)?;
