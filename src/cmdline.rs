@@ -2,9 +2,9 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use clap::{Arg, Command};
+use clap::{value_parser, Arg, ArgAction, Command};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
 use crate::base::{expand_file_macro_simple, Arch, PlatformTarget};
@@ -22,86 +22,85 @@ const OPT_IGNORE_ERROR: &str = "ignore-error";
 
 pub fn read_cmdline() -> Result<(), Error> {
     let matches = Command::new("Pifu - Cross platform package builder")
-        .version("0.3.3")
+        .version("0.3.4")
         .author("Xu Shaohua <shaohua@biofan.org>")
         .about("General package builder")
         .arg(
             Arg::new(OPT_CONFIG)
                 .short('c')
                 .long(OPT_CONFIG)
+                .action(ArgAction::Set)
                 .value_name("toml file")
                 .help("Specify a custom toml config file")
-                .takes_value(true),
+                .value_parser(value_parser!(PathBuf)),
         )
         .arg(
             Arg::new(OPT_OS)
                 .long(OPT_OS)
-                .multiple_occurrences(true)
-                .help("Build for specific OS platform")
-                .takes_value(true),
+                .action(ArgAction::Set)
+                .help("Build for specific OS platform"),
         )
         .arg(
             Arg::new(OPT_TARGET)
-                .long(OPT_TARGET)
                 .short('t')
-                .multiple_occurrences(true)
-                .help("Build specific target")
-                .takes_value(true),
+                .long(OPT_TARGET)
+                .action(ArgAction::Set)
+                .help("Build specific target"),
         )
         .arg(
             Arg::new(OPT_ARCH)
-                .long(OPT_ARCH)
                 .short('a')
-                .multiple_occurrences(true)
-                .help("Build specific architecture")
-                .takes_value(true),
+                .long(OPT_ARCH)
+                .action(ArgAction::Set)
+                .help("Build specific architecture"),
         )
         .arg(
             Arg::new(OPT_DOWNLOAD)
                 .long(OPT_DOWNLOAD)
-                .help("Download required tools from github")
-                .takes_value(false),
+                .help("Download required tools from github"),
         )
         .arg(
             Arg::new(OPT_IGNORE_ERROR)
                 .long(OPT_IGNORE_ERROR)
-                .help("Ignore build errors and continue")
-                .takes_value(false),
+                .help("Ignore build errors and continue"),
         )
         .get_matches();
 
-    if matches.is_present(OPT_DOWNLOAD) {
+    if matches.get_count(OPT_DOWNLOAD) > 0 {
         return download::download();
     }
 
     // read config
-    let mut config_file = matches.value_of(OPT_CONFIG).unwrap_or("pkg/pifu.toml");
-    if !Path::new(config_file).exists() {
-        config_file = "pifu.toml";
+    let mut config_file: String = matches
+        .get_one::<&str>(OPT_CONFIG)
+        .unwrap_or(&"pkg/pifu.toml")
+        .to_string();
+    if !Path::new(&config_file).exists() {
+        config_file = "pifu.toml".to_owned();
     }
     log::info!("config file: {:?}", config_file);
 
-    let config_content = fs::read_to_string(config_file)
+    let config_content = fs::read_to_string(&config_file)
         .unwrap_or_else(|_| panic!("Failed to read config at {}", config_file));
     let mut conf: Config = toml::from_str(&config_content).expect("Invalid config");
 
     conf.metadata.build_id = expand_file_macro_simple(&conf.metadata.build_id)?;
 
     let mut options = build::BuildOptions {
-        ignore_error: matches.is_present(OPT_IGNORE_ERROR),
+        ignore_error: matches.get_count(OPT_IGNORE_ERROR) > 0,
         ..Default::default()
     };
 
-    if let Some(os_list) = matches.values_of(OPT_OS) {
+    if let Some(os_list) = matches.get_many::<&str>(OPT_OS) {
         options.targets.clear();
         for os in os_list {
-            if os == "linux" {
+            if *os == "linux" {
                 options.targets.extend([
                     PlatformTarget::Deb,
                     PlatformTarget::Rpm,
                     PlatformTarget::AppImage,
                 ]);
-            } else if os == "win" {
+            } else if *os == "win" {
                 options.targets.push(PlatformTarget::Nsis);
             } else {
                 log::error!("Invalid --os {}", &os);
@@ -113,7 +112,7 @@ pub fn read_cmdline() -> Result<(), Error> {
         }
     }
 
-    if let Some(target_list) = matches.values_of(OPT_TARGET) {
+    if let Some(target_list) = matches.get_many::<&str>(OPT_TARGET) {
         options.targets.clear();
         for target in target_list {
             if let Ok(target) = PlatformTarget::from_str(target) {
@@ -127,7 +126,7 @@ pub fn read_cmdline() -> Result<(), Error> {
         }
     }
 
-    if let Some(arch_list) = matches.values_of(OPT_ARCH) {
+    if let Some(arch_list) = matches.get_many::<&str>(OPT_ARCH) {
         options.arches.clear();
         for arch in arch_list {
             if let Ok(arch) = Arch::from_str(arch) {
