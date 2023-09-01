@@ -10,6 +10,7 @@ use crate::base::utils::{default_false, default_true};
 
 /// `NsisConfig` is defined based on <https://www.electron.build/configuration/nsis>
 #[derive(Debug, Deserialize, Serialize)]
+#[allow(clippy::struct_excessive_bools)]
 pub struct NsisConfig {
     pub files: Option<Vec<FileSet>>,
 

@@ -48,10 +48,12 @@ fn get_env(name: &str) -> Result<String, Error> {
     }
     Err(Error::from_string(
         ErrorKind::EnvironmentNotSetError,
-        format!("Environment with name `{:?}` not set!", name),
+        format!("Environment with name `{name:?}` not set!"),
     ))
 }
 
+/// # Errors
+/// Returns error if failed to expand file path.
 pub fn expand_file_macro_simple(s: &str) -> Result<String, Error> {
     let mut content = s.to_string();
     let content_git = "${git}";
@@ -87,6 +89,8 @@ pub fn expand_file_macro_simple(s: &str) -> Result<String, Error> {
     Ok(new_content)
 }
 
+/// # Errors
+/// Returns error if failed to expand file path.
 pub fn expand_file_macro(
     s: &str,
     conf: &Config,
@@ -192,7 +196,7 @@ mod tests {
 
         let s = "app-${env.USER}.deb";
         let ret = expand_file_macro_simple(s);
-        println!("ret: {:?}", ret);
+        println!("ret: {ret:?}");
         assert!(ret.is_ok());
         assert!(ret.unwrap().len() > 9);
     }

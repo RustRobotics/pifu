@@ -11,6 +11,8 @@ use xz2::write::XzEncoder;
 
 use crate::error::{Error, ErrorKind};
 
+/// # Errors
+/// Returns error if failed to create archive file.
 #[allow(dead_code)]
 pub fn create_gz(in_path: &Path, out_path: &Path) -> Result<(), Error> {
     log::info!("create_gz(), in: {:?}, out: {:?}", in_path, out_path);
@@ -23,6 +25,9 @@ pub fn create_gz(in_path: &Path, out_path: &Path) -> Result<(), Error> {
     Ok(())
 }
 
+/// # Errors
+/// Returns error if failed to create archive file.
+#[allow(clippy::cast_possible_truncation)]
 pub fn create_xz2(in_path: &Path, out_path: &Path) -> Result<(), Error> {
     log::info!("create_xz2(), in: {:?}, out: {:?}", in_path, out_path);
     let xz_level = 6;
@@ -34,10 +39,7 @@ pub fn create_xz2(in_path: &Path, out_path: &Path) -> Result<(), Error> {
     let out_file = File::create(out_path).map_err(|err| {
         Error::from_string(
             ErrorKind::IoError,
-            format!(
-                "Failed to create out file: {:?}, error: {:?}",
-                out_path, err
-            ),
+            format!("Failed to create out file: {out_path:?}, error: {err:?}"),
         )
     })?;
 
@@ -46,16 +48,13 @@ pub fn create_xz2(in_path: &Path, out_path: &Path) -> Result<(), Error> {
     let mut in_file = File::open(in_path).map_err(|err| {
         Error::from_string(
             ErrorKind::IoError,
-            format!("Failed to open file {:?}, err: {:?}", in_path, err),
+            format!("Failed to open file {in_path:?}, err: {err:?}"),
         )
     })?;
     io::copy(&mut in_file, &mut encoder).map_err(|err| {
         Error::from_string(
             ErrorKind::IoError,
-            format!(
-                "Failed to copy file from {:?} to {:?}, err: {:?}",
-                in_file, out_path, err
-            ),
+            format!("Failed to copy file from {in_file:?} to {out_path:?}, err: {err:?}"),
         )
     })?;
     encoder.finish()?;

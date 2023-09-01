@@ -55,7 +55,7 @@ fn define_header(
 
     let artifact_name =
         expand_file_macro(&nsis_conf.artifact_name, conf, arch, PlatformTarget::Nsis)?;
-    writeln!(nsis_fd, r#"OutFile "{}""#, artifact_name)?;
+    writeln!(nsis_fd, r#"OutFile "{artifact_name}""#)?;
     writeln!(
         nsis_fd,
         "SetCompressor /SOLID {}\n",
@@ -217,15 +217,13 @@ fn define_languages(conf: &Config, nsis_fd: &mut File) -> Result<(), Error> {
     if let Some(ref company) = conf.metadata.company {
         writeln!(
             nsis_fd,
-            r#"VIAddVersionKey /LANG=${{LANG_ENGLISH}} "CompanyName" "{}""#,
-            company
+            r#"VIAddVersionKey /LANG=${{LANG_ENGLISH}} "CompanyName" "{company}""#
         )?;
     }
     if let Some(ref copyright) = conf.metadata.copyright {
         writeln!(
             nsis_fd,
-            r#"VIAddVersionKey /LANG=${{LANG_ENGLISH}} "LegalCopyright" "{}""#,
-            copyright
+            r#"VIAddVersionKey /LANG=${{LANG_ENGLISH}} "LegalCopyright" "{copyright}""#
         )?;
     }
     writeln!(
@@ -257,8 +255,7 @@ fn define_uninstall_section(
     }
     writeln!(
         nsis_fd,
-        r#"  DeleteRegKey {} "{}""#,
-        reg_section, reg_uninst_key
+        r#"  DeleteRegKey {reg_section} "{reg_uninst_key}""#
     )?;
     if nsis_conf.create_start_menu_shortcut {
         writeln!(
@@ -318,18 +315,15 @@ fn define_install_section(
 
     writeln!(
         nsis_fd,
-        r#"  WriteRegStr {} "{}" "UninstallString" '"$INSTDIR\Uninstall.exe"'"#,
-        reg_section, reg_uninst_key
+        r#"  WriteRegStr {reg_section} "{reg_uninst_key}" "UninstallString" '"$INSTDIR\Uninstall.exe"'"#
     )?;
     writeln!(
         nsis_fd,
-        r#"  WriteRegStr {} "{}" "QuietUninstallString" '"$INSTDIR\Uninstall.exe" /S'"#,
-        reg_section, reg_uninst_key
+        r#"  WriteRegStr {reg_section} "{reg_uninst_key}" "QuietUninstallString" '"$INSTDIR\Uninstall.exe" /S'"#
     )?;
     writeln!(
         nsis_fd,
-        r#"  WriteRegStr {} "{}" "InstallLocation" "$INSTDIR""#,
-        reg_section, reg_uninst_key
+        r#"  WriteRegStr {reg_section} "{reg_uninst_key}" "InstallLocation" "$INSTDIR""#
     )?;
     writeln!(
         nsis_fd,
@@ -349,19 +343,16 @@ fn define_install_section(
     if let Some(company) = conf.metadata.company.as_ref() {
         writeln!(
             nsis_fd,
-            r#"WriteRegStr {} "{}" "Publisher" "{}""#,
-            reg_section, reg_uninst_key, company
+            r#"WriteRegStr {reg_section} "{reg_uninst_key}" "Publisher" "{company}""#
         )?;
     }
     writeln!(
         nsis_fd,
-        r#"  WriteRegDWORD {} "{}" "NoModify" "1""#,
-        reg_section, reg_uninst_key
+        r#"  WriteRegDWORD {reg_section} "{reg_uninst_key}" "NoModify" "1""#
     )?;
     writeln!(
         nsis_fd,
-        r#"  WriteRegDWORD {} "{}" "NoRepair" "1""#,
-        reg_section, reg_uninst_key
+        r#"  WriteRegDWORD {reg_section} "{reg_uninst_key}" "NoRepair" "1""#
     )?;
     //WriteRegStr HKLM "${REG_UNINST_KEY}" "InstallDate" $1
 
@@ -423,7 +414,7 @@ where
     } else {
         Err(Error::from_string(
             ErrorKind::NsisCompilerError,
-            format!("`makensis` returns error while compiling {:?}", nsis_file),
+            format!("`makensis` returns error while compiling {nsis_file:?}"),
         ))
     }
 }

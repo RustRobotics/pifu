@@ -91,72 +91,72 @@ impl Error {
 
 impl From<glob::GlobError> for Error {
     fn from(err: glob::GlobError) -> Self {
-        Self::from_string(ErrorKind::GlobError, format!("{}", err))
+        Self::from_string(ErrorKind::GlobError, format!("{err}"))
     }
 }
 
 impl From<glob::PatternError> for Error {
     fn from(err: glob::PatternError) -> Self {
-        Self::from_string(ErrorKind::GlobPatternError, format!("{}", err))
+        Self::from_string(ErrorKind::GlobPatternError, format!("{err}"))
     }
 }
 
 impl From<regex::Error> for Error {
     fn from(err: regex::Error) -> Self {
-        Self::from_string(ErrorKind::RegexError, format!("{}", err))
+        Self::from_string(ErrorKind::RegexError, format!("{err}"))
     }
 }
 
 impl From<serde_json::Error> for Error {
     fn from(err: serde_json::Error) -> Self {
-        Self::from_string(ErrorKind::JsonError, format!("{}", err))
+        Self::from_string(ErrorKind::JsonError, format!("{err}"))
     }
 }
 
 impl From<time::SystemTimeError> for Error {
     fn from(err: time::SystemTimeError) -> Self {
-        Self::from_string(ErrorKind::SystemTimeError, format!("{}", err))
+        Self::from_string(ErrorKind::SystemTimeError, format!("{err}"))
     }
 }
 
 impl From<xz2::stream::Error> for Error {
     fn from(err: xz2::stream::Error) -> Self {
-        Self::from_string(ErrorKind::Lz2EncodeError, format!("{}", err))
+        Self::from_string(ErrorKind::Lz2EncodeError, format!("{err}"))
     }
 }
 
 impl From<walkdir::Error> for Error {
     fn from(err: walkdir::Error) -> Self {
-        Self::from_string(ErrorKind::WalkDirError, format!("{}", err))
+        Self::from_string(ErrorKind::WalkDirError, format!("{err}"))
     }
 }
 
 impl From<path::StripPrefixError> for Error {
     fn from(err: path::StripPrefixError) -> Self {
-        Self::from_string(ErrorKind::StripPrefixError, format!("{}", err))
+        Self::from_string(ErrorKind::StripPrefixError, format!("{err}"))
     }
 }
 
 impl From<io::Error> for Error {
     fn from(err: io::Error) -> Self {
-        Self::from_string(ErrorKind::IoError, format!("{}", err))
+        Self::from_string(ErrorKind::IoError, format!("{err}"))
     }
 }
 
 impl From<string::FromUtf8Error> for Error {
     fn from(err: string::FromUtf8Error) -> Self {
-        Self::from_string(ErrorKind::Utf8Error, format!("{}", err))
+        Self::from_string(ErrorKind::Utf8Error, format!("{err}"))
     }
 }
 
 impl From<reqwest::Error> for Error {
     fn from(err: reqwest::Error) -> Self {
-        Self::from_string(ErrorKind::HttpError, format!("{}", err))
+        Self::from_string(ErrorKind::HttpError, format!("{err}"))
     }
 }
 
 impl From<toml::de::Error> for Error {
     fn from(err: toml::de::Error) -> Self {
-        Self::from_string(ErrorKind::TomlError, format!("{}", err))
+        Self::from_string(ErrorKind::TomlError, format!("{err}"))
     }
 }

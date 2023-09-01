@@ -8,6 +8,8 @@ use std::io;
 use std::io::Read;
 use std::path::Path;
 
+/// # Errors
+/// Returns error if failed to open file or read its content.
 pub fn sha256sum<P: AsRef<Path>>(file: P) -> Result<String, io::Error> {
     let mut digest = sha2::Sha256::new();
     let mut reader = File::open(&file)?;

@@ -18,22 +18,21 @@ pub struct FileSet {
 }
 
 impl FileSet {
+    /// # Errors
+    /// Returns error if failed to copy files.
     pub fn copy_to(&self, src: &str, dest: &Path) -> Result<(), Error> {
         log::info!("FileSet::copy_to() src: {:?}, dest: {:?}", src, dest);
         let dest_path = dest.join(&self.to);
         let dest_dir = dest_path.parent().ok_or_else(|| {
             Error::from_string(
                 ErrorKind::IoError,
-                format!("Failed to get parent dir of dest_path: {:?}", dest_path),
+                format!("Failed to get parent dir of dest_path: {dest_path:?}"),
             )
         })?;
         fs::create_dir_all(dest_dir).map_err(|err| {
             Error::from_string(
                 ErrorKind::IoError,
-                format!(
-                    "Failed to create directory `{:?}`, error: {:?}",
-                    dest_dir, err
-                ),
+                format!("Failed to create directory `{dest_dir:?}`, error: {err:?}"),
             )
         })?;
         let src_pattern = format!("{}/{}", src, &self.from);
@@ -88,14 +87,14 @@ impl FileSet {
             } else {
                 return Err(Error::from_string(
                     ErrorKind::IoError,
-                    format!("Unsupported file type: {:?}", entry),
+                    format!("Unsupported file type: {entry:?}"),
                 ));
             }
         }
         if entry_not_match {
             Err(Error::from_string(
                 ErrorKind::GlobError,
-                format!("No file is matched with pattern `{}`", src_pattern),
+                format!("No file is matched with pattern `{src_pattern}`"),
             ))
         } else {
             Ok(())
@@ -103,6 +102,8 @@ impl FileSet {
     }
 }
 
+/// # Errors
+/// Returns error if failed to copy files.
 pub fn copy_filesets(files: &[FileSet], src: &str, dest: &Path) -> Result<(), Error> {
     log::info!(
         "copy_filesets() files: {:?}, src: {:?}, dest: {:?}",

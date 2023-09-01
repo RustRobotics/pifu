@@ -41,7 +41,7 @@ impl Default for BuildOptions {
 pub fn build(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
     log::debug!("build() conf: {:#?}", conf);
 
-    if let Err(err) = build_linux(&conf, options) {
+    if let Err(err) = build_linux(conf, options) {
         if options.ignore_error {
             log::error!("build_linux() failed: {:?}", err);
         } else {
@@ -49,7 +49,7 @@ pub fn build(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
         }
     }
 
-    build_windows(&conf, options)
+    build_windows(conf, options)
 }
 
 fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
@@ -75,13 +75,13 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
 
     if targets.contains(&PlatformTarget::Deb) {
         for arch in &arches {
-            print!("Build deb package for {}...", arch);
+            print!("Build deb package for {arch}...");
             match build_deb(conf, linux_conf, *arch) {
                 Ok(_) => println!(" {}", "Ok".green()),
                 Err(err) => {
                     println!(" {}", "Failed".red());
                     if options.ignore_error {
-                        println!("Error: {:?}", err);
+                        println!("Error: {err:?}");
                     } else {
                         return Err(err);
                     }
@@ -91,7 +91,7 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
     }
     if targets.contains(&PlatformTarget::Rpm) {
         for arch in &arches {
-            print!("Build rpm package for {}...", arch);
+            print!("Build rpm package for {arch}...");
             match build_rpm(conf, linux_conf, *arch) {
                 Ok(_) => println!(" {}", "Ok".green()),
                 Err(err) => {
@@ -107,7 +107,7 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
     }
     if targets.contains(&PlatformTarget::AppImage) {
         for arch in &arches {
-            print!("Build AppImage package for {}...", arch);
+            print!("Build AppImage package for {arch}...");
             match build_app_image(conf, linux_conf, *arch) {
                 Ok(_) => println!(" {}", "Ok".green()),
                 Err(err) => {
@@ -134,7 +134,7 @@ fn build_windows(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
 
     if windows_conf.targets.contains(&PlatformTarget::Nsis) {
         for arch in &windows_conf.arch {
-            print!("Build AppImage package for {}...", arch);
+            print!("Build AppImage package for {arch}...");
             match build_nsis(conf, windows_conf, *arch) {
                 Ok(_) => println!(" {}", "Ok".green()),
                 Err(err) => {

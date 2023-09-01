@@ -9,7 +9,7 @@
     clippy::nursery,
     clippy::pedantic
 )]
-#![allow(clippy::module_name_repetitions)]
+#![allow(clippy::module_name_repetitions, clippy::multiple_crate_versions)]
 
 mod app_image;
 pub mod base;

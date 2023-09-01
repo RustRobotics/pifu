@@ -34,7 +34,7 @@ pub fn build_rpm(conf: &Config, linux_conf: &LinuxConfig, _arch: Arch) -> Result
             ),
         )
     })?;
-    let source_dir = rpm_dir.join(&format!(
+    let source_dir = rpm_dir.join(format!(
         "{}-{}",
         &conf.metadata.name, &conf.metadata.version
     ));
@@ -95,7 +95,7 @@ fn generate_spec_file(
 
     if let Some(required_pkgs) = rpm_conf.required_pkgs.as_ref() {
         for pkg in required_pkgs {
-            writeln!(spec_fd, "Required: {}", pkg)?;
+            writeln!(spec_fd, "Required: {pkg}")?;
         }
     }
 
@@ -150,7 +150,7 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
         .map_err(|err| {
             Error::from_string(
                 ErrorKind::RpmCompilerError,
-                format!("Failed to run `rpmbuild` command, error: {:?}, please check `rpm` package is installed", err),
+                format!("Failed to run `rpmbuild` command, error: {err:?}, please check `rpm` package is installed"),
             )
         })?;
 
@@ -159,12 +159,12 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
     } else {
         Err(Error::from_string(
             ErrorKind::RpmCompilerError,
-            format!("rpm file: {:?}", spec_file),
+            format!("rpm file: {spec_file:?}"),
         ))
     }
 }
 
 fn move_rpm_files(rpm_dir: &str) -> Result<(), Error> {
-    let rpm_files = format!("{}/RPMS/*/*.rpm", rpm_dir);
+    let rpm_files = format!("{rpm_dir}/RPMS/*/*.rpm");
     utils::mv(&rpm_files, rpm_dir)
 }

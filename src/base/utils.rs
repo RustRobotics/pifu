@@ -8,6 +8,8 @@ use walkdir::WalkDir;
 
 use crate::Error;
 
+/// # Errors
+/// Returns error if failed to walk through directory.
 pub fn get_folder_size(dir: &Path) -> Result<u64, Error> {
     let mut total_size = 0;
     for entry in WalkDir::new(dir) {
@@ -31,11 +33,15 @@ pub const fn default_false() -> bool {
     false
 }
 
+/// # Errors
+/// Returns error if failed to remove some file.
 pub fn rmdir<P: AsRef<Path>>(p: P) -> Result<(), Error> {
     fs::remove_dir_all(p)?;
     Ok(())
 }
 
+/// # Errors
+/// todo
 pub fn mv<P: AsRef<Path>>(_src_pathtern: &str, _dest: P) -> Result<(), Error> {
     Ok(())
 }

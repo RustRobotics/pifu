@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::str::FromStr;
 
-#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq)]
 pub enum Arch {
     #[serde(alias = "x86")]
     X86,
@@ -85,7 +85,7 @@ pub struct Metadata {
     pub src_dir: String,
 }
 
-#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq)]
 pub enum PlatformTarget {
     #[serde(alias = "deb")]
     Deb,

@@ -70,7 +70,7 @@ fn copy_libraries(
 
 fn get_appimage_tool(arch: Arch) -> Result<PathBuf, Error> {
     let mut binary_dir = get_binary_dir()?;
-    binary_dir.push(format!("appimagetool-{}.AppImage", arch));
+    binary_dir.push(format!("appimagetool-{arch}.AppImage"));
     Ok(binary_dir)
 }
 
@@ -91,7 +91,7 @@ fn compile_app_image<P: AsRef<Path>>(workdir: &Path, dir: &P, arch: Arch) -> Res
         .map_err(|err| {
             Error::from_string(
                 ErrorKind::AppImageCompilerError,
-                format!("Failed to run `appimagetool` command, error: {:?}, please install with `pifu --download` command", err),
+                format!("Failed to run `appimagetool` command, error: {err:?}, please install with `pifu --download` command"),
             )
         })?;
 
@@ -100,7 +100,7 @@ fn compile_app_image<P: AsRef<Path>>(workdir: &Path, dir: &P, arch: Arch) -> Res
     } else {
         Err(Error::from_string(
             ErrorKind::AppImageCompilerError,
-            format!("`appimagetool` returns error, workdir: {:?}", workdir),
+            format!("`appimagetool` returns error, workdir: {workdir:?}"),
         ))
     }
 }

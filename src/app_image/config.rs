@@ -38,6 +38,6 @@ impl Default for AppImageConfig {
     }
 }
 
-fn default_exclude_libs() -> Vec<String> {
+const fn default_exclude_libs() -> Vec<String> {
     vec![]
 }

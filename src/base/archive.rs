@@ -13,6 +13,8 @@ use walkdir::WalkDir;
 
 use crate::error::{Error, ErrorKind};
 
+/// # Errors
+/// Returns error if failed to create tarball.
 pub fn create_tar(dir: &Path, to: &Path) -> Result<(), Error> {
     log::info!("create_tar_chown(), dir: {:?}, to: {:?}", dir, to);
     let to_file = File::create(to)?;
@@ -24,11 +26,13 @@ pub fn create_tar(dir: &Path, to: &Path) -> Result<(), Error> {
     } else {
         Err(Error::from_string(
             ErrorKind::InvalidDirname,
-            format!("Failed to create tar file located at: {:?}", to),
+            format!("Failed to create tar file located at: {to:?}"),
         ))
     }
 }
 
+/// # Errors
+/// Returns error if failed to create ar file.
 pub fn create_tar_without_rootdir(dir: &Path, to: &Path) -> Result<(), Error> {
     log::info!("create_tar_without_rootdir() {:?} > {:?}", dir, to);
     let to_file = File::create(to)?;
@@ -39,6 +43,8 @@ pub fn create_tar_without_rootdir(dir: &Path, to: &Path) -> Result<(), Error> {
     Ok(())
 }
 
+/// # Errors
+/// Returns error if failed to create ar file.
 pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), Error> {
     log::info!("create_tar_chown() {:?} > {:?}", dir, to);
     let to_file = File::create(to)?;
@@ -82,7 +88,7 @@ pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), Error> {
             if !path_str.ends_with('/') {
                 path_str += "/";
             }
-            header.set_path(&filename)?;
+            header.set_path(filename)?;
             header.set_entry_type(tar::EntryType::Directory);
             header.set_cksum();
             builder.append(&header, &mut io::empty())?;
@@ -94,6 +100,8 @@ pub fn create_tar_chown(dir: &Path, to: &Path) -> Result<(), Error> {
     Ok(())
 }
 
+/// # Errors
+/// Returns error if failed to create ar file.
 #[allow(dead_code)]
 pub fn create_ar(dir: &Path, to: &Path) -> Result<(), Error> {
     log::info!("create_ar() {:?} > {:?}", dir, to);
@@ -111,6 +119,8 @@ pub fn create_ar(dir: &Path, to: &Path) -> Result<(), Error> {
     Ok(())
 }
 
+/// # Errors
+/// Returns error if failed to create ar file.
 pub fn create_ar_files<P>(files: &[&P], to: &Path) -> Result<(), Error>
 where
     P: AsRef<Path> + Debug,

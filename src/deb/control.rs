@@ -30,27 +30,27 @@ pub fn generate_control(
     let linux = conf.linux.as_ref().expect("Linux conf is not set");
     let deb = &linux.deb;
     if let Some(section) = deb.section.as_ref() {
-        writeln!(&mut fd, "Section: {}", section)?;
+        writeln!(&mut fd, "Section: {section}")?;
     }
     writeln!(&mut fd, "Priority: {}", deb.priority)?;
     writeln!(&mut fd, "Standards-Version: 3.9.4")?;
     writeln!(&mut fd, "Maintainer: {}", metadata.author)?;
-    writeln!(&mut fd, "Installed-Size: {}", size)?;
+    writeln!(&mut fd, "Installed-Size: {size}")?;
 
     if let Some(ref depends) = deb.depends {
-        writeln!(&mut fd, "Depends: {}", depends)?;
+        writeln!(&mut fd, "Depends: {depends}")?;
     }
     if let Some(ref conflicts) = deb.conflicts {
-        writeln!(&mut fd, "Conflicts: {}", conflicts)?;
+        writeln!(&mut fd, "Conflicts: {conflicts}")?;
     }
     if let Some(ref breaks) = deb.breaks {
-        writeln!(&mut fd, "Breaks: {}", breaks)?;
+        writeln!(&mut fd, "Breaks: {breaks}")?;
     }
     if let Some(ref replaces) = deb.replaces {
-        writeln!(&mut fd, "Replaces: {}", replaces)?;
+        writeln!(&mut fd, "Replaces: {replaces}")?;
     }
     if let Some(ref provides) = deb.provides {
-        writeln!(&mut fd, "Provides: {}", provides)?;
+        writeln!(&mut fd, "Provides: {provides}")?;
     }
 
     writeln!(&mut fd, "Homepage: {}", metadata.homepage)?;
@@ -65,7 +65,7 @@ fn md5_file(file: &Path) -> Result<String, Error> {
     let mut context = md5::Context::new();
     io::copy(&mut in_file, &mut context)?;
     let digest = context.compute();
-    let hash = format!("{:x}", digest);
+    let hash = format!("{digest:x}");
 
     Ok(hash)
 }

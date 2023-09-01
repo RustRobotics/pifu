@@ -77,10 +77,10 @@ fn default_windows_targets() -> Vec<PlatformTarget> {
 }
 
 pub fn get_project_dir() -> Result<ProjectDirs, Error> {
-    match ProjectDirs::from("org", "biofan", "pifu") {
-        Some(dir) => Ok(dir),
-        None => Err(Error::new(ErrorKind::HomeDirError, "Invalid $HOME")),
-    }
+    ProjectDirs::from("org", "biofan", "pifu").map_or_else(
+        || Err(Error::new(ErrorKind::HomeDirError, "Invalid $HOME")),
+        Ok,
+    )
 }
 
 pub fn get_binary_dir() -> Result<PathBuf, Error> {
