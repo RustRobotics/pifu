@@ -14,6 +14,7 @@ keywords = [
   "build-utils",
   "packaging",
 ]
+rust-version = "1.62.0"
 
 [dependencies]
 ar = "0.9.0"

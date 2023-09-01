@@ -20,6 +20,9 @@ const OPT_ARCH: &str = "arch";
 const OPT_DOWNLOAD: &str = "download";
 const OPT_IGNORE_ERROR: &str = "ignore-error";
 
+/// # Errors
+/// Returns error if failed to parse cmdline or failed to read config file.
+#[allow(clippy::too_many_lines)]
 pub fn read_cmdline() -> Result<(), Error> {
     let matches = Command::new("Pifu - Cross platform package builder")
         .version("0.3.4")
@@ -71,18 +74,27 @@ pub fn read_cmdline() -> Result<(), Error> {
     }
 
     // read config
-    let mut config_file: String = matches
+    let mut config_file: String = (*matches
         .get_one::<&str>(OPT_CONFIG)
-        .unwrap_or(&"pkg/pifu.toml")
-        .to_string();
+        .unwrap_or(&"pkg/pifu.toml"))
+    .to_string();
     if !Path::new(&config_file).exists() {
         config_file = "pifu.toml".to_owned();
     }
     log::info!("config file: {:?}", config_file);
 
-    let config_content = fs::read_to_string(&config_file)
-        .unwrap_or_else(|_| panic!("Failed to read config at {}", config_file));
-    let mut conf: Config = toml::from_str(&config_content).expect("Invalid config");
+    let config_content = fs::read_to_string(&config_file).map_err(|err| {
+        Error::from_string(
+            ErrorKind::IoError,
+            format!("Failed to read config at {config_file}, err: {err}"),
+        )
+    })?;
+    let mut conf: Config = toml::from_str(&config_content).map_err(|_err| {
+        Error::from_string(
+            ErrorKind::TomlError,
+            format!("Invalid toml config, {config_file}"),
+        )
+    })?;
 
     conf.metadata.build_id = expand_file_macro_simple(&conf.metadata.build_id)?;
 
@@ -106,7 +118,7 @@ pub fn read_cmdline() -> Result<(), Error> {
                 log::error!("Invalid --os {}", &os);
                 return Err(Error::from_string(
                     ErrorKind::CmdlineError,
-                    format!("Invalid --os {}, available values are `linux` or `win`", os),
+                    format!("Invalid --os {os}, available values are `linux` or `win`"),
                 ));
             }
         }
@@ -120,7 +132,7 @@ pub fn read_cmdline() -> Result<(), Error> {
             } else {
                 return Err(Error::from_string(
                     ErrorKind::CmdlineError,
-                    format!("Invalid --target {}, available values are `deb`, `rpm`, `app_image` or `nsis`", target),
+                    format!("Invalid --target {target}, available values are `deb`, `rpm`, `app_image` or `nsis`"),
                 ));
             }
         }
@@ -135,8 +147,7 @@ pub fn read_cmdline() -> Result<(), Error> {
                 return Err(Error::from_string(
                     ErrorKind::CmdlineError,
                     format!(
-                        "Invalid --arch {}, available values are `x86_64`, `x86` or `aarch64`",
-                        arch
+                        "Invalid --arch {arch}, available values are `x86_64`, `x86` or `aarch64`"
                     ),
                 ));
             }
