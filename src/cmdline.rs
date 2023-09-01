@@ -25,7 +25,7 @@ const OPT_IGNORE_ERROR: &str = "ignore-error";
 #[allow(clippy::too_many_lines)]
 pub fn read_cmdline() -> Result<(), Error> {
     let matches = Command::new("Pifu - Cross platform package builder")
-        .version("0.3.4")
+        .version("0.3.5")
         .author("Xu Shaohua <shaohua@biofan.org>")
         .about("General package builder")
         .arg(
