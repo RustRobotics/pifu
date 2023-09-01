@@ -5,7 +5,6 @@
 use std::io;
 use std::path;
 use std::string;
-use std::time;
 
 /// Prepresent the type of errors.
 #[derive(Debug, Clone, Copy)]
@@ -56,6 +55,8 @@ pub enum ErrorKind {
     HttpError,
 
     CmdlineError,
+
+    TimeError,
 }
 
 #[derive(Debug, Clone)]
@@ -113,8 +114,8 @@ impl From<serde_json::Error> for Error {
     }
 }
 
-impl From<time::SystemTimeError> for Error {
-    fn from(err: time::SystemTimeError) -> Self {
+impl From<std::time::SystemTimeError> for Error {
+    fn from(err: std::time::SystemTimeError) -> Self {
         Self::from_string(ErrorKind::SystemTimeError, format!("{err}"))
     }
 }
@@ -158,5 +159,17 @@ impl From<reqwest::Error> for Error {
 impl From<toml::de::Error> for Error {
     fn from(err: toml::de::Error) -> Self {
         Self::from_string(ErrorKind::TomlError, format!("{err}"))
+    }
+}
+
+impl From<time::error::Format> for Error {
+    fn from(err: time::error::Format) -> Self {
+        Self::from_string(ErrorKind::TimeError, format!("{err}"))
+    }
+}
+
+impl From<time::error::InvalidFormatDescription> for Error {
+    fn from(err: time::error::InvalidFormatDescription) -> Self {
+        Self::from_string(ErrorKind::TimeError, format!("{err}"))
     }
 }

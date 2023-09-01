@@ -2,10 +2,10 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-use chrono::prelude::*;
 use regex::Regex;
 use std::env;
 use std::process::Command;
+use time::{format_description, OffsetDateTime};
 
 use super::config::{Arch, PlatformTarget};
 use crate::config::Config;
@@ -24,20 +24,21 @@ pub fn get_git_hash() -> Result<String, Error> {
 
 /// Get date of today, like `20210509`.
 pub fn get_date() -> String {
-    let now = Local::now();
-    now.format("%Y%m%d").to_string()
+    let now = OffsetDateTime::now_local().unwrap_or_else(|_| OffsetDateTime::now_utc());
+    format!("{}{}{}", now.year(), now.month() as u8, now.day())
 }
 
 /// Get date and time of today, like `202105090952`.
-fn get_date_time() -> String {
-    let now = Local::now();
-    now.format("%Y%m%d%H%M%S").to_string()
+fn get_date_time() -> Result<String, Error> {
+    let now = OffsetDateTime::now_local().unwrap_or_else(|_| OffsetDateTime::now_utc());
+    let format = format_description::parse("[year][month][day][hour][minute][second]")?;
+    now.format(&format).map_err(Into::into)
 }
 
 /// Get timestamp of now, like `1620525294`.
 fn get_timestamp() -> String {
-    let now = Local::now();
-    now.timestamp().to_string()
+    let now = OffsetDateTime::now_local().unwrap_or_else(|_| OffsetDateTime::now_utc());
+    now.unix_timestamp().to_string()
 }
 
 fn get_env(name: &str) -> Result<String, Error> {
@@ -69,7 +70,7 @@ pub fn expand_file_macro_simple(s: &str) -> Result<String, Error> {
     }
     let content_date_time = "${date-time}";
     if content.contains(content_date_time) {
-        let t = get_date_time();
+        let t = get_date_time()?;
         content = content.replace(content_date_time, &t);
     }
     let content_timestamp = "${timestamp}";
