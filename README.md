@@ -2,6 +2,11 @@
 # About
 Pifu(aka 蚍蜉), is a cross platform package builder.
 
+## Install
+```bash
+cargo install pifu
+```
+
 ## Build dependencies
 - exe: [nsis](https://nsis.sourceforge.io/)
 - AppImage: [appimagetool](https://github.com/AppImage/AppImageKit/releases), libc-bin (for `ldd`)
