@@ -23,12 +23,19 @@ pub fn get_git_hash() -> Result<String, Error> {
 }
 
 /// Get date of today, like `20210509`.
-pub fn get_date() -> String {
+///
+/// # Errors
+/// Returns error if failed to format date.
+pub fn get_date() -> Result<String, Error> {
     let now = OffsetDateTime::now_local().unwrap_or_else(|_| OffsetDateTime::now_utc());
-    format!("{}{}{}", now.year(), now.month() as u8, now.day())
+    let format = format_description::parse("[year][month][day]")?;
+    now.format(&format).map_err(Into::into)
 }
 
 /// Get date and time of today, like `202105090952`.
+///
+/// # Errors
+/// Returns error if failed to format datetime.
 fn get_date_time() -> Result<String, Error> {
     let now = OffsetDateTime::now_local().unwrap_or_else(|_| OffsetDateTime::now_utc());
     let format = format_description::parse("[year][month][day][hour][minute][second]")?;
@@ -65,7 +72,7 @@ pub fn expand_file_macro_simple(s: &str) -> Result<String, Error> {
 
     let content_date = "${date}";
     if content.contains(content_date) {
-        let t = get_date();
+        let t = get_date()?;
         content = content.replace(content_date, &t);
     }
     let content_date_time = "${date-time}";
@@ -152,12 +159,16 @@ mod tests {
     #[test]
     fn test_get_date() {
         let t = get_date();
+        assert!(t.is_ok());
+        let t = t.unwrap();
         assert_eq!(t.len(), 8);
     }
 
     #[test]
     fn test_get_date_time() {
         let t = get_date_time();
+        assert!(t.is_ok());
+        let t = t.unwrap();
         assert_eq!(t.len(), 14);
     }
 
