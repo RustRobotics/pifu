@@ -77,7 +77,7 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
         for arch in &arches {
             print!("Build deb package for {arch}...");
             match build_deb(conf, linux_conf, *arch) {
-                Ok(_) => println!(" {}", "Ok".green()),
+                Ok(()) => println!(" {}", "Ok".green()),
                 Err(err) => {
                     println!(" {}", "Failed".red());
                     if options.ignore_error {
@@ -93,7 +93,7 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
         for arch in &arches {
             print!("Build rpm package for {arch}...");
             match build_rpm(conf, linux_conf, *arch) {
-                Ok(_) => println!(" {}", "Ok".green()),
+                Ok(()) => println!(" {}", "Ok".green()),
                 Err(err) => {
                     println!(" {}", "Failed".red());
                     if options.ignore_error {
@@ -109,7 +109,7 @@ fn build_linux(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
         for arch in &arches {
             print!("Build AppImage package for {arch}...");
             match build_app_image(conf, linux_conf, *arch) {
-                Ok(_) => println!(" {}", "Ok".green()),
+                Ok(()) => println!(" {}", "Ok".green()),
                 Err(err) => {
                     println!(" {}", "Failed".red());
                     if options.ignore_error {
@@ -136,7 +136,7 @@ fn build_windows(conf: &Config, options: &BuildOptions) -> Result<(), Error> {
         for arch in &windows_conf.arch {
             print!("Build AppImage package for {arch}...");
             match build_nsis(conf, windows_conf, *arch) {
-                Ok(_) => println!(" {}", "Ok".green()),
+                Ok(()) => println!(" {}", "Ok".green()),
                 Err(err) => {
                     if options.ignore_error {
                         println!(" {}", "Failed".red());
