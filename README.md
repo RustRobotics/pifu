@@ -1,5 +1,11 @@
 
 # About
+![Build status](https://github.com/RustRobotics/pifu/actions/workflows/rust.yml/badge.svg)
+[![Latest version](https://img.shields.io/crates/v/pifu.svg)](https://crates.io/crates/pifu)
+[![Documentation](https://docs.rs/pifu/badge.svg)](https://docs.rs/pifu)
+![Minimum rustc version](https://img.shields.io/badge/rustc-1.62+-yellow.svg)
+![License](https://img.shields.io/crates/l/pifu.svg)
+
 Pifu(aka 蚍蜉), is a cross platform package builder.
 
 ## Install
