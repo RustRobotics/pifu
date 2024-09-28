@@ -25,6 +25,7 @@ cargo install pifu
 ## Related projects
 - [nsis](https://nsis.sourceforge.io)
 - [cargo bundle](https://github.com/burtonageo/cargo-bundle)
+- [cargo packager](https://github.com/crabnebula-dev/cargo-packager)
 - [cargo deb](https://github.com/mmstick/cargo-deb)
 - [electron builder](https://github.com/electron-userland/electron-builder)
 - [fpm](https://github.com/jordansissel/fpm)
