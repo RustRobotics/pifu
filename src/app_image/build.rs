@@ -82,7 +82,7 @@ fn compile_app_image<P: AsRef<Path>>(workdir: &Path, dir: &P, arch: Arch) -> Res
         cmd.stdout(Stdio::null()).stderr(Stdio::null());
     }
     let status = cmd
-        .env("ARCH", &arch.to_string())
+        .env("ARCH", arch.to_string())
         .current_dir(workdir)
         .arg(dir.as_ref())
         .stdout(Stdio::null())

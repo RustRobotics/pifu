@@ -44,7 +44,7 @@ pub struct NsisConfig {
     /// String - The path to uninstaller icon.
     pub uninstaller_icon: String,
 
-    /// String - assisted installer only. MUI_HEADERIMAGE
+    /// String - assisted installer only. `MUI_HEADERIMAGE`
     pub installer_header: Option<String>,
 
     /// String - one-click installer only.
@@ -53,12 +53,12 @@ pub struct NsisConfig {
     /// Image format is bmp, and image size is 150x57 pixels.
     pub installer_header_icon: Option<String>,
 
-    /// String - assisted installer only. MUI_WELCOMEFINISHPAGE_BITMAP.
+    /// String - assisted installer only. `MUI_WELCOMEFINISHPAGE_BITMAP`.
     ///
     /// Image format is bmp, and image size 164 × 314 pixels.
     pub installer_sidebar: Option<String>,
 
-    /// String - assisted installer only. MUI_UNWELCOMEFINISHPAGE_BITMAP.
+    /// String - assisted installer only. `MUI_UNWELCOMEFINISHPAGE_BITMAP`.
     ///
     /// Image format is bmp, and image size 164 × 314 pixels.
     pub uninstaller_sidebar: Option<String>,

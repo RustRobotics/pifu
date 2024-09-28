@@ -33,7 +33,7 @@ pub struct LinuxConfig {
 
     pub files: Option<Vec<FileSet>>,
 
-    /// Specific config for AppImage format.
+    /// Specific config for `AppImage` format.
     #[serde(default = "AppImageConfig::default")]
     pub app_image: AppImageConfig,
 
