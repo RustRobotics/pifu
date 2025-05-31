@@ -69,7 +69,7 @@ pub fn read_cmdline() -> Result<(), Error> {
         )
         .get_matches();
 
-    if matches.get_count(OPT_DOWNLOAD) > 0 {
+    if matches.contains_id(OPT_DOWNLOAD) {
         return download::download();
     }
 
@@ -99,7 +99,7 @@ pub fn read_cmdline() -> Result<(), Error> {
     conf.metadata.build_id = expand_file_macro_simple(&conf.metadata.build_id)?;
 
     let mut options = build::BuildOptions {
-        ignore_error: matches.get_count(OPT_IGNORE_ERROR) > 0,
+        ignore_error: matches.contains_id(OPT_IGNORE_ERROR),
         ..Default::default()
     };
 
