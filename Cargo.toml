@@ -1,7 +1,7 @@
 [package]
 name = "pifu"
 version = "0.3.5"
-edition = "2021"
+edition = "2024"
 authors = ["Xu Shaohua <shaohua@biofan.org"]
 repository = "https://github.com/RustRobotics/pifu"
 readme = "README.md"
@@ -14,7 +14,7 @@ keywords = [
   "build-utils",
   "packaging",
 ]
-rust-version = "1.62.0"
+rust-version = "1.85.0"
 
 [dependencies]
 ar = "0.9.0"
