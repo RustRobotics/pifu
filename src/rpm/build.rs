@@ -3,9 +3,9 @@
 // in the LICENSE file.
 
 use std::fs::{self, File};
-use std::io::Write;
+use std::io::{self, Write};
 use std::path::Path;
-use std::process::{Command, Stdio};
+use std::process::Command;
 
 use super::config::RpmConfig;
 use crate::base::archive;
@@ -137,29 +137,31 @@ fn generate_rpm_file(spec_file: &Path, rpm_dir: &Path) -> Result<(), Error> {
     let def = format!("_topdir {}", fs::canonicalize(rpm_dir)?.display());
 
     let mut cmd = Command::new("rpmbuild");
-    //if cfg!(not(debug_assertions)) {
-    cmd.stdout(Stdio::null()).stderr(Stdio::null());
-    //}
     // Change rootdir of rpm build.
-    let status = cmd
+    let output = cmd
         .arg("-D")
         .arg(&def)
         .arg("-bb")
         .arg(spec_file)
-        .status()
+        .output()
         .map_err(|err| {
             Error::from_string(
                 ErrorKind::RpmCompilerError,
                 format!("Failed to run `rpmbuild` command, error: {err:?}, please check `rpm` package is installed"),
             )
         })?;
+    let status = output.status;
 
     if status.success() {
+        log::info!("stdout:");
+        io::stdout().write_all(&output.stdout)?;
         Ok(())
     } else {
+        log::error!("stderr:");
+        io::stderr().write_all(&output.stderr)?;
         Err(Error::from_string(
             ErrorKind::RpmCompilerError,
-            format!("rpm file: {spec_file:?}"),
+            format!("rpm file: {spec_file:?}",),
         ))
     }
 }
